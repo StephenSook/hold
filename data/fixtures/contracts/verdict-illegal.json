@@ -1,0 +1,19 @@
+{
+  "status": "ILLEGAL",
+  "day": 0,
+  "violations": [
+    {
+      "rule_id": "CA_11760e_work_cap",
+      "citation": "8 CCR 11760(e)",
+      "title": "California child performer daily work hour cap (9-15 years)",
+      "limit": "5 hours work per day",
+      "computed": "6.5 hours work",
+      "over_by": "1.5 hours",
+      "quote": "Minors from nine (9) years of age to fifteen (15) years of age: five (5) hours of work.",
+      "source_url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=11760.&lawCode=CCR",
+      "jurisdiction": "CA"
+    }
+  ],
+  "core_rule_ids": ["CA_11760e_work_cap"],
+  "witness": null
+}

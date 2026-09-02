@@ -1,0 +1,79 @@
+{
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "INT",
+      "day_night": "DAY",
+      "set": "Police Station",
+      "pages_eighths": 16,
+      "cast_ids": ["c1", "c2"],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "City Park",
+      "pages_eighths": 8,
+      "cast_ids": ["c1", "c3"],
+      "location_id": "loc2"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "INT",
+      "day_night": "NIGHT",
+      "set": "Apartment",
+      "pages_eighths": 12,
+      "cast_ids": ["c2"],
+      "location_id": "loc3"
+    }
+  ],
+  "cast": [
+    {
+      "id": "c1",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "c2",
+      "letter": "B",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "c3",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-01",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-02",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

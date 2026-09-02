@@ -1,0 +1,26 @@
+{
+  "pass1": [
+    {
+      "status": "LEGAL",
+      "day": 0,
+      "violations": [],
+      "core_rule_ids": [],
+      "witness": {"call": "07:00", "wrap": "17:30", "meal_break": "12:00"}
+    }
+  ],
+  "pass2": {
+    "order": [0, 1, 2],
+    "status": "FEASIBLE",
+    "holding_cents": 0,
+    "total_cents": 162000,
+    "bound": 0,
+    "hold_days": 0,
+    "penalties_cents": 0,
+    "reasons": []
+  },
+  "checker": {
+    "agrees": true,
+    "note": ""
+  },
+  "benchmark": null
+}
