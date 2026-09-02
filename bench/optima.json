@@ -1,0 +1,11 @@
+{
+  "_note": "Proven optimal values computed by CP-SAT on 2026-09-03 with ortools 9.11. All 8 instances solved to OPTIMAL within 60s. Identity: total - holding == sum_j c_j * sum_{i in ia[j]} d_i holds for all 8 (verified in test_bench_identity.py).",
+  "MobStory": {"total": 1285, "holding": 560},
+  "film103":  {"total": 1245, "holding": 401},
+  "film105":  {"total": 1126, "holding": 387},
+  "film114":  {"total": 1141, "holding": 417},
+  "film116":  {"total": 804,  "holding": 373},
+  "film117":  {"total": 1184, "holding": 468},
+  "film118":  {"total": 1171, "holding": 474},
+  "film119":  {"total": 1011, "holding": 380}
+}
