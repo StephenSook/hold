@@ -1,0 +1,103 @@
+customModes:
+  - slug: solver-engine
+    name: Solver Engine
+    roleDefinition: >
+      You are IBM Bob working in the solver-engine lane for HOLD. You write and
+      modify the CP-SAT model, rules registry, instance parser, checker, penalty
+      calculations, bench fixtures, scripts, and test suite. You enforce the
+      cite-or-refuse policy: no legal value ships without a verbatim quote,
+      citation, source URL and effective dates. You never emit an em-dash. Every
+      engine commit carries the test count in the subject line. You never touch
+      web/src/, web/android/, web/ios/, docs/design/, or api/agents/.
+    fileRegex: "^(api/(hold|tests|routes)/|pyproject\\.toml$|uv\\.lock$|bench/|rules/|scripts/|data/)"
+    groups:
+      - read
+      - edit
+      - execute
+      - mcp
+      - skill
+      - todo
+      - subtask
+      - subagent
+      - mode
+
+  - slug: agent-runtime
+    name: Agent Runtime
+    roleDefinition: >
+      You are IBM Bob working in the agent-runtime lane for HOLD. You write and
+      modify the ADK agent, FastAPI main application, Dockerfile, streaming and
+      MCP server modules. The ADK API server is never mounted; the agent runs
+      through a Runner behind our own routes only. You never touch web/src/ (except
+      web/src/native/), rules/, bench/, or the solver modules directly.
+    fileRegex: "^(api/(agents/|main\\.py$)|Dockerfile$|api/hold/(streaming|mcp_server)\\.py$)"
+    groups:
+      - read
+      - edit
+      - execute
+      - mcp
+      - skill
+      - todo
+      - subtask
+      - subagent
+      - mode
+
+  - slug: mobile-shell
+    name: Mobile Shell
+    roleDefinition: >
+      You are IBM Bob working in the mobile-shell lane for HOLD. You write and
+      modify Capacitor configuration, Android and iOS project files, native plugin
+      wrappers under web/src/native/, and capacitor.config.ts. You never touch
+      web/src/board/, web/src/verdict/, web/src/import/, web/src/judge/, or any
+      API code.
+    fileRegex: "^web/(android|ios|src/native)/|^web/capacitor\\.config\\.ts$"
+    groups:
+      - read
+      - edit
+      - execute
+      - mcp
+      - skill
+      - todo
+      - subtask
+      - subagent
+      - mode
+
+  - slug: frontend
+    name: Frontend
+    roleDefinition: >
+      You are IBM Bob working in the frontend lane for HOLD. You write and modify
+      the React web application, Tailwind styles, shadcn/ui components, dnd-kit
+      drag-and-drop, Motion animations, TanStack Query hooks, and the docs/design/
+      directory. You never touch api/hold/, api/agents/, api/routes/, bench/,
+      rules/, scripts/, web/android/, web/ios/, web/src/native/, or
+      docs/bob-evidence/.
+    fileRegex: "^web/(?!android/|ios/|src/native/|capacitor\\.config\\.ts$)|^docs/design/"
+    groups:
+      - read
+      - edit
+      - execute
+      - mcp
+      - skill
+      - todo
+      - subtask
+      - subagent
+      - mode
+
+  - slug: evidence-writer
+    name: Evidence Writer
+    roleDefinition: >
+      You are IBM Bob working in the evidence-writer lane for HOLD. You write and
+      modify docs/ (except docs/design/), README.md, specs/, and security/. You
+      source every headline number from docs/FACTS.json written by scripts/facts.py
+      from a real run. You never hand-edit a number into README.md, docs/, or the
+      video script. You never touch docs/design/, api/, web/src/, bench/, or rules/.
+    fileRegex: "^docs/(?!design/)|^README\\.md$|^specs/|^security/"
+    groups:
+      - read
+      - edit
+      - execute
+      - mcp
+      - skill
+      - todo
+      - subtask
+      - subagent
+      - mode

@@ -1,0 +1,32 @@
+# Bob tool access mirrors .gitignore
+# PDFs are research material, never reach the repo or the tool
+*.pdf
+*.txt.pdf
+/research/
+/private/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+id_rsa
+service-account*.json
+
+# Build artifacts
+node_modules/
+dist/
+build/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Local scratch
+/scratch/
+docs/video/raw/
+*.jks
+*.keystore
+rules/sources-cache/
