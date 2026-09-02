@@ -43,7 +43,6 @@ def test_residual(name: str) -> None:
 
     # If time limit hit, add the redundant span bound and retry once
     if result.status != "OPTIMAL":
-        from ortools.sat.python import cp_model
         # Retry with the redundant bound hint (documented in PLAN.md task 1.4)
         result = solve_benchmark(inst, symmetry_break=False, time_limit_s=TIME_LIMIT_S)
 
@@ -74,7 +73,6 @@ def test_write_results_json() -> None:
         "instances": {},
     }
 
-    all_matched = True
     for name in MEDIUM_INSTANCES:
         inst = parse_dzn(MEDIUM / f"{name}.dzn")
         result = solve_benchmark(inst, time_limit_s=TIME_LIMIT_S)
@@ -84,8 +82,6 @@ def test_write_results_json() -> None:
             and result.holding == published.get("holding")
             and result.total == published.get("total")
         )
-        if not matched:
-            all_matched = False
         results["instances"][name] = {
             "status": result.status,
             "holding": result.holding,

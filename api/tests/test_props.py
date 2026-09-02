@@ -3,7 +3,6 @@ Task 1.6: Hypothesis property tests for the checker and solver.
 """
 from pathlib import Path
 
-import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -18,7 +17,7 @@ MEDIUM = Path(__file__).parent.parent.parent / "bench" / "instances" / "medium"
 @settings(max_examples=50, deadline=5000)
 def test_valid_permutation_always_valid(data: st.DataObject) -> None:
     """Any valid permutation of film116 always parses as valid."""
-    inst = parse_szn = parse_dzn(MEDIUM / "film116.dzn")
+    inst = parse_dzn(MEDIUM / "film116.dzn")
     perm = data.draw(st.permutations(list(range(inst.num_scenes))))
     result = check_permutation(inst, perm)
     assert result.valid

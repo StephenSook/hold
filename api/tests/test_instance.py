@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from api.hold.instance import Instance, parse_dzn
+from api.hold.instance import parse_dzn
 
 BENCH = Path(__file__).parent.parent.parent / "bench"
 MEDIUM_DIR = BENCH / "instances" / "medium"
@@ -53,7 +53,7 @@ def test_film116_ia_dimensions() -> None:
 
 def test_instance_is_frozen() -> None:
     inst = parse_dzn(MEDIUM_DIR / "film116.dzn")
-    with pytest.raises(Exception):
+    with pytest.raises((AttributeError, TypeError)):
         inst.num_scenes = 99  # type: ignore[misc]
 
 

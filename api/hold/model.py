@@ -104,18 +104,10 @@ class BenchmarkModel:
             model.minimize(model.new_constant(0))
 
         # --- Symmetry break (benchmark model only, not the extended model) ---
-        if self.symmetry_break and n >= 2:
-            # Break symmetry on the first two positions: pos[0] < pos[1]
-            # Valid when scene 0 and scene 1 are interchangeable (same actor set).
-            # Safe conservative form: only apply when actor membership is identical.
-            ia_0 = inst.ia[0] if j_count > 0 else ()
-            # Instead use a simpler lexicographic break on scene_at:
-            # Fix scene_at[0] to the smallest-index scene that appears in the
-            # same actor group as scene_at[1] - this is complex, so use a simple
-            # position-fixing break: pos of the first scene <= pos of the last scene
-            # This is always valid (trivially true if num_scenes==1).
-            if n > 1:
-                model.add(scene_at[0] < scene_at[n - 1])
+        # Symmetry break (benchmark model only). scene_at[0] < scene_at[n-1]
+        # is always a valid tiebreaker: any schedule satisfies it or its mirror.
+        if self.symmetry_break and n > 1:
+            model.add(scene_at[0] < scene_at[n - 1])
 
         # --- Solve ---
         solver = cp_model.CpSolver()
