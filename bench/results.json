@@ -1,0 +1,63 @@
+{
+  "_run_sha": "a64970638ef34a2c5d7000b37b8f173b59d398a7",
+  "_generated_at": "2026-09-02T22:11:37Z",
+  "instances": {
+    "MobStory": {
+      "status": "OPTIMAL",
+      "holding": 146,
+      "total": 871,
+      "solve_ms": 9607,
+      "matched": true
+    },
+    "film103": {
+      "status": "OPTIMAL",
+      "holding": 187,
+      "total": 1031,
+      "solve_ms": 1467,
+      "matched": true
+    },
+    "film105": {
+      "status": "OPTIMAL",
+      "holding": 110,
+      "total": 849,
+      "solve_ms": 337,
+      "matched": true
+    },
+    "film114": {
+      "status": "OPTIMAL",
+      "holding": 143,
+      "total": 867,
+      "solve_ms": 627,
+      "matched": true
+    },
+    "film116": {
+      "status": "OPTIMAL",
+      "holding": 110,
+      "total": 541,
+      "solve_ms": 2861,
+      "matched": true
+    },
+    "film117": {
+      "status": "OPTIMAL",
+      "holding": 197,
+      "total": 913,
+      "solve_ms": 1200,
+      "matched": true
+    },
+    "film118": {
+      "status": "OPTIMAL",
+      "holding": 156,
+      "total": 853,
+      "solve_ms": 1264,
+      "matched": true
+    },
+    "film119": {
+      "status": "OPTIMAL",
+      "holding": 159,
+      "total": 790,
+      "solve_ms": 555,
+      "matched": true
+    }
+  },
+  "benchmark_matched": "8/8"
+}

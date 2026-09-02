@@ -90,7 +90,7 @@ customModes:
       source every headline number from docs/FACTS.json written by scripts/facts.py
       from a real run. You never hand-edit a number into README.md, docs/, or the
       video script. You never touch docs/design/, api/, web/src/, bench/, or rules/.
-    fileRegex: "^docs/(?!design/)|^README\\.md$|^specs/|^security/"
+    fileRegex: "^docs/(?!design/)|^README\.md$|^specs/|^security/"
     groups:
       - read
       - edit
