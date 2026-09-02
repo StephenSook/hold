@@ -1,61 +1,61 @@
 {
-  "_run_sha": "12a7424e595d190088807a56549f5397a437bab7",
-  "_generated_at": "2026-09-02T22:38:08Z",
+  "_run_sha": "e73aca4bf13cbe963d9f9aa8ad7648525992e521",
+  "_generated_at": "2026-09-02T23:05:58Z",
   "instances": {
     "MobStory": {
       "status": "OPTIMAL",
       "holding": 146,
       "total": 871,
-      "solve_ms": 9761,
+      "solve_ms": 10019,
       "matched": true
     },
     "film103": {
       "status": "OPTIMAL",
       "holding": 187,
       "total": 1031,
-      "solve_ms": 1434,
+      "solve_ms": 1489,
       "matched": true
     },
     "film105": {
       "status": "OPTIMAL",
       "holding": 110,
       "total": 849,
-      "solve_ms": 327,
+      "solve_ms": 335,
       "matched": true
     },
     "film114": {
       "status": "OPTIMAL",
       "holding": 143,
       "total": 867,
-      "solve_ms": 623,
+      "solve_ms": 652,
       "matched": true
     },
     "film116": {
       "status": "OPTIMAL",
       "holding": 110,
       "total": 541,
-      "solve_ms": 2877,
+      "solve_ms": 3030,
       "matched": true
     },
     "film117": {
       "status": "OPTIMAL",
       "holding": 197,
       "total": 913,
-      "solve_ms": 1198,
+      "solve_ms": 1191,
       "matched": true
     },
     "film118": {
       "status": "OPTIMAL",
       "holding": 156,
       "total": 853,
-      "solve_ms": 1265,
+      "solve_ms": 1245,
       "matched": true
     },
     "film119": {
       "status": "OPTIMAL",
       "holding": 159,
       "total": 790,
-      "solve_ms": 635,
+      "solve_ms": 553,
       "matched": true
     }
   },
