@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-09-02T20:26:50.349199+00:00",
+  "workspace": "/Users/stephensookra/dev/Agentic Cinema",
+  "note": "task_count includes all Bob tasks in this install, not only HOLD tasks, because the directory field is empty in this Bob db version. Visual corroboration: Bobcoin gauge screenshots in this directory.",
+  "task_count": 6,
+  "total_cost_usd": 125.494236,
+  "total_input_tokens": 0,
+  "total_output_tokens": 0,
+  "attribution_log_count": 0,
+  "tasks": [
+    {
+      "id": "e87f2af5a1b02a571ef7f09d0cfbecb1",
+      "title": "",
+      "status": "active",
+      "cost_usd": 0.0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1786579370277
+    },
+    {
+      "id": "1087001089481f4fc27508996cca2e10",
+      "title": "All right I currently have PlanMon turned on. What I want you to do is read ever",
+      "status": "error",
+      "cost_usd": 99.58666000000004,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1786902496626
+    },
+    {
+      "id": "27d2c809570b0f272b265c563e381688",
+      "title": "Research Stephen Sookra's GitHub README style across his public repos. Look at t",
+      "status": "completed",
+      "cost_usd": 0.00373,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1786905785191
+    },
+    {
+      "id": "d3bb01ddc769afe7635f1b359fd2f14a",
+      "title": "Use the GitHub CLI to fetch the README content from the following GitHub repos o",
+      "status": "completed",
+      "cost_usd": 0.003586,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1786912996625
+    },
+    {
+      "id": "dc616dac4dcc72175b935778ee5bc738",
+      "title": "",
+      "status": "active",
+      "cost_usd": 0.0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1786938323229
+    },
+    {
+      "id": "e98c6940e2b6e51abc8ec5d1f16f803d",
+      "title": "You are IBM Bob working in the workspace \"Agentic Cinema\" with Stephen. We are b",
+      "status": "running",
+      "cost_usd": 25.90026000000001,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "created_at": 1788377483935
+    }
+  ]
+}
