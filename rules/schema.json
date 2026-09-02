@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HOLD Rules Record",
+  "description": "Schema for every record in rules/*.yaml. citation and quote are required; a record missing either is UNVERIFIABLE and excluded from all claims.",
+  "type": "object",
+  "required": ["id", "jurisdiction", "authority", "citation", "title", "quote", "source_url", "valid_from", "verified"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique rule id, snake_case. Example: GA_300_7_1_03_school_night_curfew"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "enum": ["CA", "GA", "SAG-AFTRA", "FEDERAL"],
+      "description": "Primary jurisdiction this rule applies to."
+    },
+    "authority": {
+      "type": "string",
+      "description": "Issuing body. Example: Georgia Department of Labor"
+    },
+    "citation": {
+      "type": "string",
+      "description": "Exact legal citation. Example: Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short human-readable rule name shown in the verdict card."
+    },
+    "quote": {
+      "type": "string",
+      "description": "Verbatim sentence from the statute or handbook. Required; record is UNVERIFIABLE without it."
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Deep link to the source document."
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date from which this record is effective. Inclusive."
+    },
+    "valid_to": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "ISO date after which this record is no longer effective. Null = indefinitely valid."
+    },
+    "params": {
+      "type": ["object", "null"],
+      "description": "Rule-specific numeric parameters keyed by name. Example: {max_work_hours: 5, curfew_school_night: '22:00'}",
+      "additionalProperties": true
+    },
+    "verified": {
+      "type": "string",
+      "enum": ["VERIFIED", "UNVERIFIABLE", "PENDING"],
+      "description": "VERIFIED: quote confirmed against source snapshot in rules/sources/. UNVERIFIABLE: source not accessible. PENDING: not yet checked."
+    },
+    "note": {
+      "type": ["string", "null"],
+      "description": "Optional free-text note for unusual interpretation or caveats."
+    }
+  }
+}
