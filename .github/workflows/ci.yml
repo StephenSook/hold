@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  api-lint:
+    name: API lint (ruff + mypy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run ruff check api/
+      - run: uv run mypy api/ --ignore-missing-imports
+
+  api-test:
+    name: API tests (pytest hermetic)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run pytest api/tests -q -m "not network"
+
+  residual:
+    name: Residual (benchmark 8/8)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run pytest api/tests/test_bench_identity.py api/tests/test_residual.py api/tests/test_checker.py api/tests/test_bruteforce.py api/tests/test_props.py api/tests/test_symmetry.py -v
+        env:
+          HOLD_FAKE_EXTERNALS: "0"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bench-results
+          path: bench/results.json
+
+  web-check:
+    name: Web (tsc + eslint + vitest + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - name: Check web scaffold exists
+        id: web_exists
+        run: |
+          if [ -f "web/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "web/package.json not found - scaffold pending (task 0.10, Deem lane)"
+          fi
+      - if: steps.web_exists.outputs.exists == 'true'
+        working-directory: web
+        run: npm ci
+      - if: steps.web_exists.outputs.exists == 'true'
+        working-directory: web
+        run: npx tsc --noEmit
+      - if: steps.web_exists.outputs.exists == 'true'
+        working-directory: web
+        run: npm run test
+      - if: steps.web_exists.outputs.exists == 'true'
+        working-directory: web
+        run: npm run build
+
+  em-dash-gate:
+    name: Em-dash gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: bash scripts/no_em_dash.sh
+
+  license-guard:
+    name: License guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run pip-licenses --from=mixed --order=license --fail-on="GPL;AGPL;LGPL;SSPL;Commons Clause" 2>/dev/null || uv run python scripts/check_licenses.py
+
+  gitleaks:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  bob-attribution:
+    name: Bob attribution current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - run: uv run pytest api/tests/test_bob_attribution.py api/tests/test_bob_lane_enforcement.py -v
