@@ -54,7 +54,7 @@ class BenchmarkModel:
         model.add_inverse(pos, scene_at)
         model.add_all_different(pos)
 
-        obj_terms: list = []
+        obj_terms: list[cp_model.LinearExprT] = []
 
         for actor in range(j_count):
             in_scenes = [i for i in range(n) if inst.ia[actor][i] == 1]
@@ -99,7 +99,7 @@ class BenchmarkModel:
 
         # --- Objective ---
         if obj_terms:
-            model.minimize(sum(obj_terms))
+            model.minimize(cp_model.LinearExpr.sum(obj_terms))
         else:
             model.minimize(model.new_constant(0))
 

@@ -1,5 +1,5 @@
 """Task 0.15: Verify GEMINI_MODEL is a 3.x id, not a 2.5 id."""
-from api.hold.config import GEMINI_MODEL, GOOGLE_CLOUD_LOCATION, ADK_VERSION
+from api.hold.config import ADK_VERSION, GEMINI_MODEL, GOOGLE_CLOUD_LOCATION
 
 
 def test_gemini_model_is_not_2_5() -> None:

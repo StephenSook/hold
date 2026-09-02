@@ -67,10 +67,11 @@ def test_residual(name: str) -> None:
 
 def test_write_results_json() -> None:
     """After all instances solve, write bench/results.json with the run SHA."""
-    results: dict = {
+    instances: dict[str, object] = {}
+    results: dict[str, object] = {
         "_run_sha": _get_run_sha(),
         "_generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "instances": {},
+        "instances": instances,
     }
 
     for name in MEDIUM_INSTANCES:
@@ -82,7 +83,7 @@ def test_write_results_json() -> None:
             and result.holding == published.get("holding")
             and result.total == published.get("total")
         )
-        results["instances"][name] = {
+        instances[name] = {
             "status": result.status,
             "holding": result.holding,
             "total": result.total,
@@ -90,7 +91,7 @@ def test_write_results_json() -> None:
             "matched": matched,
         }
 
-    matched_count = sum(1 for v in results["instances"].values() if v["matched"])
+    matched_count = sum(1 for v in instances.values() if isinstance(v, dict) and v.get("matched"))
     results["benchmark_matched"] = (
         f"{matched_count}/{len(MEDIUM_INSTANCES)}"
     )

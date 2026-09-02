@@ -2,8 +2,11 @@
 Task 1.9: Verify all shared contract fixtures validate against their Pydantic models.
 These fixtures are what Deem builds the web app against.
 """
+from __future__ import annotations
+
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -17,8 +20,8 @@ from api.hold.schemas import (
 FIXTURES = Path(__file__).parent.parent.parent / "data" / "fixtures" / "contracts"
 
 
-def _load(name: str) -> dict:  # type: ignore[type-arg]
-    return json.loads((FIXTURES / name).read_text())
+def _load(name: str) -> dict[str, Any]:
+    return json.loads((FIXTURES / name).read_text())  # type: ignore[no-any-return]
 
 
 def test_schedule_input_fixture_validates() -> None:
@@ -85,7 +88,7 @@ def test_solve_result_fixture_validates() -> None:
     ("verdict-illegal.json", Verdict),
     ("solve-result.json", SolveResult),
 ])
-def test_all_fixtures_parse(filename: str, model_cls: type) -> None:  # type: ignore[type-arg]
+def test_all_fixtures_parse(filename: str, model_cls: type[Any]) -> None:
     data = _load(filename)
     obj = model_cls.model_validate(data)
     assert obj is not None
