@@ -7,8 +7,6 @@ from __future__ import annotations
 
 from datetime import date
 
-import pytest
-
 from api.hold.penalties import hold_day_cost_cents, hold_days_total_cents
 from api.hold.schemas import CastMember
 

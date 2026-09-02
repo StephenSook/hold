@@ -9,13 +9,12 @@ This module computes the raw values; facts.py writes the headline.
 """
 from __future__ import annotations
 
-from decimal import ROUND_HALF_UP, Decimal
 from datetime import date
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from api.hold.registry import RuleRecord, load_rules
 from api.hold.schemas import CastMember
-
 
 _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
 
@@ -23,9 +22,8 @@ _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
 def _get_ph_rate_bps(shooting_date: date, rules: list[RuleRecord]) -> int:
     """Return the P&H rate in basis points for a given shooting date."""
     for rule in rules:
-        if rule.id in ("SAG_RATES_PH_21_PCT", "SAG_RATES_PH_22_PCT"):
-            if rule.params and "ph_rate_bps" in rule.params:
-                return int(rule.params["ph_rate_bps"])
+        if rule.id in ("SAG_RATES_PH_21_PCT", "SAG_RATES_PH_22_PCT") and rule.params and "ph_rate_bps" in rule.params:
+            return int(rule.params["ph_rate_bps"])
     # Fallback to 2100 bps (21%) if no rule matched - should not happen
     return 2100
 
