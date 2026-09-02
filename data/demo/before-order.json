@@ -1,0 +1,8 @@
+{
+  "_note": "Unoptimized 'before' scene order - 7 hold days incurred. Solver produces before-order -> after-order delta.",
+  "scene_order": ["s1","s3","s7","s9","s2","s5","s6","s8","s4","s10"],
+  "hold_days": 7,
+  "illegal_days": 1,
+  "illegal_day_index": 3,
+  "illegal_reason": "Day 3 (2026-10-08 school day): minor M wrap 21:30 exceeds GA 10 p.m. school-night curfew (Rule 300-7-1-.03)"
+}
