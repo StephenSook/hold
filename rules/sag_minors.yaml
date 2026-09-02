@@ -1,0 +1,79 @@
+# SAG-AFTRA Minor Performer Rules
+# Source: SAG-AFTRA Young Performers Handbook (2022 edition, 2026 amendment)
+#   https://www.sagaftra.org/files/youngperformers_handbook.pdf
+# 2026 Chaperone amendment: ratified 2026-06-15, effective 2026-07-01
+# D4: PENDING records must be upgraded to VERIFIED with snapshot before submission.
+
+- id: SAG_MINORS_P17_CUMULATIVE_JURISDICTION
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook p. 17
+  title: Cumulative jurisdiction - stricter of state or SAG rules applies
+  quote: |
+    Where a state or local law or regulation provides greater protection to a performer
+    than this Agreement, the state or local law or regulation shall apply. Where this
+    Agreement provides greater protection, this Agreement shall apply. In all cases the
+    more protective provision controls.
+  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
+  valid_from: "2022-01-01"
+  valid_to: null
+  params: null
+  verified: PENDING
+  note: >
+    Implements D5 (cumulative jurisdiction). Cross-references 8 CCR 11756 and
+    GA 300-7-1-.01. Checker must apply stricter of state or SAG limit on each field.
+
+- id: SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook p. 22
+  title: Minor 12-hour turnaround before school day
+  quote: |
+    There must be a minimum of twelve (12) consecutive hours of rest between the end of
+    one work day and the beginning of the next work day when a performer under eighteen
+    (18) years of age is scheduled to attend school the following day.
+  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
+  valid_from: "2022-01-01"
+  valid_to: null
+  params:
+    min_turnaround_hours: 12
+  verified: PENDING
+  note: Applies when next day has school_day=true in ScheduleInput.
+
+- id: SAG_MINORS_P23_INFANT_RESTRICTION
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook p. 23
+  title: Infant restriction - 15 days old minimum, 2 hours max work
+  quote: |
+    Infants under the age of six (6) months shall not be employed unless they are at
+    least fifteen (15) days old. No infant under six (6) months of age shall be employed
+    for more than two (2) hours in any one day.
+  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
+  valid_from: "2022-01-01"
+  valid_to: null
+  params:
+    min_age_days: 15
+    max_work_hours_infant: 2
+    infant_age_months_max: 6
+  verified: PENDING
+  note: Nationwide restriction. Applies regardless of state law. Out of scope for demo (minor M is 14).
+
+- id: SAG_MINORS_2026_CHAPERONE_UNDER_16
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Young Performers Amendment, Section 4(c)
+  title: Chaperone required for all performers under 16 on set
+  quote: |
+    Effective July 1, 2026, a parent, guardian, or approved chaperone must be present on
+    set at all times when a performer under sixteen (16) years of age is working or on
+    call.
+  source_url: https://www.sagaftra.org/
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    chaperone_required_age_under: 16
+  verified: PENDING
+  note: >
+    2026 amendment. Display fact only - not modeled as a CP-SAT scheduling constraint
+    because it does not affect the shoot order or day assignment.

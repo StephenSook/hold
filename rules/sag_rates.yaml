@@ -1,0 +1,122 @@
+# SAG-AFTRA Daily Rates and Hold Day Rules
+# Source: SAG-AFTRA 2026 Theatrical/TV Agreement (ratified 2026)
+#   https://www.sagaftra.org/production-center/contract/856/minimum-rates
+# P&H rate: 21% through 2026-09-05; 22% from 2026-09-06
+# All figures in integer cents. Rounding: standard half-up on final dollar amount.
+# D4: PENDING records must be upgraded to VERIFIED before submission.
+
+- id: SAG_RATES_LOW_BUDGET_DAY
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Low Budget Agreement, Schedule of Minimums
+  title: Low Budget daily minimum rate
+  quote: |
+    The daily minimum rate for performers under the Low Budget Agreement shall be
+    eight hundred ten dollars ($810) per day.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: null
+  params:
+    day_rate_cents: 81000
+    rate_tier: low_budget
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_LOW_BUDGET_WEEK
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Low Budget Agreement, Schedule of Minimums
+  title: Low Budget weekly minimum rate
+  quote: |
+    The weekly minimum rate for performers under the Low Budget Agreement shall be
+    two thousand eight hundred twelve dollars ($2,812) per week.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: null
+  params:
+    week_rate_cents: 281200
+    rate_tier: low_budget
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_MODERATE_LOW_DAY
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Moderate Low Budget Agreement, Schedule of Minimums
+  title: Moderate Low Budget daily minimum rate
+  quote: |
+    The daily minimum rate for performers under the Moderate Low Budget Agreement shall
+    be four hundred forty-nine dollars and five cents ($449.05) per day.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: null
+  params:
+    day_rate_cents: 44905
+    rate_tier: moderate_low
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_ULTRA_LOW_DAY
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Ultra Low Budget Agreement, Schedule of Minimums
+  title: Ultra Low Budget daily minimum rate
+  quote: |
+    The daily minimum rate for performers under the Ultra Low Budget Agreement shall be
+    two hundred forty-nine dollars ($249) per day.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: null
+  params:
+    day_rate_cents: 24900
+    rate_tier: ultra_low
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_PH_21_PCT
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Agreement, Pension and Health Contribution Schedule
+  title: P&H contribution rate 21% through 2026-09-05
+  quote: |
+    The Pension and Health contribution rate shall be twenty-one percent (21%) of
+    applicable compensation for the period through September 5, 2026.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: "2026-09-05"
+  params:
+    ph_rate_bps: 2100
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_PH_22_PCT
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Agreement, Pension and Health Contribution Schedule
+  title: P&H contribution rate 22% from 2026-09-06
+  quote: |
+    Effective September 6, 2026, the Pension and Health contribution rate shall be
+    twenty-two percent (22%) of applicable compensation.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-09-06"
+  valid_to: null
+  params:
+    ph_rate_bps: 2200
+  verified: PENDING
+  note: null
+
+- id: SAG_RATES_HOLD_DAY_FULL_RATE
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA 2026 Agreement, General Provisions, Hold Days
+  title: Hold day billed at full daily rate
+  quote: |
+    When a performer is held and not working, the employer shall pay the performer the
+    full daily minimum rate for each hold day.
+  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+  valid_from: "2026-01-01"
+  valid_to: null
+  params:
+    hold_day_rate_multiplier: 1.0
+  verified: PENDING
+  note: This is the core economic fact the solver minimizes. Hold days = full daily rate.

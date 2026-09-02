@@ -57,6 +57,7 @@ def _load_yaml_records(path: Path) -> list[dict[str, Any]]:
     in_quote_block = False
     quote_lines: list[str] = []
     quote_indent = 0
+    in_params_block = False
 
     lines = text.splitlines()
     i = 0
@@ -72,6 +73,7 @@ def _load_yaml_records(path: Path) -> list[dict[str, Any]]:
                     quote_lines = []
                 records.append(current)
             current = {"id": re.sub(r"^- id:\s*", "", line).strip().strip("\"'")}
+            in_params_block = False
             i += 1
             continue
 
@@ -85,6 +87,7 @@ def _load_yaml_records(path: Path) -> list[dict[str, Any]]:
         m = re.match(r"^  (quote):\s*\|", line)
         if m:
             in_quote_block = True
+            in_params_block = False
             quote_lines = []
             quote_indent = len(line) - len(line.lstrip()) + 2
             i += 1
@@ -102,6 +105,43 @@ def _load_yaml_records(path: Path) -> list[dict[str, Any]]:
                 quote_lines.append(stripped)
                 i += 1
                 continue
+
+        # Detect start of params block
+        # "  params: null" or "  params: ~"  -> None, no sub-block
+        # "  params:"  (empty)               -> start sub-block (sub-keys follow)
+        m_params = re.match(r"^  params:\s*(.*)", line)
+        if m_params:
+            val = m_params.group(1).strip().strip("\"'")
+            if val.lower() in ("null", "~"):
+                current["params"] = None
+                in_params_block = False
+            else:
+                # Empty or has inline content: start sub-block
+                current["params"] = {}
+                in_params_block = True
+            i += 1
+            continue
+
+        # Parse params sub-keys (4-space indent)
+        if in_params_block:
+            m_sub = re.match(r"^    (\w+):\s*(.*)", line)
+            if m_sub:
+                pk, pv = m_sub.group(1), m_sub.group(2).strip().strip("\"'")
+                if not isinstance(current.get("params"), dict):
+                    current["params"] = {}
+                # Coerce numeric values
+                try:
+                    current["params"][pk] = int(pv)
+                except ValueError:
+                    try:
+                        current["params"][pk] = float(pv)
+                    except ValueError:
+                        current["params"][pk] = pv
+                i += 1
+                continue
+            else:
+                in_params_block = False
+                # fall through to process current line as top-level field
 
         # Regular key: value pairs (indented under the record)
         m = re.match(r"^  (\w+):\s*(.*)", line)
