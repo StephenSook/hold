@@ -1,0 +1,73 @@
+# Standing ~/dev convention.
+# One folder, one project. Code is built at THIS root, beside the research.
+# The research haul is the competitive moat and never reaches GitHub.
+# Stage named paths. Never `git add -A`. Verify with `git ls-files` before any push.
+
+# Research haul: Phase 0 dossiers, recon passes, build specs, outreach records.
+*.pdf
+*.txt.pdf
+/research/
+/private/
+
+# Assistant config stays local (strategy-laden, never committed)
+/CLAUDE.md
+/AGENTS.md
+.claude/
+.playwright-mcp/
+
+# Env + secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+id_rsa
+service-account*.json
+
+# Deps + build
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Test + tooling output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# OS / IDE
+.DS_Store
+.AppleDouble
+._*
+.vscode/
+.idea/
+*.swp
+*.log
+
+# Local scratch
+/scratch/
+
+# Added 2026-09-02 (HOLD Phase 0)
+.mcp.json
+.cursor/
+.cursorrules
+.github/copilot-instructions.md
+*.icloud
+research-cache/
+docs/video/raw/
+*.jks
+*.keystore
+rules/sources-cache/
