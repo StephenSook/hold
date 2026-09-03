@@ -217,7 +217,7 @@ Columns: # | Task | Files | Owner | Status | Deps | Done means | Notes. The lock
 | 6.2 | Upload to YouTube, public, English; confirm oEmbed 200 AND `playabilityStatus: OK` logged out | n/a | Stephen | ⬜ TODO | 6.1 | Both checks recorded in Notes | n/a |
 | 6.3 | Devpost: every field, track IBM, repo URL, hosted URL, video URL, Google Cloud products, other tools, team count 2; SUBMIT by 21:00 ET; reload and re-read every field | n/a | Stephen | ⬜ TODO | 6.2, 5.5 | Project shows Submitted; every field re-read after reload | n/a |
 | 6.4 | Gallery images captioned; thumbnail is the before/after frame | `docs/submission-assets/**` | Deem | ⬜ TODO | 5.6 | Uploaded and visible on the project page | n/a |
-| 6.5 | Click every link on every judge-facing surface from a logged-out browser and a phone; table of URL, status and expected title committed | `JUDGE.md` | both | ⬜ TODO | 6.3 | Every link 200 with the expected title | n/a |
+| 6.5 | Click every link on every judge-facing surface from a logged-out browser and a phone; table of URL, status and expected title committed | `JUDGE.md` | both | 🟡 WIP | 6.3 | Every link 200 with the expected title | WIP 2026-09-03 15:15 Stephen: desktop half: scripts/check_links.py fetches every URL and path linked from README.md and JUDGE.md; docs/links-check.md is the committed run; the phone pass and the logged-out browser pass wait for the web app |
 | 6.6 | Phase 6 boundary: export, screenshots both accounts | `docs/bob-evidence/**` | both | ⬜ TODO | 0.13 | Committed with dates | n/a |
 
 ### Phase 7: Freeze and final (Tue Sep 9)
