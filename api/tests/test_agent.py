@@ -113,3 +113,13 @@ def test_extract_reports_an_unexpected_failure_as_502_with_the_cause(monkeypatch
     detail = response.json()["detail"]
     assert "RuntimeError" in detail
     assert "model endpoint said no" not in detail  # the message may carry internal paths; it goes to the log only
+
+
+def test_extraction_agent_carries_no_tools() -> None:
+    """Extraction is one structured answer; the tools belong to the conversational agent only."""
+    from api.agents.hold_agent.agent import extract_agent
+
+    assert extract_agent.name == "hold_extract"
+    assert extract_agent.tools == []
+    assert extract_agent.output_schema is ExtractResult
+    assert extract_agent.model == GEMINI_MODEL

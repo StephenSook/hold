@@ -24,3 +24,17 @@ root_agent = LlmAgent(
     disallow_transfer_to_parent=True,
     disallow_transfer_to_peers=True,
 )
+
+# Extraction never calls a tool (a human confirms before anything is solved), so the extraction
+# route runs this tool-less twin: one structured answer per request. The first live run showed
+# the tool-bearing agent spending its call budget on function calls instead of answering.
+extract_agent = LlmAgent(
+    name="hold_extract",
+    model=GEMINI_MODEL,
+    description="Turns one film production document into a HOLD ExtractResult, with no tools.",
+    instruction=INSTRUCTION,
+    tools=[],
+    output_schema=ExtractResult,
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
+)

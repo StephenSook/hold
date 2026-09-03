@@ -9,12 +9,13 @@ import asyncio
 import os
 import uuid
 
+from google.adk.agents import LlmAgent
 from google.adk.agents.run_config import RunConfig
 from google.adk.runners import Runner
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
 
-from api.agents.hold_agent.agent import root_agent
+from api.agents.hold_agent.agent import extract_agent, root_agent
 from api.hold.schemas import ExtractResult
 
 APP_NAME = "hold"
@@ -33,14 +34,14 @@ def is_configured() -> bool:
     return os.environ.get("HOLD_FAKE_EXTERNALS", "0") != "1" and bool(os.environ.get("GOOGLE_CLOUD_PROJECT"))
 
 
-def build_runner() -> Runner:
+def build_runner(agent: LlmAgent = root_agent) -> Runner:
     session_service = InMemorySessionService()  # type: ignore[no-untyped-call]  # ADK ships no annotations here
-    return Runner(agent=root_agent, app_name=APP_NAME, session_service=session_service)
+    return Runner(agent=agent, app_name=APP_NAME, session_service=session_service)
 
 
 async def extract(text: str, image: bytes | None = None, mime_type: str = "image/png", timeout_s: float = EXTRACT_TIMEOUT_S) -> ExtractResult:
     """One request, one session, at most MAX_LLM_CALLS model calls, one ExtractResult; TimeoutError after timeout_s."""
-    runner = build_runner()
+    runner = build_runner(extract_agent)  # tool-less: extraction is one structured answer
     session = await runner.session_service.create_session(app_name=APP_NAME, user_id="api", session_id=uuid.uuid4().hex)
     parts = [types.Part.from_text(text=text)]
     if image is not None:
