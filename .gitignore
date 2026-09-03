@@ -69,3 +69,6 @@ docs/video/raw/
 *.jks
 *.keystore
 rules/sources-cache/
+
+# ADK eval and session artifacts written beside the agent
+.adk/
