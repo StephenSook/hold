@@ -18,7 +18,7 @@
     age_min: 9
     age_max: 15
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 9 years to 16 years".
 
 - id: GA_300_7_1_03_ages_9_15_work_hours
   jurisdiction: GA
@@ -35,7 +35,7 @@
     age_min: 9
     age_max: 15
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 9 years to 16 years".
 
 - id: GA_300_7_1_03_school_night_curfew
   jurisdiction: GA
@@ -53,7 +53,7 @@
     age_min: 9
     age_max: 15
   verified: VERIFIED
-  note: School Night is defined in 300-7-1-.02 as any time after 6:00 P.M. the night before a school day. The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: School Night is defined in 300-7-1-.02 as any time after 6:00 P.M. the night before a school day. The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 9 years to 16 years".
 
 - id: GA_300_7_1_03_non_school_night_curfew
   jurisdiction: GA
@@ -71,7 +71,7 @@
     age_min: 9
     age_max: 15
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 9 years to 16 years".
 
 - id: GA_300_7_1_03_ages_16_17_location_hours
   jurisdiction: GA
@@ -89,7 +89,7 @@
     age_min: 16
     age_max: 17
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 16 years to 18 years".
 
 - id: GA_300_7_1_03_ages_16_17_work_hours
   jurisdiction: GA
@@ -106,7 +106,7 @@
     age_min: 16
     age_max: 17
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 16 years to 18 years".
 
 - id: GA_300_7_1_03_ages_16_17_school_night_curfew
   jurisdiction: GA
@@ -124,7 +124,7 @@
     age_min: 16
     age_max: 17
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 16 years to 18 years".
 
 - id: GA_300_7_1_03_ages_16_17_non_school_night_curfew
   jurisdiction: GA
@@ -142,7 +142,7 @@
     age_min: 16
     age_max: 17
   verified: VERIFIED
-  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule. Age bracket from the form heading, evidence[ga-schedule-of-hours-of-performance.txt]: "Minors between the ages of 16 years to 18 years".
 
 - id: GA_300_7_1_03_earliest_call
   jurisdiction: GA
@@ -211,7 +211,7 @@
     next_meal_within_hours_of_previous_start: 7
     min_meal_duration_minutes: 30
   verified: VERIFIED
-  note: Timing-only: judged on a concrete call sheet, never on the crew window. The 30-minute minimum is the form's alternative at (g)(3)(i) ('30-minute meal break'); HOLD models one crew meal per day.
+  note: Timing-only: judged on a concrete call sheet, never on the crew window. The 30-minute minimum is the form's alternative at (g)(3)(i) ('30-minute meal break'); HOLD models one crew meal per day. Meal length from the form, evidence[ga-schedule-of-hours-of-performance.txt]: "30-minute meal break".
 
 - id: GA_300_7_1_09_studio_teacher_ratio
   jurisdiction: GA

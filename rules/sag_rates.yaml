@@ -163,7 +163,7 @@
   params:
     hold_day_rate_multiplier: 1.0
   verified: VERIFIED
-  note: The economic fact the solver minimizes, on an overnight location under the low-budget tiers; the day's pay is the tier's daily minimum plus P&H.
+  note: The economic fact the solver minimizes, on an overnight location under the low-budget tiers; the day's pay is the tier's daily minimum plus P&H. assumption: 1.0 (the FAQ says the consecutive day is paid and names no multiplier, so the tier day rate is taken at face value).
 
 - id: SAG_RATES_BASIC_CONSECUTIVE_EMPLOYMENT
   jurisdiction: SAG-AFTRA

@@ -100,7 +100,7 @@
     age_min: 9
     age_max: 15
   verified: VERIFIED
-  note: 7 is the school-day figure (5) plus the two additional hours the quoted sentence allows.
+  note: 7 is the school-day figure (5) plus the two additional hours the quoted sentence allows. derived: 7 = 5 + 2; the five hours and the bracket from the handbook line, evidence: "Ages 9 to 15 - five hours".
 
 - id: SAG_MINORS_16_17_ON_SET_HOURS
   jurisdiction: SAG-AFTRA
@@ -152,7 +152,7 @@
     age_min: 16
     age_max: 17
   verified: VERIFIED
-  note: 8 is the school-day figure (6) plus the two additional hours the quoted sentence allows.
+  note: 8 is the school-day figure (6) plus the two additional hours the quoted sentence allows. derived: 8 = 6 + 2; the six hours and the bracket from the handbook line, evidence: "Ages 16 and 17 - six hours".
 
 - id: SAG_MINORS_MEAL_AND_REST
   jurisdiction: SAG-AFTRA

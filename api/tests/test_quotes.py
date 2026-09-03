@@ -9,7 +9,13 @@ import json
 import shutil
 from pathlib import Path
 
-from api.hold.quotes import normalize, quote_matches, snapshot_variants, verify_rules
+from api.hold.quotes import (
+    normalize,
+    number_candidates,
+    quote_matches,
+    snapshot_variants,
+    verify_rules,
+)
 
 ROOT = Path(__file__).parents[2]
 RULES = ROOT / "rules"
@@ -72,3 +78,30 @@ def test_a_missing_entry_turns_the_check_red(tmp_path: Path) -> None:
     (rules_copy / "verification.json").write_text(json.dumps(ver))
     problems, _ = verify_rules(rules_copy, rules_copy / "sources", rules_copy / "verification.json")
     assert any(p.record_id == "CA_11760_i_turnaround_12_hours" and "no entry" in p.what for p in problems), problems
+
+
+def test_a_mutated_param_turns_the_check_red(tmp_path: Path) -> None:
+    """A number in params that no verified sentence states is a fabrication the quote check alone
+    cannot see: 30 to 45 minutes must be reported."""
+    rules_copy = tmp_path / "rules"
+    shutil.copytree(RULES, rules_copy)
+    ga = rules_copy / "ga.yaml"
+    text = ga.read_text()
+    assert text.count("min_meal_duration_minutes: 30") == 1
+    ga.write_text(text.replace("min_meal_duration_minutes: 30", "min_meal_duration_minutes: 45"))
+    problems, _ = verify_rules(rules_copy, rules_copy / "sources", rules_copy / "verification.json")
+    assert [p.record_id for p in problems] == ["GA_300_7_1_03_first_meal_within_6_hours"], problems
+    assert "min_meal_duration_minutes=45" in problems[0].what
+
+
+def test_assumed_params_are_exactly_the_known_set() -> None:
+    _, counts = verify_rules(RULES, SOURCES, VERIFICATION)
+    assert counts["assumed_params"] == 1, counts  # hold_day_rate_multiplier: the FAQ says the day is paid, not a multiplier
+
+
+def test_number_candidates_cover_the_ways_sources_write_numbers() -> None:
+    assert "sixteen" in number_candidates("age_max", 15)  # exclusive upper bound phrasing
+    assert "21%" in number_candidates("ph_rate_bps", 2100)
+    assert "half" in number_candidates("max_meal_extension_minutes", 30)
+    assert "$834" in number_candidates("day_rate_cents", 83400)
+    assert "five hundred" in number_candidates("threshold_usd", 500)
