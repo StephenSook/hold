@@ -50,10 +50,16 @@ def test_status_is_cached_for_ten_minutes(client: TestClient) -> None:
     assert client.get("/api/status").status_code == 200
 
 
-def test_live_mode_is_named_when_fakes_are_off(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_live_mode_is_named_only_when_extraction_can_run(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "0")
+    monkeypatch.delenv("GOOGLE_CLOUD_PROJECT", raising=False)
     reset_cache()
-    assert TestClient(app).get("/api/status").json()["runtime"]["mode"] == "live"
+    runtime = TestClient(app).get("/api/status").json()["runtime"]
+    assert runtime["mode"] == "unconfigured" and runtime["extraction"]["configured"] is False
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "hold-2026")
+    reset_cache()
+    runtime = TestClient(app).get("/api/status").json()["runtime"]
+    assert runtime["mode"] == "live" and runtime["extraction"]["configured"] is True
     reset_cache()
 
 

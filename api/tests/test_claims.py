@@ -9,6 +9,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from api.hold.claims import VOCABULARY, claim_problems, judge_facing_surfaces
 from api.routes.status import build_status
 
@@ -16,7 +18,24 @@ ROOT = Path(__file__).parents[2]
 
 
 def _runtime() -> dict[str, Any]:
-    runtime: dict[str, Any] = build_status()["runtime"]
+    """The deployment posture: Vertex configured, fakes off (what the judged instance reports)."""
+    import os
+
+    from api.routes.status import reset_cache
+
+    saved = {k: os.environ.get(k) for k in ("GOOGLE_CLOUD_PROJECT", "HOLD_FAKE_EXTERNALS")}
+    os.environ["GOOGLE_CLOUD_PROJECT"] = "hold-2026"
+    os.environ["HOLD_FAKE_EXTERNALS"] = "0"
+    try:
+        reset_cache()
+        runtime: dict[str, Any] = build_status()["runtime"]
+    finally:
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        reset_cache()
     return runtime
 
 
@@ -52,3 +71,29 @@ def test_streaming_is_conditional_while_confluent_is_not_connected() -> None:
     assert runtime["confluent"]["connected"] is False
     assert claim_problems("Confluent is connected and streaming verdicts live.", runtime)
     assert claim_problems("Streaming: Confluent connected at submission time; live state at /api/status.", runtime) == []
+
+
+def test_gemini_is_a_claim_only_when_extraction_is_configured(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Round four, finding 2: a runtime that names the model but cannot run it backs nothing."""
+    from api.routes.status import reset_cache
+
+    monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "0")
+    monkeypatch.delenv("GOOGLE_CLOUD_PROJECT", raising=False)
+    reset_cache()
+    unconfigured = build_status()["runtime"]
+    assert unconfigured["extraction"]["configured"] is False and unconfigured["mode"] == "unconfigured"
+    assert claim_problems("Gemini through ADK extracts schedules on Vertex AI.", unconfigured)
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "hold-2026")
+    reset_cache()
+    configured = build_status()["runtime"]
+    assert configured["extraction"]["configured"] is True and configured["mode"] == "live"
+    assert claim_problems("Gemini through ADK extracts schedules on Vertex AI.", configured) == []
+    reset_cache()
+
+
+def test_present_tense_streaming_claims_are_not_conditional() -> None:
+    """Round four, finding 3."""
+    runtime = {**_runtime(), "confluent": {**_runtime()["confluent"], "connected": False}}
+    assert claim_problems("Confluent adds live verdict streaming.", runtime)
+    assert claim_problems("Confluent streams live when it receives an event.", runtime)
+    assert claim_problems("Streaming: connected at submission time; live state at /api/status.", runtime) == []

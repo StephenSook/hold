@@ -17,6 +17,7 @@ from typing import Any
 
 from fastapi import APIRouter
 
+from api.agents.hold_agent.runner import is_configured
 from api.hold.config import ADK_VERSION, GEMINI_MODEL, GOOGLE_CLOUD_LOCATION
 from api.hold.facts import HEADLINE_FIELDS
 from api.hold.streaming import BRIDGE
@@ -41,6 +42,8 @@ def build_status() -> dict[str, Any]:
     facts = json.loads((ROOT / "docs" / "FACTS.json").read_text(encoding="utf-8"))
     bench = json.loads((ROOT / "bench" / "results.json").read_text(encoding="utf-8"))
     fake = os.environ.get("HOLD_FAKE_EXTERNALS", "0") == "1"
+    configured = is_configured()
+    mode = "fake externals" if fake else ("live" if configured else "unconfigured")
     return {
         "computed_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
         "cache_ttl_s": int(CACHE_TTL_S),
@@ -57,7 +60,11 @@ def build_status() -> dict[str, Any]:
             "adk_version": _version("google-adk", ADK_VERSION),
             "ortools_version": _version("ortools", "unknown"),
             "confluent": BRIDGE.status(),
-            "mode": "fake externals" if fake else "live",
+            "mode": mode,
+            "extraction": {
+                "configured": configured,
+                "reason": None if configured else ("HOLD_FAKE_EXTERNALS=1: fixtures answer /api/extract" if fake else "GOOGLE_CLOUD_PROJECT unset: /api/extract answers 503"),
+            },
             "invoked_by_this_endpoint": [],
             "note": "This endpoint reads committed files and invokes no model and no broker; Gemini is invoked by "
             "/api/extract and Confluent by /api/set-events once tasks 3.5 and 4.1 land.",

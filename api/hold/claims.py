@@ -14,20 +14,26 @@ Runtime = dict[str, Any]
 
 # (pattern on the surface, predicate on the runtime that backs the claim, what backs it)
 VOCABULARY: list[tuple[re.Pattern[str], Callable[[Runtime], bool]]] = [
-    (re.compile(r"\bgemini\b", re.IGNORECASE), lambda r: str(r.get("gemini_model", "")).startswith("gemini")),
-    (re.compile(r"\b(google-adk|adk)\b", re.IGNORECASE), lambda r: bool(r.get("adk_version"))),
+    (re.compile(r"\bgemini\b", re.IGNORECASE), lambda r: str(r.get("gemini_model", "")).startswith("gemini") and _extraction_configured(r)),
+    (re.compile(r"\b(google-adk|adk)\b", re.IGNORECASE), lambda r: bool(r.get("adk_version")) and _extraction_configured(r)),
     (re.compile(r"\b(cp-sat|or-tools|ortools)\b", re.IGNORECASE), lambda r: r.get("ortools_version") not in (None, "", "unknown")),
-    (re.compile(r"\bvertex\b", re.IGNORECASE), lambda r: bool(r.get("gemini_location"))),
+    (re.compile(r"\bvertex\b", re.IGNORECASE), lambda r: bool(r.get("gemini_location")) and _extraction_configured(r)),
     (re.compile(r"\b(confluent|kafka)\b", re.IGNORECASE), lambda r: isinstance(r.get("confluent"), dict)),
 ]
-_BACKING = ["runtime.gemini_model", "runtime.adk_version", "runtime.ortools_version", "runtime.gemini_location", "runtime.confluent"]
+_BACKING = ["runtime.gemini_model with extraction.configured", "runtime.adk_version with extraction.configured", "runtime.ortools_version", "runtime.gemini_location with extraction.configured", "runtime.confluent"]
+
+
+def _extraction_configured(runtime: Runtime) -> bool:
+    """Naming the model is not enough: the deployed instance must be able to call it."""
+    extraction = runtime.get("extraction") or {}
+    return bool(extraction.get("configured"))
 
 # Never on a judge-facing surface: not in the running system (D5), and the repo's own rule 0.
 FORBIDDEN = re.compile(r"\b(watsonx|granite|claude|anthropic|openai|gpt-[0-9a-z.]+)\b", re.IGNORECASE)
 
 # Model-looking names that must match the reported model exactly when they appear.
 _MODEL_ID = re.compile(r"\b(gemini-[0-9][0-9a-z.\-]*)\b", re.IGNORECASE)
-_CONDITIONAL = re.compile(r"submission time|not connected|until|once|task 4\.1|PLAN\.md|connected: ?false|adds|when it", re.IGNORECASE)
+_CONDITIONAL = re.compile(r"submission time|not connected|until|once|task 4\.1|PLAN\.md|connected: ?false|not yet|will ", re.IGNORECASE)
 
 
 def judge_facing_surfaces(root: Path) -> list[Path]:
