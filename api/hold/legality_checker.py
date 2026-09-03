@@ -51,19 +51,25 @@ _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
 
 # Rules that can only be judged on a concrete timeline (never on the crew-window proxy).
 # The pass-1 solver may name them in a core; the proxy checker never lists them.
-TIMING_ONLY_RULE_IDS = frozenset({"CA_11761_meal_period_6_hours"})
+TIMING_ONLY_RULE_IDS = frozenset({"GA_300_7_1_03_first_meal_within_6_hours"})
 
-# Rules that are display-only (ratios, chaperones) - never flagged as violations
+# Rules that are display-only (definitions, ratios, infants, weekly caps, policy layers).
+# They carry no scheduling keys, so nothing below would fire on them anyway; the set makes
+# the intent explicit and is what the verdict card uses to label them.
 DISPLAY_ONLY_RULE_IDS = frozenset({
     "GA_300_7_1_09_studio_teacher_ratio",
     "GA_300_7_1_04_coordinator_ratio",
-    "CA_11755_1_studio_teacher_in_session",
-    "CA_11755_2_studio_teacher_not_in_session",
-    "SAG_MINORS_2026_CHAPERONE_UNDER_16",
-    "SAG_MINORS_P23_INFANT_RESTRICTION",
-    "SAG_MINORS_P17_CUMULATIVE_JURISDICTION",
-    "CA_11760_e_weekly_cap_48_hours",
+    "GA_300_7_1_02_school_night_definition",
+    "GA_300_7_1_02_location_time_definition",
+    "GA_300_7_1_03_infants",
+    "CA_11755_2_studio_teacher_ratios",
+    "CA_11761_meal_period",
+    "CA_11756_out_of_state_basis",
+    "CA_1308_7_weekly_cap_48_hours",
     "CA_DLSE_SUBTRACT_6_POLICY",
+    "SAG_MINORS_P17_CUMULATIVE_JURISDICTION",
+    "SAG_MINORS_MEAL_AND_REST",
+    "SAG_MINORS_P23_INFANT_RESTRICTION",
 })
 
 
@@ -384,7 +390,7 @@ def _check_location_hours(
             rule_id=rule.id,
             citation=rule.citation,
             title=rule.title,
-            limit=f"{limit:.0f}h at location",
+            limit=f"{limit:g}h at location",
             computed=f"{location_hours:.1f}h at location",
             over_by=f"{over:.1f}h",
             quote=rule.quote,
@@ -475,15 +481,18 @@ def _check_turnaround(
 
 def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
     """
-    Meal within N hours (8 CCR 11761), timeline path only. Same predicate as the solver:
-    a span over the limit requires a meal inside the span, starting within the limit of
-    the call, lasting at least the minimum, and leaving no more than the limit after it.
+    First meal within N hours of start (Ga. 300-7-1-.03(2)(c)), timeline path only. Same
+    predicate as the solver: a span over the limit requires a meal inside the span, starting
+    within the limit of the call, lasting at least the minimum, and followed by no more than
+    `next_meal_within_hours_of_previous_start` hours measured from the meal's start (when the
+    record has no such figure, the limit is measured from the meal's end).
     """
     params = rule.params
     if "max_work_before_meal_hours" not in params:
         return None
     limit_min = int(float(params["max_work_before_meal_hours"]) * 60)
     min_meal = int(params.get("min_meal_duration_minutes", 30))
+    next_from_start = params.get("next_meal_within_hours_of_previous_start")
     call_m = _time_to_minutes(mt.call)
     span = _time_to_minutes(mt.dismiss) - call_m
     if span <= limit_min:
@@ -494,12 +503,17 @@ def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
         ms = _time_to_minutes(mt.meal_start)
         me = _time_to_minutes(mt.meal_end)
         computed = f"meal {mt.meal_start.strftime('%H:%M')} to {mt.meal_end.strftime('%H:%M')}"
+        after_ok = (
+            (call_m + span) - ms <= int(float(next_from_start) * 60)
+            if next_from_start is not None
+            else (call_m + span) - me <= limit_min
+        )
         ok = (
             ms >= call_m
             and me <= call_m + span
             and ms - call_m <= limit_min
             and me - ms >= min_meal
-            and (call_m + span) - me <= limit_min
+            and after_ok
         )
     if ok:
         return None

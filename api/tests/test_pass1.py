@@ -219,47 +219,40 @@ def test_overfull_window_is_undetermined_not_illegal() -> None:
 
 def test_timing_only_core_is_undetermined_with_named_rule() -> None:
     """
-    Non-GA shoot, CA-resident minor bracketing a six-hour adult scene in an eight-hour window
-    packed edge to edge: no 30-minute meal can fit, so only the meal rule fails. The crew-window
+    Georgia shoot, minor bracketing a six-hour adult scene in an eight-hour window packed edge
+    to edge: no 30-minute meal can fit, so only the Georgia meal rule fails. The crew-window
     checker cannot see meals, so the verdict is UNDETERMINED and names the rule.
     """
     schedule = _schedule(
         [_scene(1, 8, ["cM"]), _scene(2, 48, ["cA"]), _scene(3, 8, ["cM"])],
         [_day(date(2026, 10, 5), "07:00", "15:00")],
         [_M, _A],
-        state="other",
     )
     result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
-    assert result.individually_sufficient == ["CA_11761_meal_period_6_hours"], result.per_rule
+    assert result.individually_sufficient == ["GA_300_7_1_03_first_meal_within_6_hours"], result.per_rule
     assert result.verdict.status == "UNDETERMINED"
-    assert "CA_11761_meal_period_6_hours" in result.note
+    assert "GA_300_7_1_03_first_meal_within_6_hours" in result.note
 
 
 def test_joint_only_infeasibility_reports_sufficient_core() -> None:
     """
-    Non-GA shoot. Day 1 follows a 22:00 wrap (CA turnaround: call at or after 10:00) and precedes
-    a school day (CA 1308.7(a): dismissed by 22:00). M opens and closes a day of exactly twelve
-    hours of scenes (1h, 5h, 5h, 1h). Each rule alone is satisfiable: turnaround alone shifts the
-    day to 10:00 to 22:00, the curfew alone is met from 07:00, the meal rule alone fits a 30-minute
-    break between the two adult scenes. All three together cannot hold: the meal stretches the
-    span to 12.5 hours, which no longer fits between a 10:00 call and a 22:00 dismissal.
+    Georgia shoot, CA-resident minor: 1h, 3h, 3.75h, 1h in fixed order (8.75 h of scenes).
+    The CA 9-hour place-of-employment cap holds alone (8.75 h, no meal). The Georgia meal rule
+    holds alone (a 30-minute break between the two adult scenes, 9.25 h on set, no cap assumed).
+    Together they cannot: the meal pushes the span to 9.25 h, past the 9-hour cap.
     """
-    scenes = [_scene(1, 8, ["cM"]), _scene(2, 8, ["cM"]), _scene(3, 40, ["cA"]), _scene(4, 40, ["cA"]), _scene(5, 8, ["cM"])]
-    days = [
-        _day(date(2026, 10, 7), "07:00", "22:00"),
-        _day(date(2026, 10, 8), "07:00", "23:30"),
-        _day(date(2026, 10, 9), "07:00", "11:00", school_day=True),
-    ]
-    schedule = _schedule(scenes, days, [_M, _A], state="other")
-    result = pass1_day(schedule, 1, day_scene_ids=["s2", "s3", "s4", "s5"], time_limit_s=TIME_LIMIT)
+    scenes = [_scene(1, 8, ["cM"]), _scene(2, 24, ["cA"]), _scene(3, 30, ["cA"]), _scene(4, 8, ["cM"])]
+    days = [_day(date(2026, 10, 5), "07:00", "17:00")]
+    schedule = _schedule(scenes, days, [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3", "s4"], time_limit_s=TIME_LIMIT)
     assert result.solver_status != "UNKNOWN"
     assert result.individually_sufficient == [], result.per_rule
-    joint = {"CA_11760_i_turnaround_12_hours", "CA_1308_7_curfew_school_night", "CA_11761_meal_period_6_hours"}
+    joint = {"CA_11760_e_location_hours_9_15", "GA_300_7_1_03_first_meal_within_6_hours"}
     assert joint <= set(result.sufficient_core), result.sufficient_core
     assert result.verdict.status == "ILLEGAL"
     assert "joint" in result.note.lower()
     assert set(result.verdict.core_rule_ids) == set(result.sufficient_core)
-    proxy_ids = {v.rule_id for v in check_day_legality(schedule, 1)}
+    proxy_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
     assert set(result.verdict.core_rule_ids) <= proxy_ids | TIMING_ONLY_RULE_IDS
 
 
@@ -373,13 +366,16 @@ def _bracket_day(age: int) -> tuple[ScheduleInput, list[str]]:
 def test_fifteen_is_in_the_nine_to_fifteen_bracket() -> None:
     schedule, ids = _bracket_day(15)
     result = pass1_day(schedule, 0, day_scene_ids=ids, time_limit_s=TIME_LIMIT)
-    assert set(result.verdict.core_rule_ids) == {"GA_300_7_1_03_ages_9_15_location_hours"}
+    core = set(result.verdict.core_rule_ids)
+    assert {"GA_300_7_1_03_ages_9_15_location_hours", "SAG_MINORS_9_15_ON_SET_HOURS"} <= core, core
+    assert "GA_300_7_1_03_ages_16_17_location_hours" not in result.per_rule
 
 
 def test_sixteen_is_in_the_sixteen_to_seventeen_bracket() -> None:
     schedule, ids = _bracket_day(16)
     result = pass1_day(schedule, 0, day_scene_ids=ids, time_limit_s=TIME_LIMIT)
-    assert set(result.verdict.core_rule_ids) == {"GA_300_7_1_03_ages_16_17_location_hours"}
+    core = set(result.verdict.core_rule_ids)
+    assert {"GA_300_7_1_03_ages_16_17_location_hours", "SAG_MINORS_16_17_ON_SET_HOURS"} <= core, core
     assert "GA_300_7_1_03_ages_9_15_location_hours" not in result.per_rule
 
 
@@ -421,12 +417,25 @@ def test_prev_dismissal_override_reaches_the_checker() -> None:
     assert core <= violation_ids, (core - violation_ids, violation_ids)
 
 
-def test_school_day_three_hour_cap_binds_in_the_solver() -> None:
+def test_school_day_five_hour_caps_bind_in_the_solver() -> None:
+    """Six hours of work on a school day breaks the three five-hour caps (GA form, 8 CCR 11760(e), SAG)."""
+    days = [_day(date(2026, 10, 5), "07:00", "16:00", school_day=True)]
+    schedule = _schedule([_scene(1, 48, ["cM", "cA"])], days, [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert set(result.verdict.core_rule_ids) == {
+        "GA_300_7_1_03_ages_9_15_work_hours",
+        "CA_11760_e_work_hours_9_15_school_day",
+        "SAG_MINORS_9_15_WORK_HOURS",
+    }, result.per_rule
+    assert result.per_rule["CA_11760_e_location_hours_9_15"] == "FEASIBLE"
+
+
+def test_four_hours_on_a_school_day_is_legal_under_the_regulation() -> None:
+    """The regulation's school-day figure is five hours; the DLSE three-hour reading is a labeled policy layer."""
     days = [_day(date(2026, 10, 5), "07:00", "16:00", school_day=True)]
     schedule = _schedule([_scene(1, 32, ["cM", "cA"])], days, [_M, _A])
     result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
-    assert set(result.verdict.core_rule_ids) == {"CA_11760_e_work_hours_9_15_school_day"}, result.per_rule
-    assert result.per_rule["GA_300_7_1_03_ages_9_15_work_hours"] == "FEASIBLE"
+    assert result.verdict.status == "LEGAL", result.per_rule
 
 
 # ---------------------------------------------------------------------------
@@ -434,14 +443,15 @@ def test_school_day_three_hour_cap_binds_in_the_solver() -> None:
 # ---------------------------------------------------------------------------
 
 def test_seven_hours_after_the_meal_is_not_legal() -> None:
-    """Second-model finding: 05:00 to 13:30, a 1h minor scene, then a 7h minor scene. One 30-minute
-    meal at 06:00 satisfied "within six hours of call" and left seven uninterrupted hours after it."""
+    """Second-model finding: 05:00 to 13:30, a 1h minor scene, a 6.5h adult scene, a 1h minor scene.
+    A 30-minute meal at 06:00 satisfies "within six hours of start" but leaves 7.5 hours from the
+    meal's start to dismissal; a meal after the adult scene starts too late. No timing satisfies
+    the Georgia meal rule, so it fails on its own."""
     days = [_day(date(2026, 10, 5), "05:00", "13:30")]
-    schedule = _schedule([_scene(1, 8, ["cM"]), _scene(2, 56, ["cM"])], days, [_M, _A], state="other")
-    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2"], time_limit_s=TIME_LIMIT)
+    schedule = _schedule([_scene(1, 8, ["cM"]), _scene(2, 52, ["cA"]), _scene(3, 8, ["cM"])], days, [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
     assert result.verdict.status != "LEGAL", (result.verdict.status, result.verdict.witness)
-    assert "CA_11761_meal_period_6_hours" in result.per_rule
-    assert result.per_rule["CA_11761_meal_period_6_hours"] == "INFEASIBLE"
+    assert result.per_rule["GA_300_7_1_03_first_meal_within_6_hours"] == "INFEASIBLE"
 
 
 # ---------------------------------------------------------------------------

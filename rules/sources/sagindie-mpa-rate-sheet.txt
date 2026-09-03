@@ -1,0 +1,107 @@
+# Snapshot (rate table) of http://www.sagindie.org/media/MPA-Rate-Sheet-6.30.26.pdf
+# fetched_at 2026-09-03T01:48:02+00:00 sha256(original) 369c9abe861e22dc107fa43405b97a4c59c3dbfd61b417fd18745a8c2b4cb886 bytes 139864
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+                                                                                                                              Ver 6.30
+
+
+
+
+                                                             2026 MODERATE LOW BUDGET PROJECT
+                                                                        AGREEMENT
+                                                                                      Rate Sheet
+ As set forth in Section 3 of the Moderate Low Budget Project Agreement (“Agreement”), the minimum rates for
+ Performers (excluding Stunt Coordinators) employed in the Project shall be equal to 35% of the applicable rate
+ from the Basic Agreement current at the time of performance. Stunt Coordinator rates for Daily, Weekly and
+ “Flat Deal” Stunt Coordinators track the rates in Schedule K-I, K-II or K-III of the Basic Agreement that are
+ current at the time of photography. When covered, the minimum rates for Background Actors shall be equal to
+ the rates set forth in Schedule X-I and X-II of the Basic Agreement.Current rates for Schedules X-I, X-II, K-I,
+ K-II and K-III from the Basic are reflected in the table below.
+ In the event of a conflict between the below rate sheet and the Agreement, the Agreement shall govern.
+
+                                                                                             3%            3%            3%           3%
+
+                                   Performers                                          7/1/2026      7/1/2027     7/1/2028      7/1/2029
+
+ Day Performer                                                                             $449         $462          $476         $491
+ Weekly                                                                                 $1,560        $1,607        $1,655       $1,705
+ Daily Stunt                                                                               $449         $462          $476         $491
+ Weekly Stunt Performer                                                                 $1,675        $1,725        $1,777       $1,830
+ Daily Stunt Coordinator (employed at less than "flat deal" minimum)                    $1,283        $1,321        $1,361       $1,402
+ Weekly Stunt Coordinator (employed at less than "flat deal" minimum)                   $4,785        $4,929        $5,077       $5,229
+ Stunt Coordinators (employed On A “Flat Deal” Basis) Per Day*                          $7,872        $8,108        $8,351       $8,602
+ Stunt Coordinators (employed On A “Flat Deal” Basis) Per Week*                         $1,996        $2,056        $2,118       $2,182
+ Daily Singer Rate
+ Solo and Duo                                                                              $487         $502          $517         $532
+ Groups 3-8                                                                                $426         $439          $453         $466
+ Groups 9+                                                                                 $372         $384          $395         $407
+ Mouthing 1-16                                                                             $357         $368          $379         $390
+ Mouthing 17+                                                                              $278         $286          $295         $303
+ Contractor 3-8                                                                      plus 50%     plus 50%      plus 50%      plus 50%
+
+ Contractor 9+                                                                       plus 100% plus 100% plus 100% plus 100%
+
+ Weekly Singer Rate
+ Solo and Duo                                                                           $1,560        $1,607        $1,655       $1,705
+ Groups 3-8                                                                             $1,430        $1,473        $1,517       $1,563
+ Groups 9+                                                                              $1,301        $1,341        $1,381       $1,422
+ Step Out
+ (per day - up to 15 cumulative bars)                                                      $244         $251          $259         $266
+ (per day-16+ cumulative bars or detained 1 hour+)                                         $487         $502          $517         $532
+
+
+NOTE: The above weekly rates apply to the five (5) day "studio week" only. For a six (6) day "overnight location week", the Performer must
+automatically receive an additional four (4) hours overtime at "straight time" rates. The weekly rate stated on the employment contract
+must be the five (5) day "studio week" rate whether an overnight location is involved or not. All overtime must be computed on the five (5)
+day "studio week" rate.
+                                                              Page 1 of 3
+
+                                                                                                                              Ver 6.30
+
+
+ Contractor 3-8                                                                      plus 50%     plus 50%      plus 50%      plus 50%
+
+ Contractor 9+                                                                       plus 100% plus 100% plus 100% plus 100%
+
+ Choral Group Call-Out for 5 Bars or more                                                   $75           $77           $79          $81
+ Daily Adjustment for Singers Also Performing Services as a Dancer
+ Solo/Duo                                                                                  $112          $116         $119         $123
+ Groups 3+                                                                                  $98         $102          $105         $108
+ Dancers employed by the day
+ Solo/Duo                                                                                  $449         $462          $476         $491
+ Groups 3+                                                                                 $394         $406          $418         $431
+ Dancers employed by the 5-day week
+ Solo and Duo                                                                           $1,446        $1,489        $1,534       $1,580
+ Groups 3+                                                                              $1,325        $1,365        $1,406       $1,448
+ Daily Adjustment for Dancers Also Performing Services as Singer
+ Solo and Duo                                                                              $122         $125          $129         $133
+ 3-8                                                                                       $107          $110         $113          $117
+ Group 9+                                                                                   $93           $96           $99        $102
+ Airplane Pilots (Studio)
+ Daily                                                                                     $601         $618          $637         $656
+ Weekly                                                                                 $1,675        $1,725        $1,777       $1,830
+ Airplane Pilots (Location)
+ Daily                                                                                     $782         $805          $830         $854
+ Weekly                                                                                 $1,560        $1,607        $1,655       $1,708
+ Airplane Pilot (flying/taxiing - weekly adjustment)                                       $515         $531          $546         $563
+ Background Actors (when covered)
+ Schedules X-I & X-II                                                                      $231         $238          $245         $252
+ Photographic Doubling Adjustment                                                          $150         $150          $150         $150
+ Special Ability Background Actors (when covered)
+ Schedules X-I & X-II                                                                      $241         $248          $255         $262
+ Stand-Ins / Photo Doubles (when covered)
+ Schedules X-I & X-II                                                                      $270         $278          $286         $295
+ Stand-in as Rehearsal Actor Adjustment                                                    $150         $150          $150         $150
+ Daily Adjustment for Background Actors also working as
+ Stand-In                                                                                   $27           $27           $27          $27
+
+                                           P&H CONTRIBUTION RATES
+                             The P&H rate for Performers effective as of 9/6/2026 is 22%
+                        The P&H rate for Background Actors effective as of 9/6/2026 is 21.5%
+
+NOTE: The above weekly rates apply to the five (5) day "studio week" only. For a six (6) day "overnight location week", the Performer must
+automatically receive an additional four (4) hours overtime at "straight time" rates. The weekly rate stated on the employment contract
+must be the five (5) day "studio week" rate whether an overnight location is involved or not. All overtime must be computed on the five (5)
+day "studio week" rate.
+                                                              Page 2 of 3
+

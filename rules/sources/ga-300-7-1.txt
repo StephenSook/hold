@@ -1,0 +1,461 @@
+# Snapshot of https://rules.sos.ga.gov/gac/300-7-1
+# fetched_at 2026-09-03T01:45:00+00:00 sha256(original) 367812c2fdc4e9de240d8a9d46e15a754e0b666b6c0957e09eb59589ead4f8b7 bytes 105530
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+GA R&R - GAC - Subject 300-7-1 CHILD LABOR - MINORS IN ENTERTAINMENT
+ Home |
+ Browse |
+ Help |
+ Go to Georgia SOS |
+ Download
+ Hierarchy Search: 
+ Y
+ N
+ Search tips
+ Route: 
+GA R&R
+» Department 300
+» Chapter 300-7
+» Subject 300-7-1
+Subject 300-7-1 CHILD LABOR - MINORS IN ENTERTAINMENT
+Rule 300-7-1-.01 Intent
+(1)
+General. These Rules shall apply to all Minors employed in the State of Georgia in the entertainment Industry and to the entities that employ a Minor in a Production or who are responsible for the safety and welfare of the Minor while at a Location where the Minor is Performing.
+Rule 300-7-1-.02 Definitions
+(1)
+ As used in these Rules, the following terms shall be in effect: 
+(a)
+Certification Number: The Number issued by the Department to a specific entity indicating Department approval for a Minor to work in the entertainment industry or an Employing Unit's ability to hire a Minor.
+(b)
+Child Labor Coordinator: An employee or contractor of the Employing Unit or an approved subcontractor of the Employing Unit's contractor at the Location who is responsible for the coordination of services and safety of the Minor during the time the Minor is at the Location.
+(c)
+Commissioner: The Commissioner of the Georgia Department of Labor or the Commissioner's authorized designated representatives.
+(d)
+Department: The Georgia Department of Labor and any authorized representatives thereof.
+(e)
+Employment: An authorized association through performance or participation with or for any Employing Unit in a Production whether or not monetary remuneration is provided.
+(f)
+Employing Unit: An entertainment industry employer who is an organization, or individual, using the services of any minor in: Motion pictures of any type (e.g. film, videotape, etc.), using any format (theatrical film, commercial, documentary, television program, internet etc.) by any medium (e.g. theater, television, videocassette, etc.); photography; recording; modeling; theatrical productions; publicity; rodeos; circuses; musical performances; and any other performances where minors perform to entertain the public. Employing Unit includes, but is not limited to, motion picture production company, theatrical group or association, electronic broadcasting company or photographic modeling agency, or casting company, whether or not incorporated.
+(g)
+Employing Unit Representative: The designated representative of the Employing Unit who is responsible for providing all required information to the Department. Such individual shall be the primary contact person for the Employing Unit in all matters concerning the employment of Minors.
+(h)
+ Employing Unit Certification: The certification issued by the Department signifying approval of the application and granting the Employing Unit the ability to hire Minors to perform in Productions in the State.
+(i)
+Episodic Production: A Production consisting of two or more episodes within a sixty (60) day period. Each episode is produced separately and shown to the public separately.
+(j)
+Exemption Certification: A certification issued by the Department waiving certain Rule requirement(s) for an Employing Unit.
+(k)
+Incident: An occurrence where a Minor suffers an injury to their health or well-being while at the Location.
+(l)
+Location: The work site where the Minor is employed to perform in a Production. Location includes, but is not limited to, any facility established by the Employing Unit from which minors are at the disposal of, or subject to call by the Employing Unit to perform, whether or not physically located where that Production is occurring.
+(m)
+Location Time: The total time the Minor is on the Location of the Employing Unit including, but not limited to, work time, meal time, tutoring time, break time, and any other time spent at the Location regardless of the reason.
+(n)
+ Episodic Temporary Certification: This Certification allows the Employing Unit whose Production is episodic to utilize more than ten (10) Minors for five (5) or less days in each Episodic Production.
+(o)
+Minor: Anyone under the age of eighteen (18), unless documentation shows the individual is lawfully emancipated, an armed service member, or married.
+(p)
+Minor Certification: This is the Certification and Certification Number issued by the Department to the registering Minor signifying approval of the application and granting the Minor the ability to perform in Productions.
+(q)
+Performance or Performing: Participation by a Minor in a Production or exhibition that is available to the public or may be made available to the public.
+(r)
+Production: A work to be presented including, but not limited to, stage, screen, television, internet, video tape, audio tape, open air, runway modeling, or in still photographs or phonographic recording of any kind. Production shall not include any play or production produced exclusively by a state approved school or produced by a recognized church organization.
+(s)
+Representative of the Minor: The custodial parent or a court approved legal guardian.
+(t)
+Rules: The Rules of the Georgia Department of Labor - Minors in Entertainment.
+(u)
+SBC: Security Background Check for Studio Teachers and Child Labor Coordinators conducted by an Employing Unit annually in accordance with Rule . All SBCs shall be considered valid for one (1) year from date of the background check is conducted.
+(v)
+School Night: Any time after 6:00 P.M. the night before a school day.
+(w)
+State: The State of Georgia.
+(x)
+Studio: A facility, ordinarily consisting of rooms, buildings, or a collection of buildings, where a controlled environment is developed, equipped, and maintained to produce a Production. This includes both interior spaces, such as a sound stage, and exterior spaces, such as a backlot. Ordinarily a studio is used to produce multiple Productions, often simultaneously.
+(y)
+Studio Teacher: A person certified as a teacher by the Georgia Professional Standards Commission or who possesses a valid teaching certification from another state or territory,
+(z)
+Temporary Certification: Certification issued by the Department to an Employing Unit who is utilizing more than ten (10) Minors for five (5) or less days in a Production or Episodic Production.
+(aa)
+Work Time: The total time that a Minor is participating in anything for the Employing Unit related to the Production at the Location, excluding meal time, tutoring and any breaks for rest and recreation.
+Rule 300-7-1-.03 Employment of a Minor
+(1)
+General.
+(a)
+ It is the responsibility of the Employing Unit to ensure compliance with the Official Code of Georgia Annotated and Official Rules and Regulations of the State of Georgia with regard to Minors in entertainment.
+(b)
+ The Employing Unit must be issued an approved Employing Unit Certification and Certification Number by the Department before it can employ or otherwise utilize a Minor in a Production.
+(c)
+ The Employing Unit must have an approved Location prior to having the Certified Minor perform in the Production.
+(d)
+ No Minor may perform in a Production scene until such Minor has been issued an approved Minor Certification by the Department and the Employing Unit has verified that the Minor Certification is valid and in good standing.
+(e)
+ Infants between birth to fifteen (15) days of age are NOT allowed to work in a Production.
+(2)
+Hours of Performance.
+(a)
+ The Hours of Performance for all Minors fifteen (15) days of age or older shall be in accordance with the Department Form "Schedule of Hours of Performance".
+(b)
+ For the purposes of computing Hours of Performance, a Minor will be considered at the Location commencing with the Minor's sign-in on the Employing Unit's Hours of Performance Log at the Location until the Minor is allowed to leave the Location by the Employing Unit. In the alternative, the Employing Unit may use its time sheets maintained for the purposes of payroll. If time sheets are used in lieu of the Department's Performance Log, a copy of such time sheets must be retained at the Location.
+(c)
+ Meal periods are not work time. Meal time may be scheduled at the end of the day as long as the first meal is within six (6) hours of start time and subsequent meals are no more than seven (7) hours after the start of the previous meal period.
+(d)
+ No work day shall start earlier than 5:00 A.M.
+(e)
+ No Minor shall work more than six (6) consecutive days.
+(3)
+Travel Time for Minors Employed in the Entertainment Industry.
+(a)
+ Except for the initial forty-five (45) minutes of travel time from lodging to Location, all time spent by the Minor in traveling to participate in the production shall count as the Minor's Location Time.
+(4)
+Extended Hours. 
+(a)
+ A request may be made to the Commissioner for permission for the Minor to work earlier or later than approved hours. Each request shall be submitted in writing at least twenty-four (24) hours prior to the time needed along with a written consent of the Representative of the Minor. If approved, the Commissioner shall issue an Exemption Certification.
+(5)
+School Days.
+(a)
+ When any Minor between ages four (4) and eighteen (18) works during school hours, twelve (12) hours must elapse between the Minor's time of dismissal and time of call on the following day; or if the Minor is not working the next day, the start of the Minor's regular school day. If the Minor is employed for the following day and the Minor's regular school day starts less than twelve (12) hours after the Minor's dismissal time, the Minor must be offered instruction by the Production Company and, if requested, such instruction must be provided to the Minor the next day
+(6)
+Supervision of Minor.
+(a)
+ No Minor may be sent to wardrobe, makeup, hairdressing or employed in any manner unless under the general supervision of the Child Labor Coordinator or Representative of the Minor.
+(b)
+ If the Minor is dismissed early and is not to be picked up at dismissal, the Minor shall be under the supervision of a Child Labor Coordinator until picked up.
+(c)
+ All Minors must have a Representative of the Minor present at all times when the Minor is at the Location, including all times the Minor is in wardrobe, make-up, or dress.
+(d)
+ If the Representative of the Minor is unable to be in attendance, the Minor shall not Perform; provided, however, that the Minor may perform if the Representative of the Minor provides written consent to the Child Labor Coordinator and the Child Labor Coordinator agrees in writing to assume the responsibility for the safety and well-being of the Minor.
+(e)
+ The Employing Unit must retain the Representative of the Minor's written permission to be responsible for the Minor during the Production.
+(7)
+Medical Care and Safety. 
+(a)
+ Prior to a Minor's first call, the Employing Unit must obtain the written consent of the Representative of the Minor for medical care in the case of any emergency. However, if the Representative of the Minor refuses to provide such consent due to religious beliefs, the Employing Unit must at least obtain written consent for external emergency aid, provided such consent is not contrary to the aforementioned religious beliefs.
+(b)
+ When atmospheric smoke is utilized at the Location, the Employing Unit must comply with the standards set forth on the Department Form, "Minors and Atmospheric Smoke: Acceptable Standards", including listing compounds being used.
+(c)
+ Medical personnel retained by the Employing Unit to provide medical care to a Minor must be licensed to provide such care by the appropriate professional licensing authority and in good standing.
+(8)
+Hazardous, Unlawful or Unacceptable Activity.
+(a)
+ A Minor in any Production shall not be allowed to work in any Location deemed hazardous by the Department under Official Rules and Regulations of the State of Georgia, by the appropriate state or federal agency, or certified police, fire and rescue personnel.
+(b)
+ No Minor shall be required to work in a situation that places the Minor in a clear and present danger to life and/or limb.
+(c)
+ Emergency medical personnel must be on site when there is reasonable risk of harm to the minor at the Location which may require medical attention.
+(d)
+ No Minor between fifteen (15) days of age to six (6) months of age shall be exposed to light exceeding 100 foot-candles for more than thirty (30) seconds at a time
+(e)
+ No minor between fifteen (15) days and two (2) years of age may be exposed to atmospheric smoke.
+(f)
+ A Minor shall not be required, coerced, or otherwise permitted to pose nude or perform acts which are sexually explicit as defined by the Georgia Criminal Code.
+(g)
+ No Minor shall be present on a set while adults are posing nude or performing acts which are sexually explicit as defined by the Georgia Criminal Code.
+(h)
+ The aforementioned prohibitions shall not be waived by the Representative of the Minor.
+Rule 300-7-1-.04 Child Labor Coordinator
+(1)
+Child Labor Coordinator.
+(a)
+ Each Employing Unit shall have a Child Labor Coordinator, who is responsible for the coordination of services and safety of all Minors in the Employment of the Employing Units at the Location. The Child Labor Coordinator shall not take on any other role or perform any other function for the Employing Unit when a Minor is at the Location.
+(b)
+ The ratio of Child Labor Coordinator to Minors shall not exceed one (1) Child Labor Coordinator per ten (10) minors at a Location.
+(c)
+ The Child Labor Coordinator shall: 
+1.
+ Be twenty-one (21) years of age or older;
+2.
+ Be retained by the Employing Unit;
+3.
+ Have completed a security background check ("SBC") prior to certification to verify that the individual:
+(i)
+ has not been convicted of a crime of moral turpitude;
+(ii)
+ has NO Felony convictions or "no lo contendere" or "no contest" plea within the preceding seven (7) years for crimes of moral turpitude;
+(iii)
+ has no uncompleted deferred adjudication, probation, or parole for any felony (regardless of whether the convictions are within the preceding seven (7) years);
+(iv)
+ is not listed as an active sex offender using an available sex offender database.
+4.
+ Be at the Location when Minor(s) are present.
+5.
+ Complete the Child Labor Coordinator certification course as established by the Department on the form, "Child Labor Coordinator Certification Course Requirements".
+(d)
+ Upon request from an authorized representative of the Department, a copy of the SBC will be made available to the Department within one business day of receipt of the request by the Employing Unit.
+(e)
+ Any individual failing to meet any one of the requirements set forth in (c) above shall not serve as a Child Labor Coordinator.
+(f)
+ The Child Labor Coordinator shall be responsible for:
+1.
+ Ensuring that, in the event the Representative of the Minor is not present or in proximity of the Minor, the Minor is safe;
+2.
+ Maintaining the Hours of Performance Log;
+3.
+ Ensuring the Minor does not exceed the total hours at the Location or allowable Work Time; and
+4.
+ Timely advising the Department of any Incidents, violations of these Rules, or safety issues at the Location.
+5.
+ Being responsive to inquiries or requests for information from Representatives of Minors.
+(g)
+ At all times a Minor is present at the Location, the Child Labor Coordinator shall wear a badge, tag, or other clothing clearly identifying themselves as the Child Labor Coordinator.
+Rule 300-7-1-.05 Employer Certification Requirements
+(1)
+General.
+(a)
+ Any Employing Unit prior to employing or otherwise utilizing the services of a Minor in any Production must have a valid Certification Number issued by the Department.
+(2)
+Certification.
+(a)
+ Application. 
+1.
+ The Employing Unit must provide all information requested by the Application and submit the Application to the Department for approval along with a one-time administrative assessment for registration of $500.00; provided, however, if the Employing Unit only engages in industrial training films or commercial advertising production, then the administrative assessment for registration is $250.00.
+2.
+ If the Application is approved by the Department, the Department will issue a permanent Certification Number to the Employing Unit. This permanent Certification number shall be valid from the date issued unless otherwise set forth in these Rules.
+(b)
+ Renewal. 
+1.
+ At the end of the calendar year, the Employing Unit shall reply to a Renewal Notice from the Department to maintain the Certification. Failure to respond may result in the suspension or termination of the Certification.
+(c)
+ Changes in Certification Information provided:
+1.
+ After Certification has been granted by the Department, the Employing Unit shall notify the Department within five (5) business days of any changes in the information provided on the application by the Employing Unit.
+(3)
+Insurance.
+(a)
+ The Employing Unit shall have valid Georgia Worker's Compensation Insurance in the amounts of the statutory limits established in Title 34, Chapter 9 of the O.C.G.A. covering the Minors.
+(b)
+ If the Employing Unit is self-insured the Employing Unit must submit a certificate from the Georgia Board of Workers' Compensation stating that the Employing Unit qualifies to pay its employees' compensation claims.
+(c)
+ Upon request by the Department the Employing Unit shall timely provide the Department a copy of the Worker's Compensation Insurance certificate.
+(4)
+Violation of Rules. The Employing Unit's Certification may be revoked or suspended for the violations of these Rules.
+Rule 300-7-1-.06 Minor Certification Requirements
+(1)
+General.
+(a)
+ For a Minor to be eligible for Employment in the entertainment industry, the Minor shall have a Representative.
+(b)
+ Any Minor prior to being employed or otherwise providing service utilized in any Production, shall have his or her Representative complete and submit to the Department an electronic Application for Initial or Renewal Certification for the Minor. This Certification will allow the Minor to be employed by a Certified Employing Unit.
+(2)
+Certification.
+(a)
+ Initial. 
+1.
+ The Representative of the Minor must submit the completed Initial Application electronically to the Department for Approval.
+2.
+ This Certification number shall be valid for one (1) calendar year ending on December 31st of the year the Initial Certification is issued.
+(b)
+ Renewal. 
+1.
+ At the end of the calendar year, the Minor's Representative may submit electronically a Renewal Application to the Department for review and approval
+2.
+ After Certification has been granted, the Department shall be notified within five (5) business days of any changes in the information provided by the Representative of the Minor.
+(3)
+Violation of Rules. The Minor's Certification may be revoked or suspended for violations of these Rules.
+Rule 300-7-1-.07 Representative of the Minor
+(1)
+General.
+(a)
+ All Employed Minors must have a Representative.
+(b)
+ Unless granted an exception as set forth in these Rules, the Representative shall be present at the Location at all times when the Minor is on the Location.
+(c)
+ Upon request by the Department, the Representative of the Minor shall provide to the Department appropriate documentation establishing the basis for the individual to serve in the capacity of Representative of the Minor.
+(d)
+ Only the Representative of the Minor registered with the Department can provide written consent to allow the Child Labor Coordinator of the Employing Unit to assume responsibility for the Minor on the Location or for additional hours.
+(e)
+ The Representative of the Minor and the Studio Teacher shall maintain and be responsible for a log of the Minor's "Bank" of instruction hours during a Production.
+(f)
+ Should the Commissioner determine that it is in the Minor's best interest, the consent of the Representative of the Minor may be suspended and the Minor shall be removed from the Location until such time as an Appeal hearing is concluded.
+Rule 300-7-1-.08 Production and Locations
+(1)
+General.
+(a)
+ Prior to submitting a Location to the Department for approval, the Employing Unit must electronically register the Production with the Department.
+(b)
+ Before a Location is authorized for Minors to work on a Production, the Employing Unit will submit a Location application electronically to the Department.
+(c)
+ Along with the Application for the initial Location of the Production, the Employing Unit shall submit a one-time administrative assessment of $50.00. All subsequent Location Applications for that Production shall not be subject to further assessments.
+(2)
+Facilities for the Minors and their Representatives. 
+(a)
+ For all Locations in which a Minor will be required to perform or is performing, the Employing Unit must provide adequate facilities for the Minor including dressing rooms, and for the Minor and their Representatives, rest rooms, and a rest area with appropriate hydration, seating, and protection from the weather. Such rest area may not also be used simultaneously for tutoring.
+(b)
+ No dressing room shall be occupied simultaneously by a Minor and an adult performer or by Minor(s) of the opposite sex.
+(3)
+Location Application. 
+(a)
+ The Employing Unit shall: 
+1.
+ Provide the physical address of the Location and specific directions to where the Location can be found at the physical address or in the alternative, provide a Department assigned Location Number.
+2.
+ Provide a detailed description of the tasks to be performed by the Minor including anticipated length of participation by the Minor; and
+3.
+ Be completed for each Minor employed.
+(b)
+ If the Location application is approved, the Employing Unit can employ Minors who are certified with the Department.
+(c)
+ Location approval will be valid for sixty (60) calendar days from date of approval.
+(d)
+ Location Approval is valid only for the Location as described in the Location Application.
+(e)
+ Should significant changes occur in the information or circumstances provided in 300-7-.1 -.08(3)(a)(2) after consent has been granted, the Department shall be notified by the requesting party within one (1) business day of said changes.
+(4)
+Inspection of the Location.
+(a)
+ During all times in which any Minor is Employed at the Location, the Commissioner or their designee shall have the right to inspect, with or without notice, such Location in order to ascertain compliance with the Rules by the Employing Unit and/or the Representative of the Minor.
+(b)
+ The Employing Unit shall cooperate with the Commissioner or their designee and timely provide any requested documentation and a suitable place to conduct a review of any documentation.
+(c)
+ The Child Labor Coordinator shall be available to meet with the Commissioner or their designee during the inspection.
+(d)
+ In the event the Commissioner or their designee is denied access to the Location, the Employing Unit's Certification may be suspended.
+Rule 300-7-1-.09 Education Requirements
+(1)
+General.
+(a)
+ When a Minor is guaranteed more than 1 day of employment during a school week, the Employing Unit shall allow time for instruction, provide a suitable facility and a Studio Teacher from the initial (first) day of such Performance when the Minor is Performing on any day the Minor's regularly attended school is in session.
+(b)
+ When a Minor works more than one (1) school day in a school week, the Employing Unit will provide a Studio Teacher for any day the Minor's regularly attended school is in session.
+(c)
+ Upon the request of the Representative of a Minor who works more than one (1) school day in a school week for two (2) or more Employing Units, the current Employing Unit on the second school day shall allow time for instruction; provide a suitable facility and a Studio Teacher on that day of such Performance. The Representative must give the Employing Unit twenty-four (24) hours notice to provide such tutoring.
+(d)
+ If a Minor is homeschooled, the Employing Unit shall use the school district calendar where the Minor resides.
+(e)
+ Teaching instruction each day shall not commence before 7:00 a.m. and shall cease at 6:00 p.m. with a minimum of twenty (20) minutes for each teaching block.
+(f)
+ A Minor, who is a high school graduate or has a GED or its equivalent from a state education department and a letter from the Representative of the Minor stating that the Minor does not have to attend school, shall not be subject to this Rule 300-7-1.09.
+(2)
+Studio Teacher and Curriculum.
+(a)
+ When any Minor, between the age of four (4) to the age of eighteen (18), due to Performance responsibilities is absent from regular school curriculum, for more than one (1) calendar school day in a school week, then the Minor shall receive at least three (3) hours of instruction per school calendar day from a Studio Teacher at the Location during the Production.
+(b)
+ A Minor between the ages of four (4) and nine (9) may "bank" one (1) hour of instruction time per school day, not to exceed a total of five (5) banked hours per week. Minors between nine (9) and eighteen (18) years of age may "bank" two hours of instruction time per school day, not to exceed a total of ten (10) banked hours per week. No more than ten (10) hours can be banked at any given time. No hours may be banked during a school night (a night that precedes a school day), past 6:00 p.m., or during non-school days. When "bank" hours are used by the Minor, the Minor may replace such hours. "Banked" hours are not valid except with the Production the Minor was Performing with when earned.
+(c)
+ No more than two (2) banked hours may be used per school day. No more than ten (10) banked hours may be used per week. For Minors between the age of four (4) years and six (6) years, no more than eight (8) banked hours may be used per week.
+(d)
+ The Representative of the Minor shall present a copy of the log of the "Bank" instruction hours to the Child Labor Coordinator who shall attach a copy along with any request to allow the Minor additional Performance time. Such request to be maintained by the Child Labor Coordinator at the Location during the Performance.
+(e)
+ The Studio Teacher and Representative shall maintain a record of each Minor's attendance, grades, and banked hours.
+(f)
+ The record maintained by the Studio Teacher and/or Representative shall be turned over to the Minor's local school officials within two (2) business days of the end of the Employment by the Employing Unit.
+(g)
+ The Studio Teacher must have completed a SBC to verify that the individual has not been convicted of a crime of moral turpitude. In regard to the SBC, the Studio Teacher must meet the same criteria as the Child Labor Coordinator.
+(h)
+ Any individual failing to meet the requirements set forth in (g) above shall not serve as a Studio Teacher.
+(i)
+ At the request of the Department, the Studio Teacher's SBC shall be provided to the Department.
+(j)
+ The Studio Teacher shall be provided by the Employing Unit and neither the Minor, Representative of the Minor nor the Minor's family shall incur any costs associated with the Studio Teacher.
+(k)
+ The Studio Teacher may serve as the Child Labor Coordinator when only one Minor is on Location or the Studio Teacher is not instructing while serving as the Child Labor Coordinator.
+(l)
+ The ratio of Studio Teacher to Minors shall not exceed one (1) Studio Teacher per ten (10) Minors.
+Rule 300-7-1-.10 Temporary Certification
+(1)
+General.
+(a)
+ The Department will only grant one (1) Temporary Certificate per Production. The Temporary Certification will allow an Employing Unit to employ or utilize for a Production, ten (10) or more Minors for a period not to exceed five (5) consecutive calendar days in a calendar year.
+(b)
+ Should the Employing Unit engage in producing another Production, then the Employing Unit may request another Temporary Certification for that specific Production.
+(c)
+ If the Employing Unit is engaged in an Episodic Production, the Employing Unit may request an Episodic Temporary Certification.
+(d)
+ It is the sole and exclusive discretion of the Department that a Temporary Certificate or Episodic Temporary Certification may be issued to the applying Employing Unit.
+(2)
+Application.
+(a)
+ The Employing Unit wanting a Temporary Certification or an Episodic Temporary Certification to allow the utilization of ten (10) or more Minors in their Production or episodes must file an application with the Department.
+(b)
+ If the application is approved, the Department will issue a Temporary Certification Number to the Employing Unit.
+(c)
+ By accepting the Temporary Certification Number, the Employing Unit agrees to have and maintain the information set forth on the Department's Temporary Certification Log form for one (1) year.
+(d)
+ If at any time after the issuance of the Temporary Certification, the conditions upon which the Exemption was granted should change the Employing Unit shall notify the Department within one (1) business day.
+(e)
+ The Department shall only grant one (1) Temporary Certification for a Production per year or if an Episodic Temporary Certification is granted the Episodic Temporary Certification can be used once per episode.
+Rule 300-7-1-.11 Exemptions
+(1)
+General.
+(a)
+ Employing Units may file a written petition with the Commissioner for an exemption to allow the organization to utilize Minors in their Productions without the necessity of the Minors having been issued a Department Certification ("Petition") if the Employing Unit is: 
+(i)
+ a Non-Profit or a Government Organization, who are exempted from paying federal tax; and who are making industrial (training films) or commercial advertising Productions; 
+(ii)
+ Nonprofit theatrical organizations presenting a Production and exempt from the payment of federal taxes
+(b)
+ The organization shall provide assurance that it has read and agrees to comply with the conditions set forth in O.C.G.A. Section 39-2-18(b).
+(c)
+ In the sole and exclusive discretion of the Commissioner, an Exemption Certificate may be issued to the petitioning organization.
+(d)
+ If the Exemption Certificate is granted, the petitioning organization shall be exempt from compliance of the responsibilities imposed on an Employing Unit as to only utilizing Certified Minors in its Production and any application payment for registering. The organization must comply with all other Rules.
+(e)
+ An Exemption Certificate shall expire on December 31st of the calendar year in which it is issued.
+(f)
+ If after the issuance of the Exemption, the conditions upon which the Exemption was granted should change, the organization shall notify the Department within two (2) business days.
+(g)
+ After one (1) year from the date of revocation, the organization may reapply for an Exemption.
+(2)
+Other Exemptions.
+(a)
+ An Employing Unit may file a Petition with the Commissioner for an exemption of certain Rules.
+Rule 300-7-1-.12 Child Labor Citations and Penalties
+(1)
+General. Pursuant to O.C.G.A. § 39-2-19 it is the duty of the Commissioner to issue rules and regulations to ensure enforcement of the law concerning the employment of Minors as actors or performers.
+(2)
+Violations and Penalties. The violations that may be cited by the Department and any penalties to be assessed by the Department arising out of such citation are set forth on the form appropriate schedule.
+Rule 300-7-1-.13 Appeals
+(1)
+General.
+(a)
+ In the event an Employing Unit or the Representative of a Minor is issued a citation for violation of these Rules, the cited entity may by a written appeal addressed to the Georgia Department of Labor, or by email requesting the Commissioner to review the citation and that the citation be dismissed, withdrawn or modified.
+(b)
+ The Commissioner or the Commissioner's designated administrative adjudicator will review the matter and issue a ruling.
+(2)
+Appeals Process.
+(a)
+ All appeals are heard by the Commissioner's designated administrative adjudicator.
+(b)
+ All appeals to the Commissioner shall be made and received by the Department within two (2) state business days from the date of issuance of the citation.
+(c)
+ A telephone hearing will be scheduled within two (2) state business days from receipt of the appeal by the Department and the conduct of the hearing will be in accordance with GDOL- UI Appeal Tribunal Procedure.
+(d)
+ Failure to appear for the hearing will result in a dismissal of the appeal.
+(e)
+ Failure to timely file an appeal will result in the appeal being dismissed. The appealing party may request a reconsideration of the dismissal; provided such request is received by the Department within five (5) calendar days of the dismissal.
+(f)
+ Appeals under these Rules should be forwarded to the address provided at the time the citation is issued.
+(g)
+ The designated administrative adjudicator will issue a final determination. This is a final administrative determination; there are no further administrative appeal rights.
+Rule 300-7-1-.14 Written Notices
+All written notices to the Commissioner or the Department should be sent to:
+Georgia Department of Labor,
+Attention Child Labor Section,
+148 Andrew Young International Blvd. NE, 
+Atlanta, Georgia 30303 or by email.
+Rule 300-7-1-.15 Forms
+(1)
+Forms
+(a)
+ The Department will maintain and make available to the public a list of forms and schedules relevant to Child Labor - Minors in Entertainment.
+(2)
+Request for Forms.
+(a)
+ Requests for forms may be made, in person or by mail, at the Georgia Department of Labor, 148 Andrew Young International Boulevard NE, Atlanta, Georgia or by internet by typing: https://dol.georgia.gov/.
+Rule 300-7-1-.01 Intent
+Rule 300-7-1-.02 Definitions
+Rule 300-7-1-.03 Employment of a Minor
+Rule 300-7-1-.04 Child Labor Coordinator
+Rule 300-7-1-.05 Employer Certification Requirements
+Rule 300-7-1-.06 Minor Certification Requirements
+Rule 300-7-1-.07 Representative of the Minor
+Rule 300-7-1-.08 Production and Locations
+Rule 300-7-1-.09 Education Requirements
+Rule 300-7-1-.10 Temporary Certification
+Rule 300-7-1-.11 Exemptions
+Rule 300-7-1-.12 Child Labor Citations and Penalties
+Rule 300-7-1-.13 Appeals
+Rule 300-7-1-.14 Written Notices
+Rule 300-7-1-.15 Forms
+ Copyright © 2026 Fastcase, Inc - All rights reserved. |
+ Email Us | 844-838-0769

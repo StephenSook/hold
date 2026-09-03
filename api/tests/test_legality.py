@@ -149,7 +149,8 @@ def test_curfew_violation_has_correct_fields() -> None:
     violations = check_day_legality(schedule, 0)
     ga_v = next((v for v in violations if v.rule_id == "GA_300_7_1_03_school_night_curfew"), None)
     assert ga_v is not None
-    assert ga_v.citation == "Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)"
+    assert ga_v.citation.startswith("Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(1)")
+    assert "300-7-1-.03(2)(a)" in ga_v.citation
     assert "22:00" in ga_v.limit
     assert "23:00" in ga_v.computed
     assert ga_v.over_by  # non-empty
@@ -488,7 +489,7 @@ def test_timeline_overrides_crew_window() -> None:
 
 
 def test_timeline_meal_check() -> None:
-    """Eight hours on set with no recorded meal breaches 8 CCR 11761; a 30-minute meal inside six hours clears it."""
+    """Eight hours on set with no recorded meal breaches Ga. 300-7-1-.03(2)(c); a 30-minute meal inside six hours clears it."""
     from api.hold.legality_checker import DayTimeline, MinorTimeline
 
     days = [_day(date(2026, 10, 5), "07:00", "19:00", school_day=False)]
@@ -497,7 +498,7 @@ def test_timeline_meal_check() -> None:
         minors={"cM": MinorTimeline(call=time(7, 0), dismiss=time(15, 0), work_minutes=240)}
     )
     ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=no_meal)}
-    assert "CA_11761_meal_period_6_hours" in ids, ids
+    assert "GA_300_7_1_03_first_meal_within_6_hours" in ids, ids
     with_meal = DayTimeline(
         minors={
             "cM": MinorTimeline(
@@ -510,7 +511,7 @@ def test_timeline_meal_check() -> None:
         }
     )
     ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=with_meal)}
-    assert "CA_11761_meal_period_6_hours" not in ids, ids
+    assert "GA_300_7_1_03_first_meal_within_6_hours" not in ids, ids
 
 
 def test_timeline_skips_absent_minor() -> None:
@@ -560,7 +561,7 @@ def test_prev_dismissal_override_in_checker() -> None:
 
 
 def test_timeline_meal_too_early_leaves_a_long_stretch_after_it() -> None:
-    """A meal at 06:00 on a 05:00 to 13:30 day leaves seven hours after it: still a breach."""
+    """A meal at 06:00 on a 05:00 to 13:30 day leaves 7.5 hours from the meal's start: still a breach."""
     from api.hold.legality_checker import DayTimeline, MinorTimeline
 
     days = [_day(date(2026, 10, 5), "05:00", "13:30", school_day=False)]
@@ -568,7 +569,7 @@ def test_timeline_meal_too_early_leaves_a_long_stretch_after_it() -> None:
     tl = DayTimeline(minors={"cM": MinorTimeline(call=time(5, 0), dismiss=time(13, 30), work_minutes=480,
                                                   meal_start=time(6, 0), meal_end=time(6, 30))})
     ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=tl)}
-    assert "CA_11761_meal_period_6_hours" in ids
+    assert "GA_300_7_1_03_first_meal_within_6_hours" in ids
 
 
 def test_consecutive_days_use_worked_dates_when_given() -> None:

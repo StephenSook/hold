@@ -1,0 +1,360 @@
+{
+  "snapshots": {
+    "ga-300-7-1.txt": {
+      "url": "https://rules.sos.ga.gov/gac/300-7-1",
+      "fetched_at": "2026-09-03T01:45:00+00:00",
+      "sha256_original": "367812c2fdc4e9de240d8a9d46e15a754e0b666b6c0957e09eb59589ead4f8b7",
+      "kind": "full text"
+    },
+    "ga-schedule-of-hours-of-performance.txt": {
+      "url": "https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download",
+      "fetched_at": "2026-09-03T01:36:55+00:00",
+      "sha256_original": "ce5f1382d073fc0eff6079bec5a9ab124167a591f3f8b5c1679dd3e4666c5fb1",
+      "kind": "full text"
+    },
+    "ca-lab-1308.7.txt": {
+      "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB",
+      "fetched_at": "2026-09-03T01:45:00+00:00",
+      "sha256_original": "cda4d6a48e4685a73bbc4479cc0564f05405723a76a7b7695b1bb3a491f7bea0",
+      "kind": "full text"
+    },
+    "ca-t8-11760.txt": {
+      "url": "https://www.dir.ca.gov/t8/11760.html",
+      "fetched_at": "2026-09-03T01:37:14+00:00",
+      "sha256_original": "73e3d6afe9b85dadb3f283e19f2857b7581f9aae644c7617f06690de75dd91a1",
+      "kind": "full text"
+    },
+    "ca-t8-11761.txt": {
+      "url": "https://www.dir.ca.gov/t8/11761.html",
+      "fetched_at": "2026-09-03T01:37:23+00:00",
+      "sha256_original": "e53732ebe7c6e998fd45e9b06d15894256ed502305598fd4691cee87a4d2a939",
+      "kind": "full text"
+    },
+    "ca-t8-11755_2.txt": {
+      "url": "https://www.dir.ca.gov/t8/11755_2.html",
+      "fetched_at": "2026-09-03T01:47:15+00:00",
+      "sha256_original": "f472c3c46d70cc8a99659ca755adaa9217283e64f92afca5f614e60384d9fb9b",
+      "kind": "full text"
+    },
+    "ca-t8-11756.txt": {
+      "url": "https://www.dir.ca.gov/t8/11756.html",
+      "fetched_at": "2026-09-03T01:37:33+00:00",
+      "sha256_original": "02f6d184d9d2bac7b6e5db8ef72c351ecec760e38883624535b270bc2192a021",
+      "kind": "full text"
+    },
+    "ca-dlse-minors-summary-charts.txt": {
+      "url": "https://www.dir.ca.gov/dlse/MinorsSummaryCharts_HoursofWork.pdf",
+      "fetched_at": "2026-09-03T01:47:34+00:00",
+      "sha256_original": "6b4ed82c5cfaaa5227c85da2e8ca84f8fbb3499cf8d0083e1ca569702392998c",
+      "kind": "full text"
+    },
+    "sagindie-lba-rate-sheet.txt": {
+      "url": "http://www.sagindie.org/media/LBA-Rate-Sheet-6.30.26.pdf",
+      "fetched_at": "2026-09-03T01:47:53+00:00",
+      "sha256_original": "d929df9b6e1263a86ba83f44ef3f3cdc527429dfcb43a09b215def62cdbd3afe",
+      "kind": "full text"
+    },
+    "sagindie-mpa-rate-sheet.txt": {
+      "url": "http://www.sagindie.org/media/MPA-Rate-Sheet-6.30.26.pdf",
+      "fetched_at": "2026-09-03T01:48:02+00:00",
+      "sha256_original": "369c9abe861e22dc107fa43405b97a4c59c3dbfd61b417fd18745a8c2b4cb886",
+      "kind": "full text"
+    },
+    "sag-young-performers-handbook-2020-excerpt.txt": {
+      "url": "https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf",
+      "fetched_at": "2026-09-03T01:47:43+00:00",
+      "sha256_original": "b29524f199e6729190bdf597453cc59d8aa18cb40163f07548e2f54982810d12",
+      "kind": "excerpt"
+    },
+    "sagindie-faq-excerpt.txt": {
+      "url": "https://www.sagindie.org/resources/faq/",
+      "fetched_at": "2026-09-03T01:48:11+00:00",
+      "sha256_original": "00fa5da5de9a1033e91e7315c12dee51ab1a603d6d4cd086e26082406291eba3",
+      "kind": "excerpt"
+    },
+    "sagindie-tv-theatrical-2026-excerpt.txt": {
+      "url": "https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/",
+      "fetched_at": "2026-09-03T01:37:42+00:00",
+      "sha256_original": "79e7d9443bf80decf9e3cec987363119729ac17133c90bda1803fd77c20fb058",
+      "kind": "excerpt"
+    },
+    "sagindie-signatory-excerpt.txt": {
+      "url": "https://www.sagindie.org/signatory/",
+      "fetched_at": "2026-09-03T01:37:51+00:00",
+      "sha256_original": "432235402d788acc6eca53348923b3d6bc427d5aa874de3c9657f6ad514dbf3c",
+      "kind": "excerpt"
+    }
+  },
+  "records": {
+    "GA_300_7_1_03_ages_9_15_location_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_ages_9_15_work_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_school_night_curfew": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_non_school_night_curfew": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_ages_16_17_location_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_ages_16_17_work_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_ages_16_17_school_night_curfew": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_ages_16_17_non_school_night_curfew": {
+      "status": "VERIFIED",
+      "snapshot": "ga-schedule-of-hours-of-performance.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_earliest_call": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_consecutive_days": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_turnaround_school_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_first_meal_within_6_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_09_studio_teacher_ratio": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_04_coordinator_ratio": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_02_school_night_definition": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_02_location_time_definition": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "GA_300_7_1_03_infants": {
+      "status": "VERIFIED",
+      "snapshot": "ga-300-7-1.txt",
+      "reason": null
+    },
+    "CA_11760_e_location_hours_9_15": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_e_work_hours_9_15_school_day": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_e_work_hours_9_15_non_school_day": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_f_location_hours_16_17": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_f_work_hours_16_17_school_day": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_f_work_hours_16_17_non_school_day": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_11760_i_turnaround_12_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11760.txt",
+      "reason": null
+    },
+    "CA_1308_7_daily_cap_8_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ca-lab-1308.7.txt",
+      "reason": null
+    },
+    "CA_1308_7_weekly_cap_48_hours": {
+      "status": "VERIFIED",
+      "snapshot": "ca-lab-1308.7.txt",
+      "reason": null
+    },
+    "CA_1308_7_curfew_school_night": {
+      "status": "VERIFIED",
+      "snapshot": "ca-lab-1308.7.txt",
+      "reason": null
+    },
+    "CA_1308_7_curfew_non_school_night": {
+      "status": "VERIFIED",
+      "snapshot": "ca-lab-1308.7.txt",
+      "reason": null
+    },
+    "CA_11755_2_studio_teacher_ratios": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11755_2.txt",
+      "reason": null
+    },
+    "CA_11761_meal_period": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11761.txt",
+      "reason": null
+    },
+    "CA_11756_out_of_state_basis": {
+      "status": "VERIFIED",
+      "snapshot": "ca-t8-11756.txt",
+      "reason": null
+    },
+    "CA_DLSE_SUBTRACT_6_POLICY": {
+      "status": "VERIFIED",
+      "snapshot": "ca-dlse-minors-summary-charts.txt",
+      "reason": null
+    },
+    "SAG_MINORS_P17_CUMULATIVE_JURISDICTION": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_WORKDAY_CURFEW": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_9_15_ON_SET_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_9_15_WORK_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_16_17_ON_SET_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_16_17_WORK_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_MEAL_AND_REST": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_MINORS_P23_INFANT_RESTRICTION": {
+      "status": "VERIFIED",
+      "snapshot": "sag-young-performers-handbook-2020-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_LOW_BUDGET_DAY": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_LOW_BUDGET_DAY_2027": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_LOW_BUDGET_WEEK": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_MODERATE_LOW_DAY": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_MODERATE_LOW_WEEK": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_ULTRA_LOW_DAY": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-tv-theatrical-2026-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_PH_21_PCT": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-signatory-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_PH_22_PCT": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-lba-rate-sheet.txt",
+      "reason": null
+    },
+    "SAG_RATES_CONSECUTIVE_EMPLOYMENT_LOW_BUDGET": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-faq-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_HOLD_DAY_FULL_RATE": {
+      "status": "VERIFIED",
+      "snapshot": "sagindie-faq-excerpt.txt",
+      "reason": null
+    },
+    "SAG_RATES_BASIC_CONSECUTIVE_EMPLOYMENT": {
+      "status": "UNVERIFIABLE",
+      "snapshot": null,
+      "reason": "sagaftra.org returns HTTP 403 to scripted fetches; the sentence was read through a rendering service and is not snapshotted."
+    }
+  }
+}

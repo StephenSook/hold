@@ -1,200 +1,277 @@
-# California Child Performer Rules
-# Sources:
-#   California Labor Code: https://leginfo.legislature.ca.gov/
-#   IWC Wage Order 12 (8 CCR 11750-11765): https://www.dir.ca.gov/iwc/wageorders/
-#   DLSE Opinion Letters: https://www.dir.ca.gov/dlse/
-# Effective dates: current as of 2026-09-01.
-# All quotes: verbatim from CA statutes; verified PENDING full snapshot (task 2.10).
-# D4: PENDING records must be upgraded to VERIFIED before submission.
+# California child performer rules. Every quote is verbatim from a committed snapshot under rules/sources/
+# (8 CCR 11755.2, 11756, 11760, 11761 at dir.ca.gov; Labor Code 1308.7 at leginfo; the DLSE summary chart).
+# Checked by api/tests/test_quotes.py. D4: cite or refuse.
+
+- id: CA_11760_e_location_hours_9_15
+  jurisdiction: CA
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(e)
+  title: Minor ages 9 to 15: 9 hours at the place of employment
+  quote: |
+    Minors who have reached the age of nine (9) years but who have not attained the age of
+    sixteen (16) years may be permitted at the place of employment for a maximum of nine (9)
+    hours.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
+  valid_to: null
+  params:
+    max_location_hours: 9
+    age_min: 9
+    age_max: 15
+  verified: VERIFIED
+  note: Effective date from the section history (amendment filed 3-4-86, effective the thirtieth day thereafter).
 
 - id: CA_11760_e_work_hours_9_15_school_day
   jurisdiction: CA
-  authority: California Industrial Welfare Commission
-  citation: 8 CCR 11760(e)(1)
-  title: Minor ages 9-15 max work hours school day
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(e)
+  title: Minor ages 9 to 15: 5 hours of work when school is in session
   quote: |
-    Minors from nine (9) years of age to fifteen (15) years of age: three (3) hours of
-    work on any school day and eight (8) hours on any non-school day or on any day during
-    a school holiday.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
+    Such nine (9)-hour period shall consist of not more than five (5) hours of work and at least
+    three (3) hours of schooling when the minor's school is in session.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
   valid_to: null
   params:
-    max_work_hours_school_day: 3
-    max_work_hours_non_school_day: 8
+    max_work_hours_school_day: 5
     age_min: 9
     age_max: 15
-  verified: PENDING
-  note: >
-    The DLSE "subtract 6 hours" policy applies to compute net school-day hours
-    when a studio teacher is present. Tracked separately as CA_DLSE_SUBTRACT_6.
+  verified: VERIFIED
+  note: The DLSE subtract-6 policy (separate record) reads this as 3 hours of work for tutored minors on a school day.
 
-- id: CA_11760_e_work_hours_16_17_school_day
+- id: CA_11760_e_work_hours_9_15_non_school_day
   jurisdiction: CA
-  authority: California Industrial Welfare Commission
-  citation: 8 CCR 11760(e)(2)
-  title: Minor ages 16-17 max work hours school day
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(e)
+  title: Minor ages 9 to 15: 7 hours of work when school is not in session
   quote: |
-    Minors from sixteen (16) years of age to seventeen (17) years of age: four (4) hours
-    of work on any school day and eight (8) hours on any non-school day or on any day
-    during a school holiday.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
+    On days when the minor's school is not in session, working hours may be increased to seven
+    (7) hours, with one (1) hour of rest and recreation.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
   valid_to: null
   params:
-    max_work_hours_school_day: 4
+    max_work_hours_non_school_day: 7
+    age_min: 9
+    age_max: 15
+  verified: VERIFIED
+  note: null
+
+- id: CA_11760_f_location_hours_16_17
+  jurisdiction: CA
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(f)
+  title: Minor ages 16 to 17: 10 hours at the place of employment
+  quote: |
+    Minors who have reached the age of sixteen (16) years but who have not attained the age of
+    eighteen (18) years may be permitted at the place of employment for a maximum of ten (10)
+    hours.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
+  valid_to: null
+  params:
+    max_location_hours: 10
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: null
+
+- id: CA_11760_f_work_hours_16_17_school_day
+  jurisdiction: CA
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(f)
+  title: Minor ages 16 to 17: 6 hours of work when school is in session
+  quote: |
+    Such ten (10)-hour period shall consist of not more than six (6) hours of work and at least
+    three (3) hours of schooling when the minor's school is in session, and one (1) hour of rest
+    and recreation.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
+  valid_to: null
+  params:
+    max_work_hours_school_day: 6
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: null
+
+- id: CA_11760_f_work_hours_16_17_non_school_day
+  jurisdiction: CA
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11760(f)
+  title: Minor ages 16 to 17: 8 hours of work when school is not in session
+  quote: |
+    On days when school is not in session, working hours may be increased to not more than eight
+    (8) hours, with one (1) hour of rest and recreation.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
+  valid_to: null
+  params:
     max_work_hours_non_school_day: 8
     age_min: 16
     age_max: 17
-  verified: PENDING
-  note: null
-
-- id: CA_11760_e_daily_cap_8_hours
-  jurisdiction: CA
-  authority: California Industrial Welfare Commission
-  citation: 8 CCR 11760(e)
-  title: Minor daily work cap 8 hours maximum
-  quote: |
-    No minor shall be employed for more than eight (8) hours of work in any one day.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
-  valid_to: null
-  params:
-    max_work_hours_day: 8
-  verified: PENDING
-  note: Absolute cap; school-day limits are stricter subsets.
-
-- id: CA_11760_e_weekly_cap_48_hours
-  jurisdiction: CA
-  authority: California Industrial Welfare Commission
-  citation: 8 CCR 11760(e)
-  title: Minor weekly work cap 48 hours
-  quote: |
-    No minor shall be employed for more than forty-eight (48) hours of work in any one
-    workweek.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
-  valid_to: null
-  params:
-    max_work_hours_week: 48
-  verified: PENDING
+  verified: VERIFIED
   note: null
 
 - id: CA_11760_i_turnaround_12_hours
   jurisdiction: CA
-  authority: California Industrial Welfare Commission
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
   citation: 8 CCR 11760(i)
-  title: Minor 12-hour turnaround between work days
+  title: 12 hours between dismissal and the next day's call
   quote: |
-    There shall be a lapse of not less than twelve (12) hours between the time a minor is
-    dismissed and the time such minor is called for work.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
+    Twelve (12) hours must elapse between the minor's time of dismissal and time of call on the
+    following day.
+  source_url: https://www.dir.ca.gov/t8/11760.html
+  valid_from: "1986-04-03"
   valid_to: null
   params:
     min_turnaround_hours: 12
-  verified: PENDING
+  verified: VERIFIED
   note: null
+
+- id: CA_1308_7_daily_cap_8_hours
+  jurisdiction: CA
+  authority: California Legislature
+  citation: Cal. Lab. Code 1308.7(a)
+  title: Minor daily cap: 8 hours of work in one day
+  quote: |
+    No minor shall be employed in the entertainment industry more than eight hours in one day of
+    24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day
+    preceding a schoolday. However, a minor may work the hours authorized by this section during
+    any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.
+  source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB
+  valid_from: "1993-09-28"
+  valid_to: null
+  params:
+    max_work_hours_day: 8
+  verified: VERIFIED
+  note: Statutory cap on top of the 8 CCR 11760 tables. Effective date from the section note (Stats. 1993, Ch. 570).
+
+- id: CA_1308_7_weekly_cap_48_hours
+  jurisdiction: CA
+  authority: California Legislature
+  citation: Cal. Lab. Code 1308.7(a)
+  title: Minor weekly cap: 48 hours of work in one week
+  quote: |
+    No minor shall be employed in the entertainment industry more than eight hours in one day of
+    24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day
+    preceding a schoolday. However, a minor may work the hours authorized by this section during
+    any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.
+  source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB
+  valid_from: "1993-09-28"
+  valid_to: null
+  params:
+    max_work_hours_week: 48
+  verified: VERIFIED
+  note: Display fact in pass 1; a week needs the whole schedule.
 
 - id: CA_1308_7_curfew_school_night
   jurisdiction: CA
   authority: California Legislature
   citation: Cal. Lab. Code 1308.7(a)
-  title: Minor curfew before school day - no work after 10 PM
+  title: Not before 5 a.m., not after 10 p.m. on any day preceding a schoolday
   quote: |
-    It is unlawful to employ a minor in the entertainment industry before 5 a.m. or after
-    10 p.m. on any day preceding a school day.
+    No minor shall be employed in the entertainment industry more than eight hours in one day of
+    24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day
+    preceding a schoolday. However, a minor may work the hours authorized by this section during
+    any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.
   source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB
-  valid_from: "1993-01-01"
+  valid_from: "1993-09-28"
   valid_to: null
   params:
     earliest_call: "05:00"
     curfew_school_night: "22:00"
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: 1308.7(b): a schoolday is any day the minor must attend school for 240 minutes or more.
 
 - id: CA_1308_7_curfew_non_school_night
   jurisdiction: CA
   authority: California Legislature
-  citation: Cal. Lab. Code 1308.7(b)
-  title: Minor curfew before non-school day - no work after 12:30 AM
+  citation: Cal. Lab. Code 1308.7(a)
+  title: Not before 5 a.m.; until 12:30 a.m. before a nonschoolday
   quote: |
-    It is unlawful to employ a minor in the entertainment industry before 5 a.m. or after
-    12:30 a.m. on any day not preceding a school day.
+    No minor shall be employed in the entertainment industry more than eight hours in one day of
+    24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day
+    preceding a schoolday. However, a minor may work the hours authorized by this section during
+    any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.
   source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB
-  valid_from: "1993-01-01"
+  valid_from: "1993-09-28"
   valid_to: null
   params:
     earliest_call: "05:00"
     curfew_non_school_night: "00:30"
-  verified: PENDING
+  verified: VERIFIED
   note: null
 
-- id: CA_11755_1_studio_teacher_in_session
+- id: CA_11755_2_studio_teacher_ratios
   jurisdiction: CA
-  authority: California Industrial Welfare Commission
-  citation: 8 CCR 11755.1
-  title: Studio teacher ratio 1:10 during school session
-  quote: |
-    When school is in session, there shall be one studio teacher for every ten (10) minors
-    or fraction thereof employed on the set.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
-  valid_to: null
-  params:
-    teacher_per_minors_in_session: 10
-  verified: PENDING
-  note: Display fact in Phase 2. Not modeled as CP-SAT constraint.
-
-- id: CA_11755_2_studio_teacher_not_in_session
-  jurisdiction: CA
-  authority: California Industrial Welfare Commission
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
   citation: 8 CCR 11755.2
-  title: Studio teacher ratio 1:20 when school not in session
+  title: Studio teacher 1 per 10 minors (1 per 20 on non-school days for minors under 16)
   quote: |
-    When school is not in session, there shall be one studio teacher for every twenty (20)
-    minors or fraction thereof employed on the set.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
+    One (1) studio teacher must be provided for each group of ten (10) minors or fraction
+    thereof. With respect to minors age fifteen (15) days to age sixteen (16), one (1) studio
+    teacher must be provided for each group of twenty (20) minors or fraction thereof on
+    Saturdays, Sundays, holidays, or during school vacation periods.
+  source_url: https://www.dir.ca.gov/t8/11755_2.html
+  valid_from: "1997-12-02"
   valid_to: null
   params:
-    teacher_per_minors_not_in_session: 20
-  verified: PENDING
-  note: Display fact in Phase 2. Not modeled as CP-SAT constraint.
+    teacher_per_minors: 10
+    teacher_per_minors_non_school_under_16: 20
+  verified: VERIFIED
+  note: Display fact; renumbered from 11755.1 on 12-2-97 per the section history.
 
-- id: CA_11761_meal_period_6_hours
+- id: CA_11761_meal_period
   jurisdiction: CA
-  authority: California Industrial Welfare Commission
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
   citation: 8 CCR 11761
-  title: Minor meal period within 6 hours
+  title: Meal period excluded from hours; extends the day by at most 30 minutes
   quote: |
-    No minor shall be required to work for a period of more than six (6) hours without a
-    meal period of not less than thirty (30) minutes.
-  source_url: https://www.dir.ca.gov/iwc/wageorders/IWCArticle12.pdf
-  valid_from: "2001-01-01"
+    All hours for the minor at the place of employment are exclusive of the meal period. The
+    working day may not be extended by a meal period longer than one half (1/2) hour.
+  source_url: https://www.dir.ca.gov/t8/11761.html
+  valid_from: "1986-04-03"
   valid_to: null
   params:
-    max_work_before_meal_hours: 6
-    min_meal_duration_minutes: 30
-  verified: PENDING
-  note: null
+    max_meal_extension_minutes: 30
+  verified: VERIFIED
+  note: Display fact. California's six-hour meal timing is not in this section; the six-hour rule HOLD enforces is Georgia's 300-7-1-.03(2)(c).
+
+- id: CA_11756_out_of_state_basis
+  jurisdiction: CA
+  authority: California Department of Industrial Relations (8 CCR, Title 8)
+  citation: 8 CCR 11756
+  title: California rules follow California-resident minors to another state
+  quote: |
+    When minors resident in the State of California and employed by an employer in the
+    entertainment industry located in the State of California, are taken from the State of
+    California to work on location in another state, as part of, and pursuant to, contractual
+    arrangements made in the State of California for their employment in the entertainment
+    industry, the child labor laws of California and the regulations based thereon shall be
+    applicable, including, but not limited to, the requirement that a studio teacher must be
+    provided for such minor in accordance with Section 11755.1.
+  source_url: https://www.dir.ca.gov/t8/11756.html
+  valid_from: "1986-04-03"
+  valid_to: null
+  params: null
+  verified: VERIFIED
+  note: Basis for D5 on a Georgia shoot with a California-resident minor. HOLD assumes a California employer and a California contract; if that is not the case, the CA records do not apply and the README honesty panel says so.
 
 - id: CA_DLSE_SUBTRACT_6_POLICY
   jurisdiction: CA
   authority: California Division of Labor Standards Enforcement
-  citation: DLSE Opinion Letter 1988.11.02 (entertainment industry minor hours policy)
-  title: DLSE subtract-6 policy for studio school minors
+  citation: DLSE, Minors Summary Charts: Hours of Work (Attendance and Work Hours)
+  title: DLSE subtract-6 policy for tutored minors on a school day
   quote: |
-    When a minor attends a studio school on the set, six (6) hours shall be subtracted
-    from the permitted hours at the place of employment to determine the maximum permitted
-    work hours for that minor on that day.
-  source_url: https://www.dir.ca.gov/dlse/
-  valid_from: "1988-11-02"
+    Compute work hours for each age group by subtracting 6 hours from the max time at employment
+    site for tutored minors when school in session. The difference is the maximum work hours for
+    these minors.
+  source_url: https://www.dir.ca.gov/dlse/MinorsSummaryCharts_HoursofWork.pdf
+  valid_from: "2000-01-01"
   valid_to: null
   params:
     school_hours_to_subtract: 6
-  verified: PENDING
-  note: >
-    Separately flagged layer per PLAN.md task 2.2. Applied on top of 8 CCR 11760(e)
-    when a studio teacher and school hours are present. Quote is paraphrase of DLSE
-    policy; exact wording from Opinion Letter required for VERIFIED status.
+  verified: VERIFIED
+  note: Separately flagged enforcement layer (PLAN.md 2.2), display only in pass 1. The chart continues: 9 to 16 year-olds who attend regular school may only work up to 3 hours on a schoolday (row label interleaved in the text extraction, so not machine-checked). The chart carries no date; valid_from is a placeholder and is stated as such.
+

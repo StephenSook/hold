@@ -1,0 +1,20 @@
+# Snapshot of https://www.dir.ca.gov/t8/11761.html
+# fetched_at 2026-09-03T01:37:23+00:00 sha256(original) e53732ebe7c6e998fd45e9b06d15894256ed502305598fd4691cee87a4d2a939 bytes 4665
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+California Code of Regulations, Title 8, Section 11761. Meal Period for Minors.
+ Skip to Main Content
+ This information is provided free of charge by the Department of Industrial Relations 
+ from its web site at www.dir.ca.gov. These regulations are for the 
+ convenience of the user and no representation or warranty is made that the information 
+ is current or accurate. See full disclaimer at https://www.dir.ca.gov/od_pub/disclaimer.html.
+Chapter 6. Division of Labor Standards Enforcement
+Subchapter 2. Employment of Minors in the Entertainment Industry
+ Article 1. Motion Picture Industries
+ New Query 
+§11761. Meal Period for Minors.
+ All hours for the minor at the place of employment are exclusive of the meal period. The working day may not be extended by a meal period longer than one half (1/2) hour.
+NOTE: Authority cited: Sections 55, 59 and 1398, Labor Code. Reference: Section 1396, Labor Code.
+ HISTORY
+1. Amendment filed 3-4-86; effective thirtieth day thereafter (Register 86, No. 10).
+Go Back to Article 1 Table of Contents

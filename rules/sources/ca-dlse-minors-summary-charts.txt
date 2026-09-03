@@ -1,0 +1,145 @@
+# Snapshot of https://www.dir.ca.gov/dlse/MinorsSummaryCharts_HoursofWork.pdf
+# fetched_at 2026-09-03T01:47:34+00:00 sha256(original) 6b4ed82c5cfaaa5227c85da2e8ca84f8fbb3499cf8d0083e1ca569702392998c bytes 168184
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+ENTERTAINMENT INDUSTRY—SUMMARY CHART
+AGE
+
+WORK TIME
+SCHOOL IN
+SESSION
+
+WORK TIME
+SCHOOL NOT
+IN SESSION
+20 minutes work activity
+2 hrs. max at employment site
+
+15 days
+to
+6 months
+
+CONCURRENT
+REQUIREMENTS
+
+Permits to work and employ required. [8 CCR 11751]
+Parent or guardian must be present. [8 CCR 11757]
+1 studio teacher and 1 nurse must be present for each 3 or fewer
+infants 15 days to 6 weeks old. [8 CCR 11760, 11755.2]
+1 studio teacher and 1 nurse must be present for each 10 or fewer
+infants 6 weeks to 6 months old. [8 CCR 11760, 11755.2]
+May not be exposed to light exceeding 100 footcandles for more than
+30 seconds. [8 CCR 11760]
+
+May only be employed between 9:30 a.m. and 11:30 a.m. or between 2:30
+p.m. and 4:30 p.m. [8 CCR 11764]
+2 hours work activity
+4 hours max at employment site
+Balance for rest and recreation
+
+6 months
+to
+2 years
+
+May only be employed between 5 a.m. and 12:30 a.m. [LC 1308.7]
+3 hours work activity
+6 hours max at employment site
+Balance for rest and recreation
+
+2 years
+to
+6 years
+
+6 years
+to
+9 years
+
+May only be employed between 5 a.m. and 12:30 a.m.
+[LC 1308.7]
+6 hours work activity
+4 hours work activity
+1 hour rest and recreation
+3 hours school
+1 hour rest and recreation
+8 hrs. max at employment site
+May only be employed between 5 a.m. and 12:30 a.m. (to
+10 p.m. preceding schooldays > 4 hours).[LC 1308.7]
+
+9 years
+to
+16 years
+
+16 years
+to
+18 years
+
+5 hours work activity
+3 hours school
+1 hour rest and recreation
+9 hrs. max at employment site
+
+7 hours work activity
+1 hour rest and recreation
+
+May only be employed between 5 a.m. and 12:30 a.m. (to
+10 p.m. preceding schooldays > 4 hours).[LC 1308.7]
+8 hours work activity
+6 hours work activity
+1 hour rest and recreation
+3 hours school
+1 hour rest and recreation
+10 hrs. max at employment site
+
+Permits to work and employ required unless the minor is a high
+school graduate or equivalent. [8 CCR 11751] High School graduates
+may be employed as adults.
+Parent or guardian must be present. [8 CCR 11757]
+Studio teacher must be present. [8 CCR 11751.1]
+1 studio teacher required per 10 minors. [8 CCR 11755.1]
+1 studio teacher per 20 minors on weekends, holidays, and school
+breaks and vacations. [8 CCR 11755.1]
+Studio teachers are responsible for the health, safety, and morals of
+the minor. [8CCR 11755.2]
+Minors in grades one through six must be tutored between the hours
+of 7 a.m. and 4 p.m. Minors in grades seven through twelve must be
+tutored between the hours of 7 a.m. and 7 p.m. [EC 48225.5]
+
+Permits to work and employ required unless a high school graduate
+or equivalent. High school graduates may be employed as adults.
+
+Studio teacher need only be present for minors' schooling
+if minor still required to attend school.
+
+May only be employed between 5 a.m. and 12:30 a.m. (to
+10 p.m. preceding schooldays > 4 hours).[LC 1308.7]
+Compute work hours for each age group by subtracting 6 hours from the max time at employment site for tutored minors when school in
+session. The difference is the maximum work hours for these minors. Thus, 9 to16 year-olds who attend regular school may only work up to 3
+Regular School
+hours on a schoolday. The 1-hour of rest and recreation is not required, but the workday may be extended one-half hour by a meal period. No
+Attendance and
+work permitted during regular school hours. Exception: Minors 14 and over may work up to 8 hours during regular school hours for each of 2
+Work Hours
+consecutive days if excused with the school's written permission. [8 CCR 11760]
+No minor may be employed over 8 hours in a day. [LC 1308.7, 1392] or over 48 hours in a week. [LC 1308.7] No exceptions.
+Max
+Day/Week
+Meal periods are not work time. Workdays extended up to one-half hour for a meal period. [8 CCR 11761] Meals must be within 6 hours of
+Meal
+call time and/or previous meal period. Teachers may require an earlier meal period.
+Periods
+Travel between studio and location is work time. Up to 45 minutes travel from on-location, overnight lodging to work site is not generally
+Travel
+considered work time. Travel between school or home and studio is not work time. [8 CCR11759]
+Time
+12 hours must elapse between dismissal and next day's call time. No exceptions. [8 CCR11760]
+Day's End
+Make-up in minor's home by persons employed on the same project is work time, and may not begin before 8:30 a.m. 12 hours must elapse
+Make-up
+between dismissal and the beginning of the next day's make-up/hairdressing. [8 CCR 11763]
+Off Set
+California employers who employ resident minors outside of California under contractual arrangements made within California, must comply
+Out of State
+with all California child labor laws and regulations. [8 CCR 11756]
+Note: Daily work and school hour schedules for tutored minors of all age groups are provided in 8 CCR 11760.
+
+

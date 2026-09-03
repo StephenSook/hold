@@ -1,210 +1,292 @@
-# Georgia Child Performer Rules
-# Source: Georgia Department of Labor, Chapter 300-7-1 Child Labor Rules
-# Effective date verified: current version in effect as of 2026-09-01
-# All quotes: verbatim from the Official Code of Georgia Annotated and
-# Ga. Comp. R. & Regs., verified PENDING full snapshot (task 2.10).
-# D4: records marked PENDING must be upgraded to VERIFIED before submission.
+# Georgia child performer rules. Every quote is verbatim from a committed snapshot under rules/sources/
+# (the rule text at rules.sos.ga.gov and the Department form Schedule of Hours of Performance).
+# Checked by api/tests/test_quotes.py. D4: cite or refuse.
 
 - id: GA_300_7_1_03_ages_9_15_location_hours
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
-  title: Minor ages 9-15 max hours at location per day
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 9 to 15: 10 hours at the Location per day
   quote: |
-    Minors who are between the ages of nine (9) and fifteen (15) years old: ten (10) hours
-    at the place of employment in any one day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    May be at the Location up to 10 hours per day and no later than 10:00 p.m. on a school night
+    and 12:00 midnight on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     max_location_hours: 10
     age_min: 9
     age_max: 15
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_ages_9_15_work_hours
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
-  title: Minor ages 9-15 max work hours per day
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(2), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 9 to 15: 5 hours of work per day
   quote: |
-    Minors who are between the ages of nine (9) and fifteen (15) years old: five (5) hours
-    of work in any one day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    Shall work no longer than a total of 5 hours per day.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     max_work_hours: 5
     age_min: 9
     age_max: 15
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_school_night_curfew
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
-  title: Minor ages 9-15 school night curfew 10 PM
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 9 to 15: no later than 10:00 p.m. on a school night
   quote: |
-    Minors who are between the ages of nine (9) and fifteen (15) years old shall not be
-    permitted to work later than 10:00 p.m. on any night preceding a school day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    May be at the Location up to 10 hours per day and no later than 10:00 p.m. on a school night
+    and 12:00 midnight on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     curfew_school_night: "22:00"
     age_min: 9
     age_max: 15
-  verified: PENDING
-  note: The demo schedule illegal day (2026-10-08, school_day=true) violates this rule.
+  verified: VERIFIED
+  note: School Night is defined in 300-7-1-.02 as any time after 6:00 P.M. the night before a school day. The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_non_school_night_curfew
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
-  title: Minor ages 9-15 non-school night curfew midnight
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 9 to 15: no later than 12:00 midnight on a non-school night
   quote: |
-    Minors who are between the ages of nine (9) and fifteen (15) years old shall not be
-    permitted to work later than 12:00 midnight on any night not preceding a school day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    May be at the Location up to 10 hours per day and no later than 10:00 p.m. on a school night
+    and 12:00 midnight on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     curfew_non_school_night: "00:00"
     age_min: 9
     age_max: 15
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_ages_16_17_location_hours
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(b)
-  title: Minor ages 16-17 max hours at location per day
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (h)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 16 to 17: 12 hours at the Location per day
   quote: |
-    Minors who are sixteen (16) or seventeen (17) years of age: twelve (12) hours at the
-    place of employment in any one day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    May be at the Location up to 12 hours per day, no later than 12:00 a.m. on a school night,
+    and no later than 2:00 a.m. on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     max_location_hours: 12
     age_min: 16
     age_max: 17
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_ages_16_17_work_hours
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(b)
-  title: Minor ages 16-17 max work hours per day
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (h)(2), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 16 to 17: 8 hours of work per day
   quote: |
-    Minors who are sixteen (16) or seventeen (17) years of age: eight (8) hours of work
-    in any one day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    Shall work no longer than a total of 8 hours per day.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     max_work_hours: 8
     age_min: 16
     age_max: 17
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_ages_16_17_school_night_curfew
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(b)
-  title: Minor ages 16-17 school night curfew midnight
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (h)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 16 to 17: no later than 12:00 a.m. on a school night
   quote: |
-    Minors who are sixteen (16) or seventeen (17) years of age shall not be permitted to
-    work later than 12:00 midnight on any night preceding a school day.
-  source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+    May be at the Location up to 12 hours per day, no later than 12:00 a.m. on a school night,
+    and no later than 2:00 a.m. on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     curfew_school_night: "00:00"
     age_min: 16
     age_max: 17
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
+
+- id: GA_300_7_1_03_ages_16_17_non_school_night_curfew
+  jurisdiction: GA
+  authority: Georgia Department of Labor
+  citation: Ga. Dept. of Labor, Schedule of Hours of Performance, (h)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)
+  title: Minor ages 16 to 17: no later than 2:00 a.m. on a non-school night
+  quote: |
+    May be at the Location up to 12 hours per day, no later than 12:00 a.m. on a school night,
+    and no later than 2:00 a.m. on a non-school night.
+  source_url: https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+  valid_from: "2020-01-30"
+  valid_to: null
+  params:
+    curfew_non_school_night: "02:00"
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: The rule text incorporates the Department form (300-7-1-.03(2)(a)); the hours live on the form, not in the rule.
 
 - id: GA_300_7_1_03_earliest_call
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(1)
-  title: Minor earliest permitted call time 5 AM
+  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(d)
+  title: No work day starts before 5:00 A.M.
   quote: |
-    No minor shall be required or permitted to work before 5:00 a.m. in any one day.
+    No work day shall start earlier than 5:00 A.M.
   source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     earliest_call: "05:00"
-  verified: PENDING
-  note: Applies to all minor ages covered by these rules.
+  verified: VERIFIED
+  note: Applies to every minor; the form repeats it at (i)(3).
 
 - id: GA_300_7_1_03_consecutive_days
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(3)
-  title: Minor max 6 consecutive work days
+  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(e)
+  title: No more than six consecutive days
   quote: |
-    No minor shall be employed for more than six (6) consecutive days without a day off.
+    No Minor shall work more than six (6) consecutive days.
   source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     max_consecutive_days: 6
-  verified: PENDING
-  note: null
+  verified: VERIFIED
+  note: Counted over the days the minor worked; the form (i)(4) makes the Representative responsible for the count.
 
 - id: GA_300_7_1_03_turnaround_school_hours
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.03(4)
-  title: Minor 12-hour turnaround when working during school hours
+  citation: Ga. Comp. R. & Regs. 300-7-1-.03(5)(a)
+  title: 12 hours between dismissal and next call when working during school hours
   quote: |
-    When a minor is employed during school hours, there shall be a minimum of twelve (12)
-    hours between the end of employment one day and the beginning of employment the next day.
+    When any Minor between ages four (4) and eighteen (18) works during school hours, twelve
+    (12) hours must elapse between the Minor's time of dismissal and time of call on the
+    following day; or if the Minor is not working the next day, the start of the Minor's regular
+    school day.
   source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     min_turnaround_hours: 12
-  verified: PENDING
-  note: Applies when minor works during school hours (school_day=true in ScheduleInput).
+    age_min: 4
+    age_max: 17
+  verified: VERIFIED
+  note: HOLD applies it when the checked day is a school day (school_day true) and measures to the crew call of that day.
+
+- id: GA_300_7_1_03_first_meal_within_6_hours
+  jurisdiction: GA
+  authority: Georgia Department of Labor
+  citation: Ga. Comp. R. & Regs. 300-7-1-.03(2)(c)
+  title: First meal within 6 hours of start, next meal within 7 hours of the previous meal start
+  quote: |
+    Meal periods are not work time. Meal time may be scheduled at the end of the day as long as
+    the first meal is within six (6) hours of start time and subsequent meals are no more than
+    seven (7) hours after the start of the previous meal period.
+  source_url: https://rules.sos.ga.gov/gac/300-7-1
+  valid_from: "2020-01-30"
+  valid_to: null
+  params:
+    max_work_before_meal_hours: 6
+    next_meal_within_hours_of_previous_start: 7
+    min_meal_duration_minutes: 30
+  verified: VERIFIED
+  note: Timing-only: judged on a concrete call sheet, never on the crew window. The 30-minute minimum is the form's alternative at (g)(3)(i) ('30-minute meal break'); HOLD models one crew meal per day.
 
 - id: GA_300_7_1_09_studio_teacher_ratio
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.09
+  citation: Ga. Comp. R. & Regs. 300-7-1-.09(2)(l)
   title: Studio teacher ratio 1 per 10 minors
   quote: |
-    There shall be one (1) studio teacher for every ten (10) minors or fraction thereof
-    employed at any place of employment.
+    The ratio of Studio Teacher to Minors shall not exceed one (1) Studio Teacher per ten (10)
+    Minors.
   source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     teacher_per_minors: 10
-  verified: PENDING
-  note: Display fact only in Phase 2. Not modeled as a CP-SAT constraint.
+  verified: VERIFIED
+  note: Display fact; headcount is not in the schedule.
 
 - id: GA_300_7_1_04_coordinator_ratio
   jurisdiction: GA
   authority: Georgia Department of Labor
-  citation: Ga. Comp. R. & Regs. 300-7-1-.04
+  citation: Ga. Comp. R. & Regs. 300-7-1-.04(1)(b)
   title: Child labor coordinator ratio 1 per 10 minors
   quote: |
-    Every employer shall provide one (1) child labor coordinator for every ten (10) minor
-    performers or fraction thereof on any production set.
+    The ratio of Child Labor Coordinator to Minors shall not exceed one (1) Child Labor
+    Coordinator per ten (10) minors at a Location.
   source_url: https://rules.sos.ga.gov/gac/300-7-1
-  valid_from: "2010-01-01"
+  valid_from: "2020-01-30"
   valid_to: null
   params:
     coordinator_per_minors: 10
-  verified: PENDING
-  note: Display fact only in Phase 2. Not modeled as a CP-SAT constraint.
+  verified: VERIFIED
+  note: Display fact; headcount is not in the schedule.
+
+- id: GA_300_7_1_02_school_night_definition
+  jurisdiction: GA
+  authority: Georgia Department of Labor
+  citation: Ga. Comp. R. & Regs. 300-7-1-.02(1)(v)
+  title: School Night defined
+  quote: |
+    School Night: Any time after 6:00 P.M. the night before a school day.
+  source_url: https://rules.sos.ga.gov/gac/300-7-1
+  valid_from: "2020-01-30"
+  valid_to: null
+  params: null
+  verified: VERIFIED
+  note: Display fact; drives the school-night curfews above.
+
+- id: GA_300_7_1_02_location_time_definition
+  jurisdiction: GA
+  authority: Georgia Department of Labor
+  citation: Ga. Comp. R. & Regs. 300-7-1-.02(1)(m)
+  title: Location Time defined (meals, tutoring and breaks count)
+  quote: |
+    Location Time: The total time the Minor is on the Location of the Employing Unit including,
+    but not limited to, work time, meal time, tutoring time, break time, and any other time
+    spent at the Location regardless of the reason.
+  source_url: https://rules.sos.ga.gov/gac/300-7-1
+  valid_from: "2020-01-30"
+  valid_to: null
+  params: null
+  verified: VERIFIED
+  note: Display fact; HOLD's location hours follow this definition (call to dismissal, meal included).
+
+- id: GA_300_7_1_03_infants
+  jurisdiction: GA
+  authority: Georgia Department of Labor
+  citation: Ga. Comp. R. & Regs. 300-7-1-.03(1)(e)
+  title: Infants under 15 days may not work
+  quote: |
+    Infants between birth to fifteen (15) days of age are NOT allowed to work in a Production.
+  source_url: https://rules.sos.ga.gov/gac/300-7-1
+  valid_from: "2020-01-30"
+  valid_to: null
+  params:
+    min_age_days: 15
+  verified: VERIFIED
+  note: Display fact; no infant in the demo.
+

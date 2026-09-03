@@ -1,0 +1,6 @@
+# Excerpt of https://www.sagindie.org/signatory/
+# fetched_at 2026-09-03T01:37:51+00:00 sha256(original) 432235402d788acc6eca53348923b3d6bc427d5aa874de3c9657f6ad514dbf3c bytes 256670
+# Plain text derived from the original for substring verification of rules/*.yaml quotes. Excerpt only; the full document is copyrighted and its sha256 is recorded above.
+
+1 UPA minimum rate for principal performers is set at 20% of Basic Agreement scale and will increase annually (current rate in effect through 6/30/27); Pension & Health contribution is also owed (21% for performers; raising to 22% effective 9/6/26). Day rate based on 8-hour day.
+2 MPA minimum rate for principal performers is set at 35% of Basic Agreement scale and will increase annually (current rates in effect through 6/30/27); Pension & Health contribution is also owed (21% for performers; raising to 22% effective 9/6/26). Day rate based on 8-hour day; weekly rate based on 5-day week.

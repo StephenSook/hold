@@ -1,79 +1,189 @@
-# SAG-AFTRA Minor Performer Rules
-# Source: SAG-AFTRA Young Performers Handbook (2022 edition, 2026 amendment)
-#   https://www.sagaftra.org/files/youngperformers_handbook.pdf
-# 2026 Chaperone amendment: ratified 2026-06-15, effective 2026-07-01
-# D4: PENDING records must be upgraded to VERIFIED with snapshot before submission.
+# SAG-AFTRA minor performer rules from the Young Performers Handbook (2020 edition excerpt under rules/sources/).
+# Checked by api/tests/test_quotes.py. D4: cite or refuse. Where the handbook prints an em dash the quote
+# writes a hyphen (this repo bans em dashes in its own text); the checker treats the two as equal.
 
 - id: SAG_MINORS_P17_CUMULATIVE_JURISDICTION
   jurisdiction: SAG-AFTRA
   authority: SAG-AFTRA
-  citation: SAG-AFTRA Young Performers Handbook p. 17
-  title: Cumulative jurisdiction - stricter of state or SAG rules applies
+  citation: SAG-AFTRA Young Performers Handbook, TV/Theatrical Contract Workday Rules
+  title: The contract governs work hours nationwide unless the state is stricter
   quote: |
-    Where a state or local law or regulation provides greater protection to a performer
-    than this Agreement, the state or local law or regulation shall apply. Where this
-    Agreement provides greater protection, this Agreement shall apply. In all cases the
-    more protective provision controls.
-  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
-  valid_from: "2022-01-01"
+    The SAG-AFTRA contract governs minors' work hours
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
   valid_to: null
   params: null
-  verified: PENDING
-  note: >
-    Implements D5 (cumulative jurisdiction). Cross-references 8 CCR 11756 and
-    GA 300-7-1-.01. Checker must apply stricter of state or SAG limit on each field.
+  verified: VERIFIED
+  note: Display fact behind D5. The full sentence reads 'The SAG-AFTRA contract governs minors' work hours everywhere in the United States unless stricter work hours are mandated by the state'; the PDF text extraction interleaves the two columns, so only the contiguous fragment is machine-checked.
+
+- id: SAG_MINORS_WORKDAY_CURFEW
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, TV/Theatrical Contract Workday Rules
+  title: Not before 5 a.m., not after 10 p.m. before a school day; 12:30 a.m. before a non-school day
+  quote: |
+    Minors may not work before 5 a.m. or after 10 p.m. on evenings preceding a school day
+    (workdays must end by 12:30 a.m. on the morning of non-school days).
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    earliest_call: "05:00"
+    curfew_school_night: "22:00"
+    curfew_non_school_night: "00:30"
+  verified: VERIFIED
+  note: Young Performers Handbook, 2020 edition (TV/Theatrical Contract Workday Rules). Applies to every minor on a SAG-AFTRA production.
 
 - id: SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY
   jurisdiction: SAG-AFTRA
   authority: SAG-AFTRA
-  citation: SAG-AFTRA Young Performers Handbook p. 22
-  title: Minor 12-hour turnaround before school day
+  citation: SAG-AFTRA Young Performers Handbook, TV/Theatrical Contract Workday Rules
+  title: Final workday ends at least 12 hours before the next regular school day
   quote: |
-    There must be a minimum of twelve (12) consecutive hours of rest between the end of
-    one work day and the beginning of the next work day when a performer under eighteen
-    (18) years of age is scheduled to attend school the following day.
-  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
-  valid_from: "2022-01-01"
+    The minor's final workday must be concluded at least 12 hours before the beginning of the
+    minor's next regular school day.
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
   valid_to: null
   params:
     min_turnaround_hours: 12
-  verified: PENDING
-  note: Applies when next day has school_day=true in ScheduleInput.
+  verified: VERIFIED
+  note: HOLD applies it when the checked day is a school day and measures to that day's crew call, which is where an on-set school day begins.
+
+- id: SAG_MINORS_9_15_ON_SET_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 9 to 15: maximum 9.5 hours on the set
+  quote: |
+    Ages 9 to 15 - five hours (maximum of 9.5 hours on the set).
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_location_hours: 9.5
+    age_min: 9
+    age_max: 15
+  verified: VERIFIED
+  note: Young Performers Handbook, 2020 edition (TV/Theatrical Contract Workday Rules). Applies to every minor on a SAG-AFTRA production.
+
+- id: SAG_MINORS_9_15_WORK_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 9 to 15: five hours of work on a school day
+  quote: |
+    Ages 9 to 15 - five hours (maximum of 9.5 hours on the set).
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_work_hours_school_day: 5
+    age_min: 9
+    age_max: 15
+  verified: VERIFIED
+  note: Young Performers Handbook, 2020 edition (TV/Theatrical Contract Workday Rules). Applies to every minor on a SAG-AFTRA production.
+
+- id: SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 9 to 15: two more hours of work when school is not in session (7)
+  quote: |
+    On days when school is not in session, school-age minors may work an additional two hours a
+    day.
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_work_hours_non_school_day: 7
+    age_min: 9
+    age_max: 15
+  verified: VERIFIED
+  note: 7 is the school-day figure (5) plus the two additional hours the quoted sentence allows.
+
+- id: SAG_MINORS_16_17_ON_SET_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 16 and 17: maximum 10.5 hours on the set
+  quote: |
+    Ages 16 and 17 - six hours (maximum of 10.5 hours on the set).
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_location_hours: 10.5
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: Young Performers Handbook, 2020 edition (TV/Theatrical Contract Workday Rules). Applies to every minor on a SAG-AFTRA production.
+
+- id: SAG_MINORS_16_17_WORK_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 16 and 17: six hours of work on a school day
+  quote: |
+    Ages 16 and 17 - six hours (maximum of 10.5 hours on the set).
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_work_hours_school_day: 6
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: Young Performers Handbook, 2020 edition (TV/Theatrical Contract Workday Rules). Applies to every minor on a SAG-AFTRA production.
+
+- id: SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: Ages 16 and 17: two more hours of work when school is not in session (8)
+  quote: |
+    On days when school is not in session, school-age minors may work an additional two hours a
+    day.
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    max_work_hours_non_school_day: 8
+    age_min: 16
+    age_max: 17
+  verified: VERIFIED
+  note: 8 is the school-day figure (6) plus the two additional hours the quoted sentence allows.
+
+- id: SAG_MINORS_MEAL_AND_REST
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Young Performers Handbook, School-Age Minors
+  title: One hour of rest and a half-hour meal every day
+  quote: |
+    On all days, the minor must have at least one hour of rest and recreation and one half-hour
+    meal break.
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    min_meal_duration_minutes: 30
+    min_rest_hours: 1
+  verified: VERIFIED
+  note: Display fact; no timing is stated, so HOLD does not model it as a constraint.
 
 - id: SAG_MINORS_P23_INFANT_RESTRICTION
   jurisdiction: SAG-AFTRA
   authority: SAG-AFTRA
-  citation: SAG-AFTRA Young Performers Handbook p. 23
-  title: Infant restriction - 15 days old minimum, 2 hours max work
+  citation: SAG-AFTRA Young Performers Handbook, Infants
+  title: Infants: 20 minutes of work, two hours on the set
   quote: |
-    Infants under the age of six (6) months shall not be employed unless they are at
-    least fifteen (15) days old. No infant under six (6) months of age shall be employed
-    for more than two (2) hours in any one day.
-  source_url: https://www.sagaftra.org/files/youngperformers_handbook.pdf
-  valid_from: "2022-01-01"
+    can work 20 minutes, with a maximum of two hours on the set.
+  source_url: https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf
+  valid_from: "2020-01-01"
   valid_to: null
   params:
-    min_age_days: 15
-    max_work_hours_infant: 2
-    infant_age_months_max: 6
-  verified: PENDING
-  note: Nationwide restriction. Applies regardless of state law. Out of scope for demo (minor M is 14).
+    max_work_minutes_infant: 20
+    max_location_hours_infant: 2
+  verified: VERIFIED
+  note: Display fact; the sentence begins 'Children age 15 days to 6 months' on the previous line of the two-column PDF, so only the contiguous fragment is machine-checked. No infant in the demo.
 
-- id: SAG_MINORS_2026_CHAPERONE_UNDER_16
-  jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Young Performers Amendment, Section 4(c)
-  title: Chaperone required for all performers under 16 on set
-  quote: |
-    Effective July 1, 2026, a parent, guardian, or approved chaperone must be present on
-    set at all times when a performer under sixteen (16) years of age is working or on
-    call.
-  source_url: https://www.sagaftra.org/
-  valid_from: "2026-07-01"
-  valid_to: null
-  params:
-    chaperone_required_age_under: 16
-  verified: PENDING
-  note: >
-    2026 amendment. Display fact only - not modeled as a CP-SAT scheduling constraint
-    because it does not affect the shoot order or day assignment.

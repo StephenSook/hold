@@ -1,122 +1,183 @@
-# SAG-AFTRA Daily Rates and Hold Day Rules
-# Source: SAG-AFTRA 2026 Theatrical/TV Agreement (ratified 2026)
-#   https://www.sagaftra.org/production-center/contract/856/minimum-rates
-# P&H rate: 21% through 2026-09-05; 22% from 2026-09-06
-# All figures in integer cents. Rounding: standard half-up on final dollar amount.
-# D4: PENDING records must be upgraded to VERIFIED before submission.
+# SAG-AFTRA low-budget rates and the consecutive-employment facts behind hold-day cost (SAGindie sources under rules/sources/).
+# Integer cents. Checked by api/tests/test_quotes.py. D4: cite or refuse.
 
 - id: SAG_RATES_LOW_BUDGET_DAY
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Low Budget Agreement, Schedule of Minimums
-  title: Low Budget daily minimum rate
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Low Budget Theatrical Agreement, rate sheet effective 7/1/2026
+  title: Low Budget day performer minimum, 7/1/2026 to 6/30/2027
   quote: |
-    The daily minimum rate for performers under the Low Budget Agreement shall be
-    eight hundred ten dollars ($810) per day.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
-  valid_to: null
+    Low Budget Daily Rate: $834
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2026-07-01"
+  valid_to: "2027-06-30"
   params:
-    day_rate_cents: 81000
-    rate_tier: low_budget
-  verified: PENDING
+    day_rate_cents: 83400
+    rate_tier: "low_budget"
+  verified: VERIFIED
+  note: Also on the LBA rate sheet: Day Performer $834 (7/1/2026 column). Rates rise 3% each July 1 through 2029.
+
+- id: SAG_RATES_LOW_BUDGET_DAY_2027
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Low Budget Theatrical Agreement, rate sheet effective 7/1/2027
+  title: Low Budget day performer minimum, 7/1/2027 to 6/30/2028
+  quote: |
+    Low Budget Daily Rate: $859
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2027-07-01"
+  valid_to: "2028-06-30"
+  params:
+    day_rate_cents: 85900
+    rate_tier: "low_budget"
+  verified: VERIFIED
   note: null
 
 - id: SAG_RATES_LOW_BUDGET_WEEK
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Low Budget Agreement, Schedule of Minimums
-  title: Low Budget weekly minimum rate
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Low Budget Theatrical Agreement, rate sheet effective 7/1/2026
+  title: Low Budget weekly minimum, 7/1/2026 to 6/30/2027
   quote: |
-    The weekly minimum rate for performers under the Low Budget Agreement shall be
-    two thousand eight hundred twelve dollars ($2,812) per week.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
-  valid_to: null
+    Low Budget Weekly Rate: $2,896
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2026-07-01"
+  valid_to: "2027-06-30"
   params:
-    week_rate_cents: 281200
-    rate_tier: low_budget
-  verified: PENDING
-  note: null
+    week_rate_cents: 289600
+    rate_tier: "low_budget"
+  verified: VERIFIED
+  note: Five-day studio week; a six-day overnight location week adds four hours of straight-time overtime per the rate sheet note.
 
 - id: SAG_RATES_MODERATE_LOW_DAY
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Moderate Low Budget Agreement, Schedule of Minimums
-  title: Moderate Low Budget daily minimum rate
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Moderate Low Budget Project Agreement, rate sheet effective 7/1/2026
+  title: Moderate Low Budget day performer minimum, 7/1/2026 to 6/30/2027
   quote: |
-    The daily minimum rate for performers under the Moderate Low Budget Agreement shall
-    be four hundred forty-nine dollars and five cents ($449.05) per day.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
-  valid_to: null
+    Moderate Low Budget Daily Rate: $449
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2026-07-01"
+  valid_to: "2027-06-30"
   params:
-    day_rate_cents: 44905
-    rate_tier: moderate_low
-  verified: PENDING
+    day_rate_cents: 44900
+    rate_tier: "moderate_low"
+  verified: VERIFIED
+  note: 35% of Basic Agreement scale per the SAGindie footnote; published rounded to the dollar.
+
+- id: SAG_RATES_MODERATE_LOW_WEEK
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Moderate Low Budget Project Agreement, rate sheet effective 7/1/2026
+  title: Moderate Low Budget weekly minimum, 7/1/2026 to 6/30/2027
+  quote: |
+    Moderate Low Budget Weekly Rate: $1,560
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2026-07-01"
+  valid_to: "2027-06-30"
+  params:
+    week_rate_cents: 156000
+    rate_tier: "moderate_low"
+  verified: VERIFIED
   note: null
 
 - id: SAG_RATES_ULTRA_LOW_DAY
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Ultra Low Budget Agreement, Schedule of Minimums
-  title: Ultra Low Budget daily minimum rate
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Ultra Low Budget Project Agreement, rates effective 7/1/2026
+  title: Ultra Low Budget day performer minimum, 7/1/2026 to 6/30/2027
   quote: |
-    The daily minimum rate for performers under the Ultra Low Budget Agreement shall be
-    two hundred forty-nine dollars ($249) per day.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
-  valid_to: null
+    Ultra Low Budget Daily Rate: $257
+  source_url: https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+  valid_from: "2026-07-01"
+  valid_to: "2027-06-30"
   params:
-    day_rate_cents: 24900
-    rate_tier: ultra_low
-  verified: PENDING
-  note: null
+    day_rate_cents: 25700
+    rate_tier: "ultra_low"
+  verified: VERIFIED
+  note: 20% of Basic Agreement scale per the SAGindie footnote; no weekly rate under the UPA.
 
 - id: SAG_RATES_PH_21_PCT
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Agreement, Pension and Health Contribution Schedule
-  title: P&H contribution rate 21% through 2026-09-05
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAGindie signatory page, LBA footnote (Pension & Health contribution)
+  title: P&H contribution 21% for performers through 2026-09-05
   quote: |
-    The Pension and Health contribution rate shall be twenty-one percent (21%) of
-    applicable compensation for the period through September 5, 2026.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
+    Pension & Health contribution is also owed (21% for performers; raising to 22% effective
+    9/6/26).
+  source_url: https://www.sagindie.org/signatory/
+  valid_from: "2026-07-01"
   valid_to: "2026-09-05"
   params:
     ph_rate_bps: 2100
-  verified: PENDING
+  verified: VERIFIED
   note: null
 
 - id: SAG_RATES_PH_22_PCT
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Agreement, Pension and Health Contribution Schedule
-  title: P&H contribution rate 22% from 2026-09-06
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAG-AFTRA Low Budget Theatrical Agreement rate sheet, P&H contribution rates
+  title: P&H contribution 22% for performers from 2026-09-06
   quote: |
-    Effective September 6, 2026, the Pension and Health contribution rate shall be
-    twenty-two percent (22%) of applicable compensation.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
+    The P&H rate for Performers effective as of 9/6/2026 is 22%
+  source_url: http://www.sagindie.org/media/LBA-Rate-Sheet-6.30.26.pdf
   valid_from: "2026-09-06"
   valid_to: null
   params:
     ph_rate_bps: 2200
-  verified: PENDING
+  verified: VERIFIED
   note: null
+
+- id: SAG_RATES_CONSECUTIVE_EMPLOYMENT_LOW_BUDGET
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAGindie FAQ, What does No Consecutive Employment mean
+  title: Low-budget agreements: intervening days are not paid, except on an overnight location
+  quote: |
+    Under the Basic Agreement producers are required to pay consecutive employment. This means
+    that if an actor works on Monday and Wednesday the producer not only has to pay them for
+    these days, but also for the “consecutive” day of Tuesday. Under all of the low budget
+    agreements, there is no consecutive employment, so if an actor only works Monday and
+    Wednesday, the producer only has to pay them (or defer their pay) for Monday and Wednesday.
+    However, if your performer is working on an overnight location, you DO have to pay them the
+    consecutive day.
+  source_url: https://www.sagindie.org/resources/faq/
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    hold_days_paid: "overnight_location_only"
+  verified: VERIFIED
+  note: This conditions the hold-day cost: under the low-budget tiers a hold day costs a day's pay only on an overnight location (ScheduleInput.overnight_location). The Basic Agreement pays consecutive employment everywhere.
 
 - id: SAG_RATES_HOLD_DAY_FULL_RATE
   jurisdiction: SAG-AFTRA
-  authority: SAG-AFTRA
-  citation: SAG-AFTRA 2026 Agreement, General Provisions, Hold Days
-  title: Hold day billed at full daily rate
+  authority: SAG-AFTRA (SAGindie, the union's low-budget program)
+  citation: SAGindie FAQ, What does No Consecutive Employment mean
+  title: A paid hold day is the consecutive day's pay
   quote: |
-    When a performer is held and not working, the employer shall pay the performer the
-    full daily minimum rate for each hold day.
-  source_url: https://www.sagaftra.org/production-center/contract/856/minimum-rates
-  valid_from: "2026-01-01"
+    However, if your performer is working on an overnight location, you DO have to pay them the
+    consecutive day.
+  source_url: https://www.sagindie.org/resources/faq/
+  valid_from: "2026-07-01"
   valid_to: null
   params:
     hold_day_rate_multiplier: 1.0
-  verified: PENDING
-  note: This is the core economic fact the solver minimizes. Hold days = full daily rate.
+  verified: VERIFIED
+  note: The economic fact the solver minimizes, on an overnight location under the low-budget tiers; the day's pay is the tier's daily minimum plus P&H.
+
+- id: SAG_RATES_BASIC_CONSECUTIVE_EMPLOYMENT
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Consecutive Employment (Theatrical Basic Agreement summary)
+  title: Basic Agreement: performers are paid on a consecutive basis
+  quote: |
+    Performers shall be paid on a consecutive basis from the first day they are instructed to
+    report for work
+  source_url: https://www.sagaftra.org/consecutive-employment
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    hold_days_paid: "always"
+  verified: UNVERIFIABLE
+  note: Read on sagaftra.org on 2026-09-02 through a browser-rendering fetch; the page refuses scripted fetches (HTTP 403), so no snapshot could be committed and the record is UNVERIFIABLE until one is.
+

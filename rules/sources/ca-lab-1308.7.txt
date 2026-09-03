@@ -1,0 +1,106 @@
+# Snapshot of https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB
+# fetched_at 2026-09-03T01:45:00+00:00 sha256(original) cda4d6a48e4685a73bbc4479cc0564f05405723a76a7b7695b1bb3a491f7bea0 bytes 163908
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+California Code, LAB 1308.7.
+skip to content
+home
+accessibility
+FAQ
+feedback
+sitemap
+login
+x
+ Quick Search:
+ Bill Number
+ Bill Keyword
+Home
+Bill Information
+California Law
+Publications
+Other Resources
+My Subscriptions
+My Favorites
+California Law
+ >>
+ >>
+Code Section
+Code Section
+Code: Select Code
+ CONS
+ BPC
+ CIV
+ CCP
+ COM
+ CORP
+ EDC
+ ELEC
+ EVID
+ FAM
+ FIN
+ FGC
+ FAC
+ GOV
+ HNC
+ HSC
+ INS
+ LAB
+ MVC
+ PEN
+ PROB
+ PCC
+ PRC
+ PUC
+ RTC
+ SHC
+ UIC
+ VEH
+ WAT
+ WIC
+Article:Section:
+Code: Select Code
+ All
+ BPC
+ CIV
+ CCP
+ COM
+ CORP
+ EDC
+ ELEC
+ EVID
+ FAM
+ FIN
+ FGC
+ FAC
+ GOV
+ HNC
+ HSC
+ INS
+ LAB
+ MVC
+ PEN
+ PROB
+ PCC
+ PRC
+ PUC
+ RTC
+ SHC
+ UIC
+ VEH
+ WAT
+ WIC
+Section: 
+Keyword(s):
+ Code Search
+ Text Search
+Up^<< Previous Next >>cross-reference chaptered billsPDF | Add To My Favorites
+Search Phrase: 
+Code Text
+Labor Code - LAB
+DIVISION 2. EMPLOYMENT REGULATION AND SUPERVISION [200 - 2699.8] ( Division 2 enacted by Stats. 1937, Ch. 90. ) 
+PART 4. EMPLOYEES [1171 - 1413] ( Heading of Part 4 amended by Stats. 1972, Ch. 1122. ) 
+CHAPTER 2. Occupational Privileges and Restrictions [1285 - 1312] ( Chapter 2 enacted by Stats. 1937, Ch. 90. )
+1308.7. 
+(a) No minor shall be employed in the entertainment industry more than eight hours in one day of 24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day preceding a schoolday. However, a minor may work the hours authorized by this section during any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.
+(b) For purposes of this section, “schoolday” means any day in which a minor is required to attend school for 240 minutes or more.
+(c) Any person or the agent or officer thereof, or any parent or guardian, who directly or indirectly violates or causes or suffers the violation of this section, is guilty of a misdemeanor punishable by a fine of not less than five hundred dollars ($500) nor more than one thousand dollars ($1,000), or imprisonment in the county jail for not more than 60 days, or both.(Added by Stats. 1993, Ch. 570, Sec. 1. Effective September 28, 1993.)

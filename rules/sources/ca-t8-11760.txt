@@ -1,0 +1,31 @@
+# Snapshot of https://www.dir.ca.gov/t8/11760.html
+# fetched_at 2026-09-03T01:37:14+00:00 sha256(original) 73e3d6afe9b85dadb3f283e19f2857b7581f9aae644c7617f06690de75dd91a1 bytes 8976
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+California Code of Regulations, Title 8, Section 11760. Working Hours of Minors.
+ Skip to Main Content
+ This information is provided free of charge by the Department of Industrial Relations 
+ from its web site at www.dir.ca.gov. These regulations are for the 
+ convenience of the user and no representation or warranty is made that the information 
+ is current or accurate. See full disclaimer at https://www.dir.ca.gov/od_pub/disclaimer.html.
+Chapter 6. Division of Labor Standards Enforcement
+Subchapter 2. Employment of Minors in the Entertainment Industry
+ Article 1. Motion Picture Industries
+ New Query 
+§11760. Working Hours of Minors.
+ The amount of time minors are permitted at the place of employment within a twenty-four (24) hour period is limited according to age, as follows:
+ (a) Babies who have reached the age of fifteen (15) days but have not reached the age of six (6) months may be permitted to remain at the place of employment for a maximum of two (2) hours.
+ (1) The day's work shall not exceed twenty (20) minutes and under no conditions shall the baby be exposed to light of greater than one hundred (100) foot candlelight intensity for more than thirty (30) seconds at a time.
+ (2) When babies between the age of fifteen (15) days and six (6) weeks of age are employed, a nurse and a studio teacher must be provided for each three (3) or fewer babies. When infants from age six (6) weeks to six (6) months are employed, one (1) nurse and one (1) studio teacher must be provided for each ten (10) or fewer infants.
+ (b) Minors who have reached the age of six (6) months but who have not attained the age of two (2) years may be permitted at the place of employment for a maximum of four (4) hours. Such four (4)-hour period shall consist of not more than two (2) hours of work; the balance of the four (4)-hour period shall be rest and recreation.
+ (c) Minors who have reached the age of two (2) years but who have not attained the age of six (6) years may be permitted at the place of employment for a maximum of six (6) hours. Such six (6)-hour period shall consist of not more than three (3) hours of work; the balance of the six (6)-hour period shall be rest and recreation and/or education.
+ (d) Minors who have reached the age of six (6) years but have not attained the age of nine (9) years may be permitted at the place of employment for a maximum of eight (8) hours. Such eight (8)-hour period shall consist of not more than four (4) hours of work and at least three (3) hours of schooling when the minor's school is in session. The studio teacher shall assure that the minor receives up to one (1) hour of rest and recreation. On days when the minor's school is not in session, working hours may be increased to six (6) hours, with one (1) hour of rest and recreation.
+ (e) Minors who have reached the age of nine (9) years but who have not attained the age of sixteen (16) years may be permitted at the place of employment for a maximum of nine (9) hours. Such nine (9)-hour period shall consist of not more than five (5) hours of work and at least three (3) hours of schooling when the minor's school is in session. The studio teacher shall assure that the minor receives at least one (1) hour of rest and recreation. On days when the minor's school is not in session, working hours may be increased to seven (7) hours, with one (1) hour of rest and recreation.
+ (f) Minors who have reached the age of sixteen (16) years but who have not attained the age of eighteen (18) years may be permitted at the place of employment for a maximum of ten (10) hours. Such ten (10)-hour period shall consist of not more than six (6) hours of work and at least three (3) hours of schooling when the minor's school is in session, and one (1) hour of rest and recreation. On days when school is not in session, working hours may be increased to not more than eight (8) hours, with one (1) hour of rest and recreation.
+ (g) If emergency situations arise, for example, early morning or night exteriors shot as exteriors, live television or theatrical productions presented after the hours beyond which a minor may not work as prescribed by law, a request may be made to the Labor Commissioner for permission for the minor to work earlier or later than such hours. Each request shall be considered individually by the Division and must be submitted in writing at least forty-eight (48) hours prior to the time needed.
+ (h) When any minor between ages fourteen (14) and eighteen (18) obtains permission from school authorities to work during school hours for a period not to exceed two (2) consecutive days, the working hours for such minor during either or both of such days may be extended to but shall not exceed eight (8) hours in twenty-four (24) hours.
+ (i) Twelve (12) hours must elapse between the minor's time of dismissal and time of call on the following day. If the minor's regular school starts less than twelve (12) hours after his or her dismissal time, the minor must be schooled the following day at the employer's place of business.
+NOTE: Authority cited: Sections 55, 59 and 1398, Labor Code. Reference: Sections 1391 and 1396, Labor Code.
+ HISTORY
+1. Amendment filed 3-4-86; effective thirtieth day thereafter (Register 86, No. 10).
+Go Back to Article 1 Table of Contents

@@ -1,0 +1,21 @@
+# Snapshot of https://www.dir.ca.gov/t8/11755_2.html
+# fetched_at 2026-09-03T01:47:15+00:00 sha256(original) f472c3c46d70cc8a99659ca755adaa9217283e64f92afca5f614e60384d9fb9b bytes 5922
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+California Code of Regulations, Title 8, Section 11755.2. Use of Studio Teachers.
+ Skip to Main Content
+ This information is provided free of charge by the Department of Industrial Relations 
+ from its web site at www.dir.ca.gov. These regulations are for the 
+ convenience of the user and no representation or warranty is made that the information 
+ is current or accurate. See full disclaimer at https://www.dir.ca.gov/od_pub/disclaimer.html.
+Chapter 6. Division of Labor Standards Enforcement
+Subchapter 2. Employment of Minors in the Entertainment Industry
+Article 1. Motion Picture Industries
+New Query
+� 11755.2. Use of Studio Teachers.
+Employers shall provide a studio teacher on each call for minors from age fifteen (15) days to their sixteenth (16th) birthday (age sixteen (16)), and for minors from age sixteen (16) to age eighteen (18) when required for the education of the minor. One (1) studio teacher must be provided for each group of ten (10) minors or fraction thereof. With respect to minors age fifteen (15) days to age sixteen (16), one (1) studio teacher must be provided for each group of twenty (20) minors or fraction thereof on Saturdays, Sundays, holidays, or during school vacation periods.
+Note: Authority cited: Sections 55, 59 and 1398, Labor Code. Reference: Section 1396, Labor Code.
+HISTORY
+1. New section filed 3-4-86; effective thirtieth day thereafter (Register 86, No. 10).
+2. Renumbering of former section 11755.2 to new section 11755.3 and renumbering of former section 11755.1 to new section 11755.2 filed 12-2-97; operative 12-2-97 (Register 97, No. 49).
+Go Back to Article 1 Table of Contents

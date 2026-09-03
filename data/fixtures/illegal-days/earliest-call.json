@@ -1,5 +1,5 @@
 {
-  "_note": "Window 04:00 to 08:00 the night before a school day, M's scene is 3.5 hours (28 eighths). Starting at or after 05:00 ends at 08:30, past the wrap. GA 5 a.m. rule and Cal. Lab. Code 1308.7(a) (5 a.m. floor on a school night) each make the day impossible on their own; the 1308.7(b) record does not apply on a school night. Day 0 is not itself a school day.",
+  "_note": "Window 04:00 to 08:00 the night before a school day, M's scene is 3.5 hours (28 eighths). Starting at or after 05:00 ends at 08:30, past the wrap. GA 5 a.m. rule and Cal. Lab. Code 1308.7(a) (5 a.m. floor on a school night) each make the day impossible on their own; the 1308.7(b) record does not apply on a school night. Day 0 is not itself a school day. The SAG-AFTRA workday rule (no work before 5 a.m.) is a third independent reason.",
   "_check_day_index": 0,
   "_day_scene_ids": {
     "0": [
@@ -9,7 +9,8 @@
   "_expected_status": "ILLEGAL",
   "_expected_core": [
     "GA_300_7_1_03_earliest_call",
-    "CA_1308_7_curfew_school_night"
+    "CA_1308_7_curfew_school_night",
+    "SAG_MINORS_WORKDAY_CURFEW"
   ],
   "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
   "scenes": [

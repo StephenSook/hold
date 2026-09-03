@@ -1,0 +1,97 @@
+# Snapshot of https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download
+# fetched_at 2026-09-03T01:36:55+00:00 sha256(original) ce5f1382d073fc0eff6079bec5a9ab124167a591f3f8b5c1679dd3e4666c5fb1 bytes 66130
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+                                                                                                   1
+                     SCHEDULE OF HOURS OF PERFORMANCE
+
+ (a) Hours of Performance shall be computed in accordance with Rule 300-7-1-.03,
+     Employment of a Minor.
+
+ (b) Infants between birth to 15 days of age: NOT allowed to work in a Production.
+
+ (c) Infants 15 days to 6 months of age:
+
+1. May be at the Location for 1 period per day for 2 consecutive hours which must occur either
+between 9:30 am and 11:30 a.m.; or between 2:30 p.m. and 4:30 p.m. or 6:00 p.m. to 8: 00 p.m.
+2. Actual work shall not exceed 20 minutes.
+3. Infants shall NOT be exposed to light exceeding 100 foot-candles for more than 30
+seconds at a time.
+4. A Child Labor Coordinator, a child care provider, and a nurse must be provided and present
+for every 3 or fewer infants aged 15 days to 6 weeks of age.
+5. A Child Labor Coordinator, a child care provider, and a nurse must be provided and present
+for every 10 or fewer infants, aged 6 weeks to 6 months of age.
+6. The nurse, if a licensed childcare provider, may serve as the childcare provider.
+7. May not be exposed to Atmospheric Smoke.
+
+ (d) Minors between the age of 6 months to 2 years:
+
+1. May be at the Location up to 4 hours per day and no later than 10:00 p.m.
+2. Shall work no longer than a total of 2 hours per day.
+3. All remaining time the Minor is at the Location shall be used for rest and recreation.
+4. May not be exposed to Atmospheric Smoke.
+
+ (e) Minors between the age of 2 years to 6 years:
+
+1. May be at the Location up to 6 hours per day and no later than 10:00 p.m.
+2. Shall work no longer than a total of 3 hours per day.
+3. All remaining time the Minor is at the Location shall be used for rest and recreation.
+4. If the Minor is enrolled in school (K-12), then the Minor must have 2 hours of tutoring (when
+tutoring is required).
+
+ (f) Minors between the age of 6 years to 9 years:
+
+1. May be at the Location up to 8 hours per day and no later than 10:00 p.m.
+2. Shall work no longer than a total of 4 hours per day.
+3. All remaining time the Minor is at the Location shall include:
+        (i) 1-hour break for meals; (or in the alternative 30-minute meal break and 30 minutes for
+        rest and recreation);
+        (ii) 3 additional hours for tutoring (when tutoring is required); and
+        (iii) If tutoring is not required, the Minor may work an additional 2 work hours after a 1-
+        hour break. The remaining unused tutoring hour must be used either after 1-hour of the 2
+        additional work hours or at the end of the 2 additional work hours.
+
+                                                                                                    2
+                    SCHEDULE OF HOURS OF PERFORMANCE
+
+  (g) Minors between the ages of 9 years to 16 years:
+
+1. May be at the Location up to 10 hours per day and no later than 10:00 p.m. on a school
+   night and 12:00 midnight on a non-school night.
+2. Shall work no longer than a total of 5 hours per day.
+3. All remaining time the Minor is at the Location shall include:
+      (i) 1-hour break for meals; (or in the alternative 30-minute meal break and 30 minutes for
+       rest and recreation);
+      (ii) 1 additional hour for rest and recreation;
+      (iii) 3 additional hours for tutoring (when tutoring is required); and
+      (iv) If tutoring is not required, the Minor may work an additional 2 work hours after a 1-
+      hour break. The remaining unused tutoring hour must be used either after 1-hour of the 2
+      additional work hours or at the end of the 2 additional work hours.
+
+   (h) Minors between the ages of 16 years to 18 years:
+
+1. May be at the Location up to 12 hours per day, no later than 12:00 a.m. on a school night, and
+no later than 2:00 a.m. on a non-school night.
+2. Shall work no longer than a total of 8 hours per day.
+3. All remaining time the Minor is at the Location shall include:
+      (i) 1-hour break for meals; (or in the alternative 30-minute meal break and additional 30
+       minutes for rest and recreation);
+      (ii) 3 additional hours for tutoring (when tutoring is required); and
+      (iii) If tutoring is not required, the Minor may work an additional 2 work hours after a 1-
+        hour break. The remaining unused tutoring hour must be used either after 1-hour of the 2
+        additional work hours or at the end of the 2 additional work hours.
+
+   (i) Additional Provisions Applicable to all Minors.
+
+1. Additional breaks as may be required to ensure the health, safety and well-being of the
+   Minor shall be permitted.
+2. Any request for a break by a Department representative, in the interest of the Minor, must
+    be granted.
+3. Work day shall start no earlier than 5 a.m.
+4. Minor shall not work more than six consecutive days. It is the responsibility of the
+   Representative of Minor to ensure that the Minor does not exceed six consecutive working
+   days.
+5. Representative of the Minor must be present at all times when the Minor is at the Location.
+ 6. Minors working past 9 p.m. must have a secure place on Location to rest during breaks for
+themselves and their Representatives.
+

@@ -30,7 +30,7 @@ Legend: DONE, WIP, TODO, BLOCKED, CUT
 - Stage named paths only. Never `git add -A`. Run `git ls-files | grep -iE '\.pdf$|\.env$|^private/'` before every push and expect nothing. The one PDF-free exception is none: sample documents under `data/demo/samples/` are PNG and TXT.
 - No research material, no third-party contact details, ever.
 - Secrets: none in the repo, none in `.bob/mcp.json` (Bob stores values literally). Cloud Run reads Secret Manager; CI uses Workload Identity Federation, no JSON keys.
-- No em-dashes anywhere: code, comments, commit messages, product copy, docs, this file. Colon for elaboration, comma or parentheses for an aside, period for a clause break, hyphen for a range. Empty table cells read `n/a`.
+- No em-dashes anywhere: code, comments, commit messages, product copy, docs, this file. Colon for elaboration, comma or parentheses for an aside, period for a clause break, hyphen for a range. Empty table cells read `n/a`. The one exemption is `rules/sources/`, verbatim third-party snapshots whose punctuation is the publisher's; a quote copied from one writes the source's em dash as a hyphen and the quote checker treats the two as equal.
 - `main` is protected: the CI checks are required, so a red push cannot land.
 
 ---

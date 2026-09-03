@@ -4,7 +4,9 @@
 # Uses Python for the grep to avoid platform differences with grep -P.
 set -euo pipefail
 
-FILES=$(git ls-files --cached --others --exclude-standard)
+# rules/sources/ holds verbatim third-party snapshots (statutes, forms, rate sheets); their
+# punctuation is the publisher's and is exempt. Everything we write ourselves is checked.
+FILES=$(git ls-files --cached --others --exclude-standard | grep -v '^rules/sources/')
 
 if [ -z "$FILES" ]; then
   echo "no_em_dash: no files to check"

@@ -24,9 +24,9 @@ Rule constraints (applicability shared with the checker through its public predi
 - min_turnaround_hours: call >= prev_dismissal - 1440 + H * 60, GA and SAG on school days,
   CA always, and only when the previous shoot day is the previous calendar date
 - max_consecutive_days: a constant test on the run of consecutive shoot dates
-- max_work_before_meal_hours (CA 11761): a span over the limit requires the meal to be
-  present, to start within the limit of the call, to sit inside the span, and to leave no
-  more than the limit between its end and dismissal
+- max_work_before_meal_hours (Ga. 300-7-1-.03(2)(c)): a span over the limit requires the
+  meal to be present, to start within the limit of the call, to sit inside the span, and to
+  leave no more than next_meal_within_hours_of_previous_start between its start and dismissal
 
 Out of scope for pass 1 (stated so nobody assumes them): wraps past midnight (rejected as
 UNDETERMINED upstream), more than one meal per day (two minors whose calls differ by more
@@ -177,7 +177,12 @@ def build_day_model(
         starts[sid] = start
         prev_start, prev_dur = start, dur
 
-    meal_minutes = MEAL_MINUTES_DEFAULT
+    # Rules are read before the meal interval so the meal length comes from the registry.
+    rules: list[RuleRecord] = load_rules(rules_dir, shooting_date=day.date)
+    meal_minutes = max(
+        [int(r.params.get("min_meal_duration_minutes", MEAL_MINUTES_DEFAULT)) for r in rules if "max_work_before_meal_hours" in r.params]
+        or [MEAL_MINUTES_DEFAULT]
+    )
     meal_present = model.new_bool_var("meal_present")
     meal_start = model.new_int_var(call_m, max(call_m, wrap_m - meal_minutes), "meal_start")
     meal_iv = model.new_optional_fixed_size_interval_var(meal_start, meal_minutes, meal_present, "iv_meal")
@@ -222,7 +227,6 @@ def build_day_model(
 
     if minors:
         ctx = build_day_context(schedule, day_index)
-        rules = load_rules(rules_dir, shooting_date=day.date)
         shoot_state = schedule.jurisdiction.shoot_state
         cast_by_id = {c.id: c for c in schedule.cast}
         for mv in minors.values():
@@ -305,6 +309,7 @@ def _add_rule_constraints(
 
     if "max_work_before_meal_hours" in params:
         limit = int(float(params["max_work_before_meal_hours"]) * 60)
+        next_from_start = params.get("next_meal_within_hours_of_previous_start")
         lit = _literal(dm, rule.id)
         needs_meal = model.new_bool_var(f"needs_meal_{mv.cast_id}")
         model.add(mv.dismiss - mv.call > limit).only_enforce_if(needs_meal)
@@ -313,6 +318,10 @@ def _add_rule_constraints(
         model.add(dm.meal_start >= mv.call).only_enforce_if([lit, needs_meal])
         model.add(dm.meal_start <= mv.call + limit).only_enforce_if([lit, needs_meal])
         model.add(dm.meal_start + dm.meal_minutes <= mv.dismiss).only_enforce_if([lit, needs_meal])
-        # No stretch over the limit after the meal either (one meal per day: a span longer
-        # than two limits plus the meal is infeasible under this rule and reads UNDETERMINED).
-        model.add(mv.dismiss - (dm.meal_start + dm.meal_minutes) <= limit).only_enforce_if([lit, needs_meal])
+        # The stretch after the meal is bounded too: Georgia measures the next meal from the
+        # previous meal's START; a record without that figure is bounded from the meal's end.
+        # One crew meal per day, so a span that needs a second meal reads UNDETERMINED.
+        if next_from_start is not None:
+            model.add(mv.dismiss - dm.meal_start <= int(float(next_from_start) * 60)).only_enforce_if([lit, needs_meal])
+        else:
+            model.add(mv.dismiss - (dm.meal_start + dm.meal_minutes) <= limit).only_enforce_if([lit, needs_meal])

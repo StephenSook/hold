@@ -1,0 +1,20 @@
+# Snapshot of https://www.dir.ca.gov/t8/11756.html
+# fetched_at 2026-09-03T01:37:33+00:00 sha256(original) 02f6d184d9d2bac7b6e5db8ef72c351ecec760e38883624535b270bc2192a021 bytes 5254
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+California Code of Regulations, Title 8, Section 11756. Employers Taking Minors of Compulsory School Age from California to Work on Location in Another State.
+ Skip to Main Content
+ This information is provided free of charge by the Department of Industrial Relations 
+ from its web site at www.dir.ca.gov. These regulations are for the 
+ convenience of the user and no representation or warranty is made that the information 
+ is current or accurate. See full disclaimer at https://www.dir.ca.gov/od_pub/disclaimer.html.
+Chapter 6. Division of Labor Standards Enforcement
+Subchapter 2. Employment of Minors in the Entertainment Industry
+ Article 1. Motion Picture Industries
+ New Query 
+§11756. Employers Taking Minors of Compulsory School Age from California to Work on Location in Another State.
+ When minors resident in the State of California and employed by an employer in the entertainment industry located in the State of California, are taken from the State of California to work on location in another state, as part of, and pursuant to, contractual arrangements made in the State of California for their employment in the entertainment industry, the child labor laws of California and the regulations based thereon shall be applicable, including, but not limited to, the requirement that a studio teacher must be provided for such minor in accordance with Section 11755.1.
+NOTE: Authority cited: Sections 55, 59, 1311 and 1398, Labor Code. Reference: Sections 1311 and 1398, Labor Code.
+ HISTORY
+1. Amendment filed 3-4-86; effective thirtieth day thereafter (Register 86, No. 10).
+Go Back to Article 1 Table of Contents

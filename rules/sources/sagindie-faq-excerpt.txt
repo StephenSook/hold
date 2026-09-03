@@ -1,0 +1,8 @@
+# Excerpt of https://www.sagindie.org/resources/faq/
+# fetched_at 2026-09-03T01:48:11+00:00 sha256(original) 00fa5da5de9a1033e91e7315c12dee51ab1a603d6d4cd086e26082406291eba3 bytes 329723
+# Plain text derived from the original for substring verification of rules/*.yaml quotes. Excerpt only; the full document is copyrighted and its sha256 is recorded above.
+
+What does “No Consecutive Employment” mean?
+Under the Basic Agreement producers are required to pay consecutive employment. This means that if an actor works on Monday and Wednesday the producer not only has to pay them for these days, but also for the “consecutive” day of Tuesday. Under all of the low budget agreements, there is no consecutive employment, so if an actor only works Monday and Wednesday, the producer only has to pay them (or defer their pay) for Monday and Wednesday. However, if your performer is working on an overnight location, you DO have to pay them the consecutive day.
+What’s considered an “overnight” location?
+A location is considered “overnight” if the performer cannot reasonably drive (or be driven) home at the end of the day. Though there are exceptions, overnights are generally further than 30 miles outside Hollywood or San Francisco (known as the Thirty-Mile-Zone or “TMZ” – like the website, get it?) or 8 miles outside New York City. To find out the overnight rules in a specific city or state, contact the SAG-AFTRA local office where you’re filming.

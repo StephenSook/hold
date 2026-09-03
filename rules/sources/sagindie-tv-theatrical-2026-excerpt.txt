@@ -1,0 +1,35 @@
+# Excerpt of https://www.sagindie.org/sagaftra/tv-theatrical-contract-2026/
+# fetched_at 2026-09-03T01:37:42+00:00 sha256(original) 79e7d9443bf80decf9e3cec987363119729ac17133c90bda1803fd77c20fb058 bytes 250795
+# Plain text derived from the original for substring verification of rules/*.yaml quotes. Excerpt only; the full document is copyrighted and its sha256 is recorded above.
+
+Minimum rates beginning 7/1/26:
+Ultra Low Budget Daily Rate: $257
+Moderate Low Budget Daily Rate: $449
+Moderate Low Budget Weekly Rate: $1,560
+Low Budget Daily Rate: $834
+Low Budget Weekly Rate: $2,896
+Background Actor Daily Rate: $231
+Minimum rates beginning 7/1/27:
+Ultra Low Budget Daily Rate: $264
+Moderate Low Budget Daily Rate: $462
+Moderate Low Budget Weekly Rate: $1,607
+Low Budget Daily Rate: $859
+Low Budget Weekly Rate: $2,984
+Background Actor Daily Rate: $238
+Minimum rates beginning 7/1/28:
+Ultra Low Budget Daily Rate: $272
+Moderate Low Budget Daily Rate: $476
+Moderate Low Budget Weekly Rate: $1,655
+Low Budget Daily Rate: $885
+Low Budget Weekly Rate: $3,073
+Background Actor Daily Rate: $245
+Minimum rates beginning 7/1/29:
+Ultra Low Budget Daily Rate: $280
+Moderate Low Budget Daily Rate: $491
+Moderate Low Budget Weekly Rate: $1,705
+Low Budget Daily Rate: $911
+Low Budget Weekly Rate: $3,166
+Background Actor Daily Rate: $252
+Pension & Health Updates
+The P&H contribution rate will increase by 1% on September 6, 2026.
+Pension & Health rate starting 9/6/26: 22% (principal performers); 21.5% (background performers)

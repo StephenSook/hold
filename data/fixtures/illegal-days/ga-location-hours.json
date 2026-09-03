@@ -1,5 +1,5 @@
 {
-  "_note": "Minor M (14, CA resident) opens and closes a 12-hour GA day with three adult scenes between: 1h + 4h + 4h + 1h + 1h in fixed order, so M cannot be dismissed less than 11 hours after call. Only the GA 10-hour location cap makes the day impossible on its own; work is 2h. All days non-school.",
+  "_note": "Minor M (14, CA resident) opens and closes a 12-hour GA day with three adult scenes between: 1h + 4h + 4h + 1h + 1h in fixed order, so M cannot be dismissed less than 11 hours after call. Only the GA 10-hour location cap makes the day impossible on its own; work is 2h. All days non-school. Cumulative jurisdiction: the CA 9-hour place-of-employment cap (8 CCR 11760(e)) and the SAG-AFTRA 9.5-hour on-set cap each make it impossible on their own too, so the core names all three.",
   "_check_day_index": 0,
   "_day_scene_ids": {
     "0": [
@@ -12,7 +12,9 @@
   },
   "_expected_status": "ILLEGAL",
   "_expected_core": [
-    "GA_300_7_1_03_ages_9_15_location_hours"
+    "GA_300_7_1_03_ages_9_15_location_hours",
+    "CA_11760_e_location_hours_9_15",
+    "SAG_MINORS_9_15_ON_SET_HOURS"
   ],
   "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
   "scenes": [
