@@ -7,9 +7,8 @@ No message bodies are exported (privacy and size).
 Usage: uv run python scripts/export_bob_evidence.py
 """
 import json
-import os
 import sqlite3
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 DB_PATH = Path.home() / ".bob" / "db" / "bob.db"
@@ -32,7 +31,7 @@ def main() -> None:
     if not DB_PATH.exists():
         print(f"Bob db not found at {DB_PATH}; writing empty evidence file")
         OUT_PATH.write_text(json.dumps({
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "workspace": WORKSPACE,
             "note": "Bob db not found",
             "task_count": 0,
@@ -77,7 +76,7 @@ def main() -> None:
     conn.close()
 
     evidence = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "workspace": WORKSPACE,
         "note": (
             "task_count includes all Bob tasks in this install, not only HOLD tasks, "
