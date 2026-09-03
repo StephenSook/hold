@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import base64
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from api.agents.hold_agent.runner import extract as run_extract
 from api.hold.schemas import ExtractResult
 
 router = APIRouter()
+log = logging.getLogger(__name__)
 _FIXTURE = Path(__file__).resolve().parents[2] / "data" / "fixtures" / "contracts" / "extract-result.json"
 
 
@@ -45,3 +47,6 @@ async def extract(request: ExtractRequest) -> ExtractResult:
         raise HTTPException(status_code=504, detail=f"extraction exceeded {EXTRACT_TIMEOUT_S:.0f} s") from exc
     except ExtractionError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+    except Exception as exc:  # the caller must see why the live path failed, never a blank 500
+        log.exception("extraction failed")
+        raise HTTPException(status_code=502, detail=f"extraction failed: {type(exc).__name__}: {exc}") from exc

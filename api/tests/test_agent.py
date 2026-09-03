@@ -95,3 +95,19 @@ def test_evalset_loads_and_names_the_tool_trajectory() -> None:
     assert [(t.name, t.args) for t in tool_uses] == [("lookup_rule", {"rule_id": "GA_300_7_1_03_earliest_call"})]
     config = json.loads((folder / "test_config.json").read_text())
     assert set(config["criteria"]) == {"tool_trajectory_avg_score", "final_response_match_v2"}
+
+
+def test_extract_reports_an_unexpected_failure_as_502_with_the_cause(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A live failure inside the agent must reach the caller as a named error, never a blank 500."""
+    import api.routes.extract as extract_route
+
+    monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "0")
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "hold-2026")
+
+    async def boom(*args: object, **kwargs: object) -> ExtractResult:
+        raise RuntimeError("model endpoint said no")
+
+    monkeypatch.setattr(extract_route, "run_extract", boom)
+    response = TestClient(app).post("/api/extract", json={"text": "INT. KITCHEN - DAY"})
+    assert response.status_code == 502
+    assert "RuntimeError" in response.json()["detail"] and "model endpoint said no" in response.json()["detail"]
