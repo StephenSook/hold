@@ -36,8 +36,12 @@ def test_facts_reproduces_from_a_fresh_run() -> None:
 def test_readme_and_docs_numerals_match_facts() -> None:
     facts = json.loads(FACTS.read_text())
     allow = _rules_dollars()
-    # docs/bob-evidence holds generated logs of commit subjects (history, not claims), so it is not scanned.
-    texts = [ROOT / "README.md", *sorted(p for p in (ROOT / "docs").rglob("*.md") if "bob-evidence" not in p.parts)]
+    # docs/bob-evidence holds generated logs of commit subjects (history, not claims), so it is not
+    # scanned. PLAN.md stays out too: it is a task table carrying day rates, a credit amount and
+    # hypotheticals, and scanning it reports dozens of legitimate figures. JUDGE.md and AGENTS.md are
+    # in, because a judge opens the first and the second repeats the same numbers.
+    texts = [ROOT / "README.md", ROOT / "JUDGE.md", ROOT / "AGENTS.md",
+             *sorted(p for p in (ROOT / "docs").rglob("*.md") if "bob-evidence" not in p.parts)]
     problems = [f"{p.name}: {m}" for p in texts for m in headline_mismatches(p.read_text(), facts, allow)]
     assert problems == [], "\n".join(problems)
 
