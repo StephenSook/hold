@@ -114,8 +114,11 @@ def test_confluent_transport_publishes_events_and_reads_verdicts_from_the_topic(
     for _, _, value in producer.produced:
         payload = json.loads(value)
         assert "job_id" not in payload and payload["source"] == "simulation"
-    for step in report["steps"]:
+    for step, event in zip(report["steps"], DEFAULT_EVENTS, strict=True):
         assert step["job_id"] and step["round_trip_ms"] >= 0 and step["verdicts_on_topic"] >= 1
         assert step["status"] == "done"
+        job = JOBS.get(step["job_id"])
+        assert job is not None
+        assert job.source == f"confluent:{event['kind']}:simulation", (step["kind"], job.source)  # round six, finding 1
     assert len({step["job_id"] for step in report["steps"]}) == len(DEFAULT_EVENTS)
     assert report_ok(report)

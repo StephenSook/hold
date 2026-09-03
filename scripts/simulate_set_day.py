@@ -101,17 +101,23 @@ def _await_assignment(consumer: Any, timeout_s: float) -> None:
     raise TimeoutError(f"no partition assignment on {TOPIC_VERDICTS} in {timeout_s:.0f}s")
 
 
-def _first_new_verdict(consumer: Any, seen_jobs: set[str], deadline: float) -> str:
-    """The job_id of the first verdict on the topic that belongs to a job not seen before."""
+def _first_new_verdict(consumer: Any, seen_jobs: set[str], deadline: float, client: Any, kind: str) -> str:
+    """The job_id of the first verdict on the topic that belongs to the re-solve of this event: a job not
+    seen before whose source the API reports as confluent:<kind>:simulation. A verdict from any other job
+    (a baseline still flushing, someone else's event) is skipped and the wait goes on (round six, finding 1)."""
     while time.monotonic() < deadline:
         message = consumer.poll(1.0)
         if message is None or message.error():
             continue
         payload = json.loads(message.value())
         job_id = payload.get("job_id")
-        if payload.get("event") == "verdict" and job_id and job_id not in seen_jobs:
+        if payload.get("event") != "verdict" or not job_id or job_id in seen_jobs:
+            continue
+        source = client.get(f"/api/jobs/{job_id}").json().get("source")
+        if source == f"confluent:{kind}:simulation":
             return str(job_id)
-    raise TimeoutError(f"no verdict for a new job arrived on {TOPIC_VERDICTS} before the deadline")
+        seen_jobs.add(str(job_id))
+    raise TimeoutError(f"no verdict for this event's re-solve arrived on {TOPIC_VERDICTS} before the deadline")
 
 
 def _drain(consumer: Any, job_id: str, quiet_s: float = 1.0) -> int:
@@ -141,14 +147,14 @@ def simulate_confluent(
     report: dict[str, Any] = {"source": "simulation", "transport": "confluent", "constructed": bool(schedule.get("constructed")), "baseline": _summary(baseline), "steps": []}
     consumer.subscribe([TOPIC_VERDICTS])
     _await_assignment(consumer, timeout_s)
-    seen_jobs: set[str] = set()
+    seen_jobs: set[str] = {str(baseline["job_id"])}  # the baseline's verdicts may still be arriving
     try:
         for event in events:
             time.sleep(delay_s)
             started = time.monotonic()
             producer.produce(TOPIC_SET_EVENTS, key=event["kind"].encode("utf-8"), value=json.dumps(event, separators=(",", ":")).encode("utf-8"))
             producer.flush(10.0)
-            job_id = _first_new_verdict(consumer, seen_jobs, started + timeout_s)
+            job_id = _first_new_verdict(consumer, seen_jobs, started + timeout_s, client, event["kind"])
             round_trip_ms = round((time.monotonic() - started) * 1000, 1)
             seen_jobs.add(job_id)
             job = _wait(client, job_id, timeout_s)
