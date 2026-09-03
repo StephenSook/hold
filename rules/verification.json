@@ -83,6 +83,48 @@
       "fetched_at": "2026-09-03T01:37:51+00:00",
       "sha256_original": "432235402d788acc6eca53348923b3d6bc427d5aa874de3c9657f6ad514dbf3c",
       "kind": "excerpt"
+    },
+    "ca-fam-6752.txt": {
+      "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=FAM&sectionNum=6752.",
+      "fetched_at": "2026-09-03T02:38:26+00:00",
+      "sha256_original": "209378a51da2c2930539dce7833c9b6c82c3c94cf9b4318b015f74326cb0e906",
+      "kind": "full text"
+    },
+    "ca-fam-6753.txt": {
+      "url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=FAM&sectionNum=6753.",
+      "fetched_at": "2026-09-03T02:38:26+00:00",
+      "sha256_original": "a843ced07cffba51d88bc935dbeeb1af5eb8d0b36aedf3391d0569a51efc24ba",
+      "kind": "full text"
+    },
+    "ny-12-nycrr-186-4.5.txt": {
+      "url": "https://www.law.cornell.edu/regulations/new-york/12-NYCRR-186-4.5",
+      "fetched_at": "2026-09-03T02:38:27+00:00",
+      "sha256_original": "a6419b71392226ec598bb0900a66e1ad1ae2f2b26ce507e9adf05b0d5585b010",
+      "kind": "full text"
+    },
+    "il-820-ilcs-206.txt": {
+      "url": "https://www.ilga.gov/Legislation/ILCS/Articles?ActID=4524&ChapterID=68&Print=True",
+      "fetched_at": "2026-09-03T02:38:27+00:00",
+      "sha256_original": "3114af0771e27dd845df9f95345c8597fad1eb083cf9e57e180d3753c0dfe8f0",
+      "kind": "full text"
+    },
+    "la-rs-51-2132.txt": {
+      "url": "https://legis.la.gov/legis/Law.aspx?d=104228",
+      "fetched_at": "2026-09-03T02:38:28+00:00",
+      "sha256_original": "381b4629be7b82c1ff96d7a919997a598347c579e9734232a9d397e13da362bb",
+      "kind": "full text"
+    },
+    "la-rs-51-2133.txt": {
+      "url": "https://legis.la.gov/legis/Law.aspx?d=104229",
+      "fetched_at": "2026-09-03T02:38:28+00:00",
+      "sha256_original": "2fcabe4b92381dcdc0a77ec97e46ce81112103d907284efe06bba624a8a1eb74",
+      "kind": "full text"
+    },
+    "nm-11-1-4-nmac.txt": {
+      "url": "https://www.srca.nm.gov/wp-content/uploads/attachments/11.001.0004.pdf",
+      "fetched_at": "2026-09-03T02:38:28+00:00",
+      "sha256_original": "52b2cc3de6d93c5c1eae0c78686ad8a781865cddea85526e4a3cc3177f55e64e",
+      "kind": "full text"
     }
   },
   "records": {
@@ -355,6 +397,51 @@
       "status": "UNVERIFIABLE",
       "snapshot": null,
       "reason": "sagaftra.org returns HTTP 403 to scripted fetches; the sentence was read through a rendering service and is not snapshotted."
+    },
+    "CA_FAM_6752_c_1_coogan_set_aside": {
+      "status": "VERIFIED",
+      "snapshot": "ca-fam-6752.txt",
+      "reason": null
+    },
+    "CA_FAM_6753_a_coogan_trust_account": {
+      "status": "VERIFIED",
+      "snapshot": "ca-fam-6753.txt",
+      "reason": null
+    },
+    "NY_12_NYCRR_186_4_5_b_trust_transfer": {
+      "status": "VERIFIED",
+      "snapshot": "ny-12-nycrr-186-4.5.txt",
+      "reason": null
+    },
+    "IL_820_ILCS_206_90_a_child_performer_under_16": {
+      "status": "VERIFIED",
+      "snapshot": "il-820-ilcs-206.txt",
+      "reason": null
+    },
+    "IL_820_ILCS_206_90_c_1_trust_deposit": {
+      "status": "VERIFIED",
+      "snapshot": "il-820-ilcs-206.txt",
+      "reason": null
+    },
+    "LA_RS_51_2132_a_scope_500_dollars": {
+      "status": "VERIFIED",
+      "snapshot": "la-rs-51-2132.txt",
+      "reason": null
+    },
+    "LA_RS_51_2133_a_1_fifteen_percent_trust": {
+      "status": "VERIFIED",
+      "snapshot": "la-rs-51-2133.txt",
+      "reason": null
+    },
+    "NM_11_1_4_13_a_trust_account_1000_dollars": {
+      "status": "VERIFIED",
+      "snapshot": "nm-11-1-4-nmac.txt",
+      "reason": null
+    },
+    "NM_11_1_4_13_e_fifteen_percent_deposit": {
+      "status": "VERIFIED",
+      "snapshot": "nm-11-1-4-nmac.txt",
+      "reason": null
     }
   }
 }

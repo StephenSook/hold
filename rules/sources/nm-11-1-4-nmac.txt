@@ -1,0 +1,602 @@
+# Snapshot of https://www.srca.nm.gov/wp-content/uploads/attachments/11.001.0004.pdf
+# fetched_at 2026-09-03T02:38:28+00:00 sha256(original) 52b2cc3de6d93c5c1eae0c78686ad8a781865cddea85526e4a3cc3177f55e64e bytes 81577
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+TITLE 11
+CHAPTER 1
+PART 4
+
+LABOR AND WORKERS COMPENSATION
+LABOR GENERAL PROVISIONS
+WAGE AND HOUR AND EMPLOYMENT OF CHILDREN
+
+11.1.4.1
+ISSUING AGENCY: Labor Relations Division, (LRD) New Mexico Department of Workforce
+Solutions (NMDWS).
+[11.1.4.1 NMAC - Rp, 11.1.4.1 NMAC, 11/14/2017]
+11.1.4.2
+SCOPE: Employers and employees within the state of New Mexico.
+[11.1.4.2 NMAC - Rp, 11.1.4.2 NMAC, 11/14/2017]
+11.1.4.3
+STATUTORY AUTHORITY: Article 1, Article 4, and Article 6 of Chapter 50 NMSA 1978,
+relating to the powers and duties of the labor commissioner and director of labor and industrial division, now known
+as the director of the labor relations division, in the enforcement of the employment laws of the state of New
+Mexico.
+[11.1.4.3 NMAC - Rp, 11.1.4.3 NMAC, 11/14/2017]
+11.1.4.4
+DURATION: Permanent.
+[11.1.4.4 NMAC - Rp, 11.1.4.4 NMAC, 11/14/2017]
+11.1.4.5
+EFFECTIVE DATE: November 14, 2017, unless a later date is cited at the end of a section.
+[11.1.4.5 NMAC - Rp, 11.1.4.5 NMAC, 11/14/2017]
+11.1.4.6
+OBJECTIVE: The objective of this Part 4 of Title 11, Chapter 1 is to establish standards and
+procedures for the administration of Articles 1, 4 and 6 of Chapter 50 NMSA 1978.
+[11.1.4.6 NMAC - Rp, 11.1.4.6 NMAC, 11/14/2017]
+11.1.4.7
+
+DEFINITIONS:
+A.
+“Certified teacher” means any person with a valid and current New Mexico teaching certificate
+issued by the New Mexico public education department or its equivalent in the United States.
+B.
+“Child performer” means a minor person employed to act or otherwise participate in the
+performing arts, including but not limited to motion pictures, theatrical, radio, or television products.
+C.
+The definitions of “employee” and “employer” that apply to these rules are set forth in Sections
+50-4-1 and 50-4-21 NMSA 1978 and are incorporated herein by reference.
+D.
+“Employ” includes suffer or permit to work.
+E.
+“Entertainment industry” means an employer including, but not limited to, any organization or
+individual using the services of any minor in: motion pictures of any type, using any format including theatrical
+film, commercial, documentary, and television program, or similar format by any medium including photography,
+recording, modeling, theatrical productions, publicity, and any performances where minors perform or entertain.
+F.
+“Forepersons, superintendents and supervisors”, as used in Section 50-4-1(C)(2) of the Minimum
+Wage Act means an employee who meets all of the following requirements:
+(1)
+their primary duty is to perform non-manual work related to management of the business;
+(2)
+they are to exercise discretion;
+(3)
+they regularly assist executives or perform specialized work or special assignments; and
+(4)
+they perform less than twenty percent manual work;
+G.
+“Good cause” means a substantial reason, one that affords a legal excuse, a legally sufficient
+ground or reason.
+H.
+“Legal guardian” means a person appointed as a guardian by a court or Indian tribal authority.
+I.
+“Labor commissioner” and “director of the labor and industrial division”, as used in Articles 1, 4,
+and 6 of Chapter 50 NMSA are synonymous with the current designation used by NMDWS of “director, labor
+relations division”.
+J.
+“Minor” means any person under the age of 18 years.
+K.
+“Person”, as used in these rules, means an individual person.
+L.
+“Place of employment”, “work location”, “movie set”, “set”, and “location” mean the actual work
+site where any person provides services in New Mexico as a performer, paid or non-paid.
+M.
+“Resolution phase” means one or more of the procedures set forth in 11.1.4.107 to 11.1.4.109
+
+11.1.4 NMAC
+
+1
+
+NMAC.
+N.
+“Safety” means the conditions of being protected from any situation that is detrimental to the
+child’s health and well-being.
+O.
+“Wages” as defined in Section 50-4-1 NMSA 1978, which definition is incorporated herein by
+reference. Vacation pay and other forms of pay for time that is not worked are included in the definition of “wages”
+if such pay is compensation for labor or service rendered pursuant to the employer’s written policy.
+P.
+“Wage claimant” or “claimant” is the individual employee on behalf of whom a wage claim is
+filed.
+Q.
+“Work permit” is a permit to allow a child under the age of 16 to be able to work under certain
+conditions and issued by a designated school official or a representative of the LRD.
+R.
+“Written authorization” means a document an employee signs at the time of hiring or prior to the
+taking of a particular deduction, giving the employer permission to deduct certain items from the employee’s pay. A
+written authorization is needed for an employer to deduct an advance or over-payment of wages, however, the
+employer must pay at least minimum wages times the hours worked to the employee.
+[11.1.4.7 NMAC - Rp, 11.1.4.7 NMAC, 11/14/2017]
+11.1.4.8
+
+[RESERVED]
+
+11.1.4.9
+
+EMPLOYMENT OF CHILDREN:
+A.
+A work permit is ordinarily required when employing children under the age of 16.
+B.
+Work permits shall be issued only by the school superintendents, school principals, designated
+issuing school officers or the director or the director’s designee, upon proof of age of the student and that the work
+the child is engaged is not dangerous to the child or prohibited as outlined in Section 50-6-4 NMSA 1978 and in the
+Fair Labor Standards Act, (FLSA).
+C.
+It is the responsibility of the employer to preserve on file the work permit in a place about the
+premises where the child is employed. All work permits and records are subject to inspection by representatives of
+the LRD.
+D.
+The maximum number of hours allowed for children under the age of 16 is 18 hours a week
+during the school week and 40 hours a week in a non-school week.
+E.
+Hazardous occupation means any occupation defined as hazardous by the United States
+department of labor under 29 U.S.C. 201 et seq. of the FLSA.
+F.
+The student labor specialist will investigate any alleged violation of the Child Labor Act. The
+investigation may include investigating the premises of the employer, issuing a subpoena duces tecum, or holding an
+administrative hearing, to resolve the complaint.
+[11.1.4.9 NMAC - Rp, 11.1.4.9 NMAC, 11/14/2017]
+11.1.4.10
+EMPLOYMENT OF CHILDREN IN THE ENTERTAINMENT INDUSTRY:
+A.
+Any person who employs a person under the age of 18 as an actor or performer in the
+entertainment industry must obtain a pre-authorization certificate issued by the department of workforce solutions
+prior to the start of work. The pre-authorization certificate will include: the project name, estimated dates and
+length of the project, employer name, employer’s New Mexico address, a minimum of three contact personnel
+including name, address, and contact telephone numbers. The pre-authorization certificate will include: the child
+performer’s information: name, address, date of birth, where the child is registered to attend school, grade level of
+the child, special educational needs, anticipated length of employment on this project, nature of work on this project,
+and list any possible exposure to potentially hazardous materials or substances. A signature will be required from
+the child performer when the child is 14 years of age and older. A signature will be required from the parent or legal
+guardian giving the child permission to be employed in the entertainment industry. A signature will be required
+from the employer certifying compliance with all requirements of the pre-authorization certificate.
+B.
+It is the responsibility of the employer to obtain a child performer pre-authorization certificate
+before the employment begins. The employer must be able to provide a copy at the work site when requested to do
+so. The LRD will retain a copy.
+C.
+The child performer pre-authorization certificate is valid for one year from the date it was issued
+or until the specific project for which the child is employed by the employer who makes the application for the preauthorization ceases, whichever time period is shorter.
+D.
+The parent or legal guardian of the child performer can contact the LRD to renew the permit 30
+days prior to expiration.
+
+11.1.4 NMAC
+
+2
+
+E.
+A pre-authorization certificate for a child performer can only be issued by the LRD.
+F.
+No pre-authorization certificate will be given or issued without a signature of a parent or legal
+guardian indicating their permission for their child to work on the specific project. A parent or legal guardian must
+be within eyesight and earshot of the child performer at all times other than the time periods in which teachers are
+teaching school.
+G.
+The employer must provide a certification of compliance for the certified teacher with appropriate
+teaching credentials for grade levels kindergarten through 12 or to teach the level of education required for the child
+performer at the place of employment to the LRD prior to issuance of the pre-authorization certificate.
+H.
+It is the responsibility of the employer to provide a New Mexico certified trainer or technician
+accredited in a United States department of labor occupational safety and health administered-certified safety
+program at the place of employment at all times when a child performer may be exposed to potentially hazardous
+conditions. Hazardous conditions are special effects, which potentially could be physically dangerous to the child
+performer.
+I.
+The employer must provide a written background check on all certified teachers, and certified
+trainers and technicians on the movie set to the LRD. It is the responsibility of the employer, parent, legal guardian,
+teacher, trainer and technician to report any arrest or conviction record and any other information that may present a
+possible danger to the health, safety and well-being of the child performer.
+[11.1.4.10 NMAC - Rp, 11.1.4.10 NMAC, 11/14/2017]
+11.1.4.11
+CERTIFICATE AND DUTIES OF CERTIFIED TEACHERS:
+A.
+A certified teacher of New Mexico resident children, who attend public schools, must possess a
+valid and current teaching certificate issued by the New Mexico public education department. Certified teachers of
+non-resident students must possess a valid and current teaching certificate from one of the United States to teach
+grade levels kindergarten through 12 or teach the level of education required for the child performer at the place of
+employment.
+B.
+All certified teachers, shall, in addition to teaching, and in conjunction with the parent or legal
+guardian, also have the responsibility of monitoring and protecting the health, safety and well-being of the child
+performers they have been hired to teach during the time the teacher is required to be present.
+C.
+The certified teacher, parent, or legal guardian may refuse to allow the engagement of the child
+performer at the place of employment. Any party may report conditions threatening the health, safety, and wellbeing of the child performer to the department of workforce solutions. It is the ultimate responsibility of the parent
+or legal guardian to assure that the safety, health and well-being of the child are being protected. A teacher must be
+present during the time reserved for school, except that the child performers under 16 do not require the presence of
+a teacher for up to one hour for wardrobe, make-up, hairdressing, promotional publicity, personal appearances, or
+audio recording if these activities are not the actual site of filming or at the theatre or if school is not in session, and
+if the parent or legal guardian is present within earshot or eyesight of the child performer.
+[11.1.4.11 NMAC - Rp, 11.1.4.11 NMAC, 11/14/2017]
+11.1.4.12
+LIMITATIONS OF CHILD PERFORMERS WORKING HOURS INCLUDING SCHOOL
+TIME:
+A.
+All child performers’ ages six to 18 years must be provided with a teacher for each group of 10 or
+fewer child performers when school is in session.
+B.
+No child performers shall begin work before 5:00 a.m. or continue work after 10:00 p.m., on
+evenings preceding school days. Child performers shall not work later than 12:00 a.m. on days preceding nonschool days. The time the child performer can be permitted at the place of employment may be extended by onehalf hour for a meal period.
+C.
+No infants 15 days old to six months of age may be employed as a child performer unless a United
+States licensed physician who is board-certified in pediatrics provides a written certification that the infant is at least
+15 days old and, is physically capable of handling the stress of filmmaking. With the physician’s approval the infant
+performer may be at the place of employment a maximum of two hours, with no more than 20 minutes of work time.
+Work time for infants shall be limited to one period of two consecutive hours in any one day.
+D.
+Child performers ages seven months to two years may be at the place of employment for up to
+four hours and may work up to two hours. The remaining time must be reserved for the child performers rest and
+recreation.
+E.
+Child performers ages three years to five years may be at the place of employment for up to six
+hours and may work up to three hours. The remaining time must be reserved for the child performer’s rest and
+
+11.1.4 NMAC
+
+3
+
+recreation.
+F.
+When school is in session, child performers ages six years to eight years may be at the place of
+employment for up to eight hours, the sum of four hours work, three hours schooling, and one hour of rest and
+recreation. When school is not in session, work time may be increased up to six hours, with the remaining time
+reserved for the child performer’s rest and recreation.
+G.
+When school is in session, child performer ages nine to 15 years may be at the place of
+employment for up to nine hours, the sum of five hours work, three hours schooling, and one hour rest and
+recreation. When school is not in session, work time may be increased up to seven hours, with the remaining time
+reserved for the child performer’s rest and recreation.
+H.
+When school is in session, child performers age 16 to 18 years may be at the place of employment
+for up to 10 hours, the sum of six hours work, three hours schooling and one hour of rest and recreation. When
+school is not in session, work time may be up to eight hours, with the remaining time reserved for the child
+performer’s rest and recreation.
+I.
+In exceptional circumstances due to unusual performance requirements, a waiver of the mandatory
+hours and start to finish times may be granted by the department of workforce solutions. Such waiver must be
+granted prior to the performances of the work that is the subject of the waiver. The department of workforce
+solutions will grant a waiver only under the following circumstances:
+(1)
+written notification through a listing of specific dates and times that the child performers
+will be employed or present at the place of employment;
+(2)
+written acknowledgement that the child performer’s parent or legal guardian have been
+fully informed of the circumstances and have granted advance consent.
+J.
+The child performer must be provided with a 12-hour rest break at the end of the workday.
+K.
+All time spent in traveling from a studio to a location or from a location to a studio shall count as
+part of the working day for a minor. When a minor with a company on a location which is sufficiently distant to
+require an overnight stay and is required to travel daily between living quarters and the place where the company is
+actually working, the time spent by the minor in such traveling will not count as work time, provided the company
+does not spend more than 45 minutes traveling each way and furnishes the necessary transportation.
+[11.1.4.12 NMAC - Rp, 11.1.4.12 NMAC, 11/14/2017]
+11.1.4.13
+REQUIREMENT OF TRUST ACCOUNT FOR ALL CHILD PERFORMERS:
+A.
+Each time a child performer is employed in the state of New Mexico with a contract equal or
+greater than $1000, a trust account will be created for the child performer.
+B.
+It is the responsibility of the parent or legal guardian, or trustee to set up a trust account for the
+child performer in the child’s state of residence for the sole benefit of the child within seven business days after the
+child performer’s employment contract is signed. The child will not have access to the trust account until the child
+is 18 years of age or becomes legally emancipated.
+C.
+The parent, guardian, or trustee shall provide the employer with a trustee statement within 15 days
+after the start of employment. Once the employer receives the trustee statement, the employer will provide the
+parent, guardian, or trustee with a written acknowledgement of receipt.
+D.
+If the employer does not receive the trustee statement within 90 days after the start of
+employment, the child’s employer shall refer the matter to district court. The district court shall have continuing
+jurisdiction over the trust.
+E.
+The employer shall deposit not less than fifteen percent of the child’s gross earnings directly into
+the child trust account within 15 business days of the work performance. If the account is not established, the
+employer shall withhold fifteen percent of the gross income until a trust account is established or until court orders
+otherwise. Once the employer deposits fifteen percent of the gross earnings in the trust account, the employer shall
+have no further obligation to monitor the funds.
+F.
+Once the funds are deposited in the trust account, only the trustee shall be obligated to monitor
+and account for the funds.
+[11.1.4.13 NMAC - Rp, 11.1.4.13 NMAC, 11/14/2017]
+11.1.4.14
+SAFETY REQUIREMENTS FOR CHILD PERFORMERS:
+A.
+No dressing room is to be occupied simultaneously by a minor and an adult performer or by
+minors of the opposite sex.
+B.
+It is the responsibility of the employer to provide a safe, secure shelter for child performers under
+the age of 18 to rest when required to be at the place of employment during non-performances times.
+
+11.1.4 NMAC
+
+4
+
+C.
+No employer may cause, induce, entice, or permit a child performer to engage or to be used
+sexually exploitive material for the purpose of producing a performance. No child performer may be depicted in any
+media as appearing to participate in a sex act.
+[11.1.4.14 NMAC - Rp, 11.1.4.14 NMAC, 11/14/2017]
+11.1.4.15
+PENALTIES AND DETERMINATION PROCESS:
+A.
+The director of the labor relations division may for cause refuse to issue a pre-authorization
+certificate to any project that has violated the provision of this act within a two year period.
+B.
+The director will notify the employer within 10 days from the dates requested of a non-issuance of
+a pre-authorization certificate.
+C.
+Any affected party may request a reconsideration of the director’s actions, in writing, within 10
+days.
+D.
+The director may schedule an administrative hearing when, in their judgment, it would facilitate
+resolution of the complaint. The conduct of the hearing is not governed by the Administrative Procedures Act, but
+rather by procedures established by the LRD. (50-1-2)
+E.
+The director may issue a subpoena duces tecum to compel the production of records they believe
+are necessary for the resolution of the complaint.
+F.
+The director may issue written findings whenever they have sufficient evidence upon which to
+base their determination.
+G.
+Other penalties for violations may be assessed pursuant to Section 50-6-12 NMSA 1978
+compilation.
+[11.1.4.15 NMAC - Rp, 11.1.4.15 NMAC, 11/14/2017]
+11.1.4.16 THROUGH 11.1.4.99: [RESERVED]
+11.1.4.100
+FILING OF A WAGE CLAIM: The claim form is to be completed by answering the questions
+in the form as completely as possible, and is to be signed and dated by the employee making the wage claim. The
+form does not need to be notarized. A wage claim may be filed for any amount that is in dispute for any claim
+arising entirely or in part within the three years prior to the filing of the claim. The wage claim form will give the
+claimant the opportunity to choose to correspond with the LRD by email or regular mail but if the wage claimant
+does not make a choice, the correspondence with the wage claimant will be by regular mail. A claimant may
+complete the wage claim form themselves or have a LRD employee assist in completing the form based on the
+claimant’s statements in-person or by telephone. If the LRD provides assistance in completing the form by
+telephone, the LRD shall mail or email the unsigned form to the claimant to be reviewed, approved, signed, and
+submitted to the LRD for filing. The wage claimant may provide any additional information and documentation
+supporting the claim, but is not required to do so. Any such documents should be copies and not originals, as the
+originals may be needed for any further proceedings. Upon receipt of the completed claim form, the LRD will
+assign a claim number and open a file. The form will be assigned to an employee of the LRD who will: (1) review
+the claim form to determine whether the LRD has jurisdiction over the claim; (2) determine if more information
+from the claimant is needed; (3) determine if the form needs to be referred for consideration as to whether a directed
+investigation is appropriate; and (4) interview the wage claimant, if necessary, to clarify any discrepancies,
+omissions, or errors in the wage claim, and obtain additional information regarding the claim. If a directed
+investigation is not warranted, the LRD will follow the procedures set forth in 11.1.4.104 to 11.1.4.109 NMAC. If a
+wage claimant is represented by an attorney at any time during the proceedings, the attorney shall give written notice
+to the LRD of said representation.
+[11.1.4.100 NMAC - N, 11/14/2017]
+11.1.4.101
+JURISDICTION OF THE LRD: The authority of the LRD is limited to the enforcement of the
+laws of the State of New Mexico. The LRD does not have authority to enforce the laws of any other state. The
+LRD may refuse to accept a wage claim if the wage claim form involves work performed entirely outside the State
+of New Mexico.
+[11.1.4.101 NMAC - N, 11/14/2017]
+11.1.4.102
+DEADLINE FOR FILING A WAGE CLAIM: A wage claimant must file a wage claim with
+the LRD against an employer within three years of that employer’s last violation of the wage and hour laws as to the
+wage claimant. As long as any portion of the wage claim falls within the three-year time limit, the LRD will
+
+11.1.4 NMAC
+
+5
+
+investigate the claim as far back as the beginning of the continued course of conduct as to the wage claimant or, in
+the case of a directed investigation, as far back as the course of conduct actually began as to any employee.
+[11.1.4.102 NMAC - N, 11/14/2017]
+11.1.4.103
+INITIAL CLOSURE OF CERTAIN WAGE CLAIMS: The LRD may close any wage claim
+file after the initial screening with no further investigation if the LRD determines that it does not have jurisdiction, it
+is impossible to identify claimant’s alleged employer, or if no portion of the claim falls within a three-year time
+period. Upon closure, the LRD will send the claimant a letter that sets forth the material facts, statutes, or
+regulations on which the closure is based.
+[11.1.4.103 NMAC - N, 11/14/2017]
+11.1.4.104
+DELIVERY OF THE WAGE CLAIM TO THE EMPLOYER: Within 10 business days of
+the initial screening, the LRD shall mail the employer an initial correspondence, which shall include details from the
+claim form that are relevant to the wage claim, any supporting documentation received from the wage claimant, and
+a blank response form. The initial correspondence shall be mailed to the last known address of the employer. The
+notice to the employer will give the employer the opportunity to choose to receive correspondence from the LRD by
+email or regular mail, but if the employer does not make a choice, the correspondence will be sent by regular mail.
+[11.1.4.104 NMAC - N, 11/14/2017]
+11.1.4.105
+RESPONSE OF THE EMPLOYER: Within 10 business days of the receipt of the initial
+correspondence regarding the wage claim, the employer shall respond in writing to the wage claim and shall provide
+all information and documentation it has that is relevant to the wage claim, including true and accurate wage and
+hour records. If the employer fully admits the alleged violation, the LRD may proceed directly to the resolution
+phase of the investigation. If after the employer’s initial response the LRD deems necessary, the LRD may
+interview the employer to obtain any additional information and shall issue a subpoena to compel time records,
+payroll records or other documents the LRD deems necessary to conduct an investigation into the merits of the wage
+claim, if such records were not voluntarily provided. If wage and hour records are not identified after these steps are
+completed, the LRD may interview the wage claimant to obtain any additional information needed and then shall
+proceed to the resolution phase of the investigation. If an employer is represented by an attorney at any time during
+the proceedings, the attorney shall give written notice to the LRD of said representation.
+[11.1.4.105 NMAC - N, 11/14/2017]
+11.1.4.106
+DELIVERY OF THE RESPONSE TO THE WAGE CLAIMANT: If the employer disputes
+the alleged violation and submits relevant documentary evidence, the LRD shall give the claimant an opportunity to
+respond in writing, by sending the claimant the employer’s response and evidence. The wage claimant may respond
+within 10 business days of receipt of the communication with any additional information regarding the wage claim.
+The LRD may also telephone the wage claimant to obtain any additional information needed. Upon receipt of
+information from the claimant, or upon expiration of the 10 day period, whichever is earlier, the LRD shall proceed
+to the resolution phase of the investigation.
+[11.1.4.106 NMAC - N, 11/14/2017]
+11.1.4.107
+SETTLEMENT BY PARTIES: Upon completing the investigatory steps set forth herein, the
+LRD may schedule a settlement meeting between the parties. During the settlement meeting, the LRD shall inform
+the parties of the preliminary conclusions the LRD has reached upon initial investigation of the claim, including the
+potential amount owed to the wage claimant. If the claim involves a violation of Section 50-4-22 NMSA1978, the
+potential amount owed shall include the unpaid and underpaid wages of the wage claimant, plus an additional
+amount equal to twice the amount of the unpaid or underpaid wages. The LRD shall also inform the parties that any
+award by the LRD can only be enforced by a court entering a judgment and enforcing the judgment in the same
+manner as other judgments are enforced, and that the LRD will pursue such enforcement action if the claim is not
+resolved through settlement. The employer and the wage claimant will be given the opportunity to discuss the
+settlement of the wage claim and the wage claimant will have the right to decide whether to accept any settlement
+offered by the employer or proceed, if necessary, to a LRD hearing on the wage claim or to court to collect on the
+wage claim. If a settlement of the wage claim is agreed to between the employer and the wage claimant, the LRD
+shall prepare a document for the parties to sign reflecting the resolution.
+[11.1.4.107 NMAC - N, 11/14/2017]
+
+11.1.4 NMAC
+
+6
+
+11.1.4.108
+HEARING BY THE LRD: If parties do not agree to a settlement, and the LRD deems
+necessary, the LRD may schedule a hearing. If a hearing is held, the following procedures shall apply: At the
+commencement of the hearing, the LRD shall once again inform the parties of the preliminary conclusions the LRD
+has reached upon initial investigation of the claim, including the potential amount owed to the wage claimant. If the
+claim involves a violation of Section 50-4-22 NMSA 1978, the potential amount owed shall include the unpaid and
+underpaid wages of the wage claimant, plus an additional amount equal to twice the amount of the unpaid or
+underpaid wages. The LRD shall also inform the parties that any award by the LRD can only be enforced by a court
+entering a judgment and enforcing the judgment in the same manner as other judgments are enforced, and that the
+LRD will pursue such enforcement action if the claim is not resolved through settlement. At the hearing, the LRD
+shall place witnesses under oath and shall obtain the testimony of the witnesses who are available in person and by
+telephone.
+[11.1.4.108 NMAC - N, 11/14/2017]
+11.1.4.109
+DECISION OF THE LRD: The LRD shall issue a written determination whenever a wage claim
+or investigation is not resolved through settlement. The LRD has discretion to render a written decision without
+conducting a hearing. The decision of the LRD shall be in writing and shall set forth the material facts upon which
+the decision is based, the specific statutes or regulations on which the decision is based, an explanation of the
+reasons supporting the decision, and a calculation of the damages. When the claim involves a violation of any
+provision of Section 50-4-22 NMSA1978, damages shall include the amount of the claimant’s unpaid minimum
+wages plus interest, and an additional amount equal to twice the unpaid or underpaid wages. A copy of the decision
+shall be sent to each party, by the method of correspondence selected by the party, as soon as it has been entered,
+and a copy shall be kept in the file of the LRD regarding the claim. The parties will be given an additional
+opportunity to resolve the claim for an amount agreed to by the parties and acceptable to the wage claimant, prior to
+the claim being filed with a court of competent jurisdiction.
+[11.1.4.109 NMAC - N, 11/14/2017]
+11.1.4.110
+NO RIGHT OF ADMINISTRATIVE APPEAL: the LRD’s administrative determinations are
+not judgments, and the LRD does not have the power to issue judgments. The LRD may only enforce a judgment
+against the employer after a legally-enforceable judgment has been docketed in the appropriate court. The LRD has
+no administrative appeals process provided by law by which a party may appeal wage claim decisions. Wage
+claimants who disagree with the LRD’s administrative determinations have no right of administrative appeal, but
+may exercise the private right of action set forth in Sections 37-1-5 and 50-4-26 NMSA1978.
+[11.1.4.110 NMAC - N, 11/14/2017]
+11.1.4.111
+DIRECTED INVESTIGATIONS: When the LRD has information about an alleged violation
+that affects multiple employees, which the director, in his sole discretion, believes involves a systemic violation of
+the wage and hour laws of the state of New Mexico by an employer, the director may direct the LRD to undertake a
+directed investigation. A directed investigation is a workplace-wide investigation into an employer’s wage payment
+practices, which is not limited in scope to the claims of the individual reporting the alleged violation of the law.
+Among other investigatory methods, a directed investigation may include interviews with individuals having
+information and obtaining and reviewing all employment records for the time period under investigation. It may
+also include enforcement action against the employer to collect wages, damages, or penalties owed, based on
+violations uncovered as to any employee.
+[11.1.4.111 NMAC - N, 11/14/2017]
+11.1.4.112
+ACTION BY THE LRD IN DISTRICT COURT TO ENFORCE DECISION ON
+MINIMUM WAGE ACT CLAIM: To enforce the Minimum Wage Act, Sections 50-4-19 through 50-4-30
+NMSA1978, the director may institute an action in the name of the state in the district court of the county wherein
+the employer who has failed to comply with the act resides or has a principal office or place of business, and shall
+seek the assistance of the district attorney whenever, in the director’s discretion, such assistance is necessary or
+advisable.
+[11.1.4.112 NMAC - N, 11/14/2017]
+11.1.4.113
+ACTION BY THE LRD TO ENFORCE DECISION ON ALL OTHER WAGE CLAIMS:
+To enforce any provision of Chapter 50, Article 4, if the amount of the wage claim does not exceed the jurisdictional
+limit for the metropolitan or magistrate court, the LRD may file an action against the employer on behalf of the
+
+11.1.4 NMAC
+
+7
+
+wage claimant in the appropriate court. The LRD shall obtain an assignment of the wage claim as provided in
+Section 50-4-11 NMSA1978 prior to proceeding with any court action. The LRD will request a recording of all
+hearings in magistrate or metropolitan court to preserve the right to appeal to district court. The LRD will promptly
+forward any notice of hearing received from the magistrate or metropolitan court to the claimant in the manner
+selected by the wage claimant in the wage claim form. In the event the amount of a valid and enforceable wage
+claim exceeds the jurisdictional limit for the metropolitan or magistrate court, the LRD shall refer the matter to the
+district attorney for the district wherein any violation occurs by sending the district attorney the complete
+investigation file and cooperating with the district attorney throughout the prosecution of the action. The LRD may
+file a proof of claim on behalf of the wage claimant in any U.S. bankruptcy court. The LRD will not be responsible
+for providing an attorney to represent a wage claimant in any administrative or judicial proceeding. The wage
+claimant will also be advised that he or she may exercise the private right of action set forth in Sections 37-1-5 and
+50-4-26 NMSA1978 and may wish to consult with an attorney regarding filing such a claim.
+[11.1.4.113 NMAC - N, 11/14/2017]
+11.1.4.114
+SUBPOENA POWERS: The LRD may issue a subpoena compelling any witness, including but
+not limited to the employer and the wage claimant, to appear for the taking of a deposition and for the production of
+any documents relevant to the claim at the time of the deposition, or to appear for any hearing and for the production
+of any documents relevant to the claim at the time of the hearing.
+[11.1.4.114 NMAC - N, 11/14/2017]
+11.1.4.115
+EMPLOYER RECORDS: It is the employer’s burden to maintain true and accurate time and
+pay records for all employees. Therefore, upon a finding by the LRD of an employment relationship, if the
+employer has not maintained and produced to the LRD the wage and hour records required by law, or if the LRD
+determines that employer records are inaccurate or incomplete, the LRD will calculate the wages due to the wage
+claimant based on employee records or the employee’s credible recollection of the hours worked and wages paid or
+unpaid.
+[11.1.4.115 NMAC - N, 11/14/2017]
+11.1.4.116
+CONFIDENTIALITY: If there is danger of retaliation by the employer against the individual or
+other good cause to believe that the person providing the information about the misconduct may suffer harm for
+providing the information, the identity of the source of the information of misconduct by the employer shall be kept
+confidential by the LRD and its employees. The LRD shall not require a social security number or a taxpayer
+identification number of a wage claimant and shall adopt procedures to ensure that such information, if obtained,
+does not remain in its case files.
+[11.1.4.116 NMAC - N, 11/14/2017]
+11.1.4.117
+CONFLICTS WITH STATE LAWS: In the event any of the rules and regulations set forth
+herein conflict with any applicable state law, the state law shall control.
+[11.1.4.117 NMAC - N, 11/14/2017]
+11.1.4.118
+CONSIDERATION OF FEDERAL FAIR LABOR STANDARDS ACT: In making a
+decision, the LRD may rely upon definitions used within and decisions relating to the FLSA, 29 U.S.C. 201 et seq.
+[11.1.4.118 NMAC - N, 11/14/2017]
+11.1.4.119
+EFFECT OF FILING OF PRIVATE ACTION: The LRD may close a wage claimant’s wage
+claim file and take no further action if the wage claimant files a separate civil action against the employer in a court
+of competent jurisdiction asserting the same legal claims that are the subject of a LRD investigation.
+[11.1.4.119 NMAC - N, 11/14/2017]
+11.1.4.120
+REOPENING OF INVESTIGATION BY THE LRD: Prior to a final decision by the LRD,
+and upon a showing of good cause for doing so, the LRD may reopen the investigation of any wage claim at the
+written request of a wage claimant. Upon reopening, the LRD may pursue any investigatory steps available to it
+pursuant to law and these rules and regulations.
+[11.1.4.120 NMAC - N, 11/14/2017]
+11.1.4.121
+
+11.1.4 NMAC
+
+STANDARD OPERATING PROCEDURES: The LRD may adopt standard operating
+
+8
+
+procedures to provide additional instructions for its employees in the performance of their duties and
+responsibilities, which shall be made available on the LRD website upon adoption. The LRD shall also adopt a
+manual containing information for employees about how to apply the relevant laws to wage claims based on
+applicable statutes and judicial or administrative decisions. The most recent version of the manual shall be made
+available on the LRD website upon adoption, and changes to the manual shall be identified by date. In the event of
+a conflict between a provision of these rules and regulations and a provision of any standard operating procedure or
+manual, these rules shall control.
+[11.1.4.121 NMAC - N, 11/14/2017]
+11.1.4.122
+LANGUAGE ACCESS: The LRD shall translate into Spanish all standardized portions of
+written materials provided to the parties or made available to the public, including the claim form, form letters,
+standardized portions of administrative decisions, notices, brochures, and informational materials. Interpretation
+services will be made available by the LRD to all individuals with whom the LRD interacts in the course of carrying
+out its duties under the relevant statutes and rules. The claim form and the employer response form will give the
+parties the opportunity to indicate a language preference. The LRD shall provide a multilingual notice for members
+of the public to access the LRD’s interpretation service, which shall include the LRD’s phone number and a
+statement that interpretation services are available free of charge. The multilingual notice shall include the top five
+written languages spoken in each county in New Mexico, set forth in the language access plans of the New Mexico
+state courts. The notice shall appear on the LRD website and at the front desk of all LRD offices. It shall also be
+printed in the claimant’s preferred language on all documents sent to parties who select a preferred language other
+than English.
+[11.1.4.122 NMAC - N, 11/14/2017]
+11.1.4.123
+ACCESS TO DWS OFFICES: The wage claim form shall be made available in all offices in
+which department of workforce solutions services are administered, and claimants shall be permitted to use landline
+telephones or computers in such offices to communicate with the LRD for any purpose relevant to filing a wage
+claim or the investigation and enforcement of the wage claim. Administrative hearings or other LRD administrative
+functions may also be conducted in such offices.
+[11.1.4.123 NMAC - N, 11/14/2017]
+HISTORY OF 11.1.4 NMAC: [RESERVED]
+History of Repealed Material:
+11.1.4 NMAC, Wage and Hour and Employment of Children, filed 11/14/1998, repealed effective 11/14/2017.
+
+11.1.4 NMAC
+
+9

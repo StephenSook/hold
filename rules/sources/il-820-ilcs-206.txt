@@ -1,0 +1,477 @@
+# Snapshot of https://www.ilga.gov/Legislation/ILCS/Articles?ActID=4524&ChapterID=68&Print=True
+# fetched_at 2026-09-03T02:38:27+00:00 sha256(original) 3114af0771e27dd845df9f95345c8597fad1eb083cf9e57e180d3753c0dfe8f0 bytes 162264
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+- 
+Illinois General Assembly
+ ILGA.GOV
+ (820 ILCS 206/) Child Labor Law of 2024.
+Illinois Compiled Statutes (ILCS) 
+ Updating the database of the Illinois Compiled Statutes (ILCS) is an ongoing process. Recent laws may not yet be included in the ILCS database, but they are found on this site as Public Acts soon after they become law. For information concerning the relationship between statutes and Public Acts, refer to the Guide.
+ Because the statute database is maintained primarily for legislative drafting purposes, statutory changes are sometimes included in the statute database before they take effect. If the source note at the end of a Section of the statutes includes a Public Act that has not yet taken effect, the version of the law that is currently in effect may have already been removed from the database and you should refer to that Public Act to see the changes made to the current law.
+ (820 ILCS 206/1) 
+ Sec. 1. Short title. This Act may be cited as the Child Labor Law of 2024.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/5) 
+ Sec. 5. Findings. The General Assembly finds that minors engaged in work are deserving of enhanced workplace protections. It is the intent of the General Assembly, in enacting this Child Labor Law of 2024, to safeguard all working minors' health, safety, welfare, and access to education and the provisions of this Act shall be interpreted to provide the greatest protection of a minor's well-being.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/10) 
+ Sec. 10. Definitions. As used in this Act:
+ "Construction" means any constructing, altering, reconstructing, repairing, rehabilitating, refinishing, refurbishing, remodeling, remediating, renovating, custom fabricating, maintenance, landscaping, improving, wrecking, painting, decorating, demolishing, and adding to or subtracting from any building, structure, highway, roadway, street, bridge, alley, sewer, ditch, sewage disposal plant, water works, parking facility, railroad, excavation or other structure, project, development, real property or improvement, or to do any part thereof, whether or not the performance of the work herein described involves the addition to, or fabrication into, any structure, project, development, real property or improvement herein described of any material or article of merchandise. "Construction" also includes moving construction-related materials on the job site to or from the job site.
+ "Department" means the Department of Labor.
+ "Director" means the Director of Labor.
+ "District superintendent of schools" means an individual employed by a board of education in accordance with Section 10-21.4 of the School Code and the chief executive officer of a school district in a city with over 500,000 inhabitants.
+ "Duly authorized agent" means an individual who has been designated by a regional or district superintendent of schools as his or her agent for the limited purpose of issuing employment certificates to minors under the age of 16 and may include officials of any public school district, charter school, or any State-recognized, non-public school.
+ "Employ" means to allow, suffer, or permit to work. 
+ "Employer" means a person who employs a minor to work. 
+ "Family" means a group of persons related by blood or marriage, including civil partnerships, or whose close relationship with each other is considered equivalent to a family relationship by the individuals.
+ "Minor" means any person under the age of 16.
+ "Online platform" means any public-facing website, web application, or digital application, including a mobile application. "Online platform" includes a social network, advertising network, mobile operating system, search engine, email service, or Internet access service.
+ "Person" means any natural person, individual, corporation, business enterprise, or other legal entity, either public or private, and any legal successor, representative, agent, or agency of that individual, corporation, business enterprise, or legal entity.
+ "Regional superintendent of schools" means the chief administrative officer of an educational service region as described in Section 3A-2 of the School Code.
+ "School hours" means, for a minor of compulsory school age who is enrolled in a public or non-public school that is registered with or recognized by the State Board of Education, the hours the minor's school is in session. "School hours" means, for a minor of compulsory school age who is not enrolled in a public or non-public school that is registered with or recognized by the State Board of Education, the hours that the minor's local public school in the district where the minor resides is in session. 
+ "School issuing officer" means a regional or district superintendent of schools, or his or her duly authorized agent.
+ "Vlog" means content shared on an online platform in exchange for compensation.
+ "Vlogger" means an individual or family that creates video content, performed in Illinois, in exchange for compensation, and includes any proprietorship, partnership, company, or other corporate entity assuming the name or identity of a particular individual or family for the purposes of that content creation. "Vlogger" does not include any person under the age of 16 who produces his or her own vlogs.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/15) 
+ Sec. 15. Employment of minors. 
+ (a) A person shall not employ, allow, or permit a minor to work in Illinois unless that work meets the requirements of this Act and any rules adopted under this Act.
+ (b) A person may employ, allow, or permit a minor 14 or 15 years of age to work outside of school hours, except at work sites prohibited under Section 55, after being issued a certificate authorizing that employment. 
+ (c) A person shall not employ, allow, or permit a minor 13 years of age or younger to work in any occupation or at any work site not explicitly authorized by or exempted from this Act.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/20) 
+ Sec. 20. Exemptions. 
+ (a) Nothing in this Act applies to the work of a minor engaged in agricultural pursuits, except that no minor under 12 years of age, except members of the farmer's own family who live with the farmer at his principal place of residence, at any time shall be employed, allowed, or permitted to work in any gainful occupation in connection with agriculture, except that any minor of 10 years of age or older shall be permitted to work in a gainful occupation in connection with agriculture during school vacations or outside of school hours.
+ (b) Nothing in this Act applies to the work of a minor engaged in the sale and distribution of magazines and newspapers outside of school hours. 
+ (c) Nothing in this Act applies a minor's performance of household chores or babysitting outside of school hours if that work is performed in or about a private residence and not in connection with an established business, trade, or profession of the person employing, allowing, or permitting the minor to perform the activities.
+ (d) Nothing in this Act applies to the work of a minor 13 years of age or older in caddying at a golf course.
+ (e) Nothing in this Act applies to a minor 14 or 15 years of age who is, under the direction of the minor's school, participating in work-based learning programs in accordance with the School Code.
+ (f) Nothing in this Act prohibits an employer from employing, allowing, or permitting a minor 12 or 13 years of age to work as an officiant or an assistant instructor of youth sports activities for a not-for-profit youth club, park district, township parks and recreation department, or municipal parks and recreation department if the employer obtains certification as provided for in Section 55 and:
+ (1) the parent or guardian of the minor who is 
+working as an officiant or an assistant instructor, or an adult designated by the parent or guardian, shall be present at the youth sports activity while the minor is working;
+ (2) the minor may work as an officiant or an 
+assistant instructor for a maximum of 3 hours per day on school days and a maximum of 4 hours per day on non-school days;
+ (3) the minor shall not exceed 10 hours of 
+officiating and working as assistant instructor in any week;
+ (4) the minor shall not work later than 9:00 p.m. on 
+any day of the week; and
+ (5) the participants in the youth sports activity are 
+at least 3 years younger than the minor unless an individual 16 years of age or older is officiating or instructing the same youth sports activity with the minor.
+ The failure to satisfy the requirements of this subsection may result in the revocation of the minor's employment certificate.
+(Source: P.A. 103-721, eff. 1-1-25; 104-35, eff. 8-1-25.)
+ (820 ILCS 206/25) 
+ Sec. 25. Allowable work hours. Except as allowed under Section 30, no employer shall employ, allow, or permit a minor to work:
+ (1) more than 18 hours during a week when school is 
+in session; 
+ (2) more than 40 hours during a week when school is 
+not in session; 
+ (3) more than 8 hours in any single 24-hour period;
+ (4) between 7 p.m. and 7 a.m. from Labor Day until 
+June 1 or between 9 p.m. and 7 a.m. from June 1 until Labor Day; or
+ (5) more than 3 hours per day or more than 8 hours 
+total of work and school hours on days when school is in session.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/30) 
+ Sec. 30. Exceptions to allowable work hours. 
+ (a) An employer may employ, allow, or permit a minor under the age of 16 to work a maximum of 8 hours on each Saturday and on Sunday during the school year if:
+ (1) the minor does not work outside of school hours 
+more than 6 consecutive days in any one week; and
+ (2) the number of hours worked by the minor outside 
+of school hours in any week does not exceed 24. 
+ (b) A minor working as a live theatrical performer as described in Section 45 shall be permitted to work until 11 p.m. on nights when performances are held. 
+ (c) A minor under 16 years of age working as a performer as described in Section 50 shall be permitted to work until 10 p.m.
+ (d) A park district, not-for-profit youth club, or municipal parks and recreation department may allow a minor 14 years of age or older to work in a recreational or educational activity beyond the hours identified in Section 25 as follows: 
+ (1) From Labor Day until June 1, an employer may 
+allow a minor to work until 9 p.m. on school days if the following conditions are met: 
+ (A) the minor does not work more than 3 hours per 
+day;
+ (B) the minor does not work on more than 2 school 
+days in that week; and 
+ (C) the minor does not work more than 24 total 
+hours outside school hours in that week. 
+ (2) From June 1 to Labor Day, an employer may allow a 
+minor to work until 10 p.m. and no earlier than 7 a.m. 
+ (3) For a minor who attends a school that operates a 
+year-round schedule, an employer may allow the minor to work until 10 p.m. and no earlier than 7 a.m. during periods when school is not in session for the minor. If school is in session, then the minor who attends a school that operates a year-round schedule may work until 9 p.m. on school days and no earlier than 7 a.m., if the following conditions are met:
+ (A) the minor does not work more than 3 hours per 
+day;
+ (B) the minor does not work on more than 2 school 
+days in that week; and 
+ (C) the minor does not work more than 24 total 
+hours outside school hours in that week.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/35) 
+ Sec. 35. Employer requirements. 
+ (a) It shall be unlawful for any person to employ, allow, or permit any minor to work unless the minor obtains an employment certificate authorizing the minor to work for that person. Any person seeking to employ, allow, or permit any minor to work shall provide that minor with a notice of intention to employ to be submitted by the minor to the minor's school issuing officer with the minor's application for an employment certificate.
+ (b) Every employer of one or more minors shall maintain, on the premises where the work is being done, records that include the name, date of birth, and place of residence of every minor who works for that employer, notice of intention to employ the minor, and the minor's employment certificate. Authorized officers and employees of the Department, truant officers, and other school officials charged with the enforcement of school attendance requirements described in Section 26-1 of the School Code may inspect the records without notice at any time.
+ (c) Every employer of minors shall ensure that all minors are supervised by an adult 21 years of age or older, on site, at all times while the minor is working. This requirement does not apply with respect to: (i) any minor working for a park district, a township parks and recreation department, or a municipal parks and recreation department who is supervised by an adult 18 years of age or older who is an employee of the park district, the township parks and recreation department, or the municipal parks and recreation department and no alcohol or tobacco is being sold on site; or (ii) any minor working as an officiant of youth sports activities if an adult 21 years of age or older who is an employee of the park district, the township parks and recreation department, or the municipal parks and recreation department is on call.
+ (d) No person shall employ, allow, or permit any minor to work for more than 5 hours continuously without an interval of at least 30 minutes for a meal period. No period of less than 30 minutes shall be deemed to interrupt a continuous period of work.
+ (e) Every employer who employs one or more minors shall post in a conspicuous place where minors are employed, allowed, or permitted to work, a notice summarizing the requirements of this Act, including a list of the occupations prohibited to minors and the Department's toll free telephone number described in Section 85. An employer with employees who do not regularly report to a physical workplace, such as employees who work remotely or travel for work, shall also provide the summary and notice by email to its employees or conspicuous posting on the employer's website or intranet site, if the site is regularly used by the employer to communicate work-related information to employees and is able to be regularly accessed by all employees, freely and without interference. The notice shall be furnished by the Department.
+ (f) Every employer, during the period of employment of a minor and for 3 years thereafter, shall keep on file, at the place of employment, a copy of the employment certificate issued for the minor. An employment certificate shall be valid only for the employer for whom it was issued and a new certificate shall not be issued for the employment of a minor except on the presentation of a new statement of intention to employ the minor. The failure of any employer to produce for inspection the employment certificate for each minor in the employer's establishment shall be a violation of this Act. The Department may specify any other record keeping requirements by rule. 
+ (g) In the event of the work-related death of a minor engaged in work subject to this Act, the employer shall, within 24 hours, report the death to the Department and to the school official who issued the minor's work certificate for that employer. In the event of a work-related injury or illness of a minor that requires the employer to file a report with the Illinois Workers' Compensation Commission under Section 6 of the Workers' Compensation Act or Section 6 of the Workers' Occupational Diseases Act, the employer shall submit a copy of the report to the Department and to the school official who issued the minor's work certificate for that employer within 72 hours of the deadline by which the employer must file the report to the Illinois Workers' Compensation Commission. The report shall be subject to the confidentiality provisions of Section 6 of the Workers' Compensation Act or Section 6 of the Workers' Occupational Diseases Act.
+(Source: P.A. 103-721, eff. 1-1-25; 103-1062, eff. 2-7-25; 104-35, eff. 8-1-25; 104-417, eff. 8-15-25.)
+ (820 ILCS 206/40) 
+ Sec. 40. Restrictions on employment of minors. 
+ (a) No person shall employ, allow, or permit a minor to work: 
+ (1) in any mechanic's garage, including garage pits, 
+repairing cars, trucks, or other vehicles or using garage lifting racks;
+ (2) in the oiling, cleaning, or wiping of machinery 
+or shafting;
+ (3) in or about any mine or quarry;
+ (4) in stone cutting or polishing;
+ (5) in any factory work;
+ (6) in or about any plant manufacturing explosives or 
+articles containing explosive components, or in the use or transportation of same;
+ (7) in or about plants manufacturing iron or steel, 
+ore reduction works, smelters, foundries, forging shops, hot rolling mills or any other place in which the heating, melting, or heat treatment of metals is carried on;
+ (8) in the operation of machinery used in the cold 
+rolling of heavy metal stock, or in the operation of power-driven punching, shearing, stamping, or metal plate bending machines;
+ (9) in or about logging, sawmills or lath, shingle, 
+or cooperage-stock mills;
+ (10) in the operation of power-driven woodworking 
+machines, or off-bearing from circular saws;
+ (11) in the operation and repair of freight elevators 
+or hoisting machines and cranes;
+ (12) in spray painting;
+ (13) in occupations involving exposure to lead or its 
+compounds;
+ (14) in occupations involving exposure to acids, 
+dyes, chemicals, dust, gases, vapors, or fumes that are known or suspected to be dangerous to humans;
+ (15) in any occupation subject to the Amusement Ride 
+and Attraction Safety Act;
+ (16) in oil refineries, gasoline blending plants, or 
+pumping stations on oil transmission lines;
+ (17) in the operation of laundry, dry cleaning, or 
+dyeing machinery;
+ (18) in occupations involving exposure to radioactive 
+substances;
+ (19) in or about any filling station or service 
+station, except that this prohibition does not extend to employment within attached convenience stores, food service, or retail establishments;
+ (20) in construction work, including demolition and 
+repair;
+ (21) in any energy generation or transmission service;
+ (22) in public and private utilities and related 
+services;
+ (23) in operations in or in connection with 
+slaughtering, meat packing, poultry processing, and fish and seafood processing;
+ (24) in operations which involve working on an 
+elevated surface, with or without use of equipment, including, but not limited to, ladders and scaffolds;
+ (25) in security positions or any occupations that 
+require the use or carrying of a firearm or other weapon;
+ (26) in occupations which involve the handling or 
+storage of human blood, human blood products, human body fluids, or human body tissues;
+ (27) in any mill, cannery, factory, workshop, or 
+coal, brick, or lumber yard;
+ (28) any occupation which is prohibited for minors 
+under federal law; or
+ (29) in any other occupation or working condition 
+determined by the Director to be hazardous.
+ (b) No person shall employ, allow, or permit a minor to work at:
+ (1) any cannabis business establishment subject to 
+the Cannabis Regulation and Tax Act or Compassionate Use of Medical Cannabis Program Act;
+ (2) any establishment subject to the Live Adult 
+Entertainment Facility Surcharge Act;
+ (3) any firearm range or gun range used for 
+discharging a firearm in a sporting event, for practice or instruction in the use of a firearm, or the testing of a firearm, except for a scorer age 14 years or older at the World Shooting and Recreational Complex on the dates of the U.S. Open and the Grand American World Trapshooting Championship who is located, during those competitions, at least 15 feet behind the firing line of the trap shooters participating in the competitions;
+ (4) any establishment in which items containing 
+alcohol for consumption are manufactured, distilled, brewed, or bottled;
+ (5) any establishment where the primary activity is 
+the sale of alcohol or tobacco;
+ (6) an establishment operated by any holder of an 
+owners license subject to the Illinois Gambling Act; or
+ (7) any other establishment which State or federal 
+law prohibits minors from entering or patronizing.
+ (c) An employer shall not allow minors to draw, mix, pour, or serve any item containing alcohol or otherwise handle any open containers of alcohol. An employer shall make reasonable efforts to ensure that minors are unable to access alcohol.
+ (d) An employer may allow minors aged 14 and 15 to work in retail stores, except that an employer shall not allow minors to handle or be able to access any goods or products which are illegal for minors to purchase or possess.
+ (e) No person shall employ, allow, or permit an unlicensed minor to perform work in the practice of barber, cosmetology, esthetics, hair braiding, and nail technology services requiring a license under the Barber, Cosmetology, Esthetics, Hair Braiding, and Nail Technology Act of 1985, except for students enrolled in a school and performing barber, cosmetology, esthetics, hair braiding, and nail technology services in accordance with that Act and rules adopted under that Act.
+ (f) A person may employ, allow, or permit a minor to perform office or administrative support work that does not expose the minor to the work prohibited in this Section.
+(Source: P.A. 103-721, eff. 1-1-25; 104-16, eff. 1-1-26.)
+ (820 ILCS 206/45) 
+ Sec. 45. Minors employed in live theatrical performances. In addition to the other requirements of this Act, an employer of a minor working in live theatrical performances, including plays, musicals, recitals, or concerts, is subject to the following requirements:
+ (1) An employer shall not allow a minor to work in 
+more than 2 performances in any 24-hour period.
+ (2) An employer shall not allow a minor to work in 
+more than 8 performances in any 7-day period or 9 performances if a State holiday occurs during that 7-day period.
+ (3) A minor shall be accompanied by a parent, 
+guardian, or chaperone at all times while at the work site. 
+ (4) A minor shall not work, including performing, 
+rehearsing, or otherwise being present at the work site, in connection with the performance, for more than 8 hours in any 24-hour period, more than 6 days in any 7-day period, more than 24 hours in any 7-day period, or after 11 p.m. on any night.
+ (5) A minor shall not be excused from attending 
+school except as authorized by Section 26-1 of the School Code. 
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/50) 
+ Sec. 50. Minors employed in live or pre-recorded, distributed, broadcast performances and modeling. 
+ (a) Notwithstanding the provisions of this Act, minors under 16 years of age may be employed as models or performers on live or pre-recorded radio or television, in motion pictures, or in other entertainment-related performances, subject to conditions that may be imposed by rule by the Department.
+ (b) A child performer who works in a television, motion picture, or related entertainment production may be permitted to be at the place of employment, within a 24-hour time period, as follows:
+ (1) Minors who have reached the age of 15 days but 
+have not reached the age of 6 months may be permitted to remain at the place of employment for a maximum of 2 hours. The 2-hour period shall consist of not more than 20 minutes of work.
+ (2) Minors who have reached the age of 6 months but 
+who have not attained the age of 2 years may be permitted at the place of employment for a maximum of 4 hours. The 4-hour period shall consist of not more than 2 hours of work with the balance of the 4-hour period being rest and recreation.
+ (3) Minors who have reached the age of 2 years but 
+who have not attained the age of 6 years may be permitted at the place of employment for a maximum of 6 hours. The 6-hour period shall consist of not more than 3 hours of work with the balance of the 6-hour period being rest, recreation, and education.
+ (4) Minors who have reached the age of 6 years but 
+have not attained the age of 9 years may be permitted at the place of employment for a maximum of 8 hours. The 8-hour period shall consist of not more than 4 hours of work and at least 3 hours of schooling when the minor's school is in session. The studio teacher shall ensure that the minor receives up to one hour of rest and recreation. On days when the minor's school is not in session, working hours may be a maximum of 6 hours and one hour of rest and recreation.
+ (5) Minors who have reached the age of 9 years but 
+who have not attained the age of 16 years may be permitted at the place of employment for a maximum of 9 hours. The 9-hour period shall consist of not more than 5 hours of work and at least 3 hours of schooling when the minor's school is in session. The studio teacher shall ensure that the minor receives at least one hour of rest and recreation. On days when the minor's school is not in session, working hours may be a maximum of 7 hours and one hour of rest and recreation.
+ (c) Notwithstanding the provisions of this Act, an employer who employs a minor under 16 years of age in a television, motion picture, or related entertainment production may allow the minor to work until 10 p.m. without seeking a waiver from the Department. An employer may apply to the Director, or the Director's authorized representative, for a waiver permitting a minor to work outside of the hours allowed by this Act.
+ (1) A waiver request for a minor to work between 10 
+p.m. and 12:30 a.m. or between 5 a.m. and 7 a.m. shall be granted if the Director, or the Director's authorized representative, is satisfied that all of the following conditions are met:
+ (A) the employment shall not be detrimental to 
+the health or welfare of the minor;
+ (B) the minor shall be supervised adequately;
+ (C) the education of the minor shall not be 
+neglected; and
+ (D) the total number of hours to be worked that 
+day and week is not over the limits established in this Act or any rules adopted under this Act.
+ (2) A waiver request for a minor to work between 
+12:30 a.m. and 5 a.m. shall be granted if the Director, or the Director's authorized representative, is satisfied that all of the following conditions are met:
+ (A) the employment shall not be detrimental to 
+the health or welfare of the minor;
+ (B) the minor shall be supervised adequately;
+ (C) the education of the minor shall not be 
+jeopardized;
+ (D) performance by the minor during that time is 
+critical to the success of the production, as demonstrated by true and accurate statements by the employer that filming cannot be completed at any other time of day;
+ (E) the filming primarily requires exterior 
+footage of sunset, nighttime, or dawn;
+ (F) the filming is scheduled on the most optimal 
+day of the week for the minor's schooling;
+ (G) the employer provides a schedule to the 
+Department of schooling and rest periods on the day before, the day of, and the day after the overnight hours to be worked;
+ (H) the age of the minor is taken into account as 
+provided by this Act or any rules adopted under this Act;
+ (I) the total number of hours to be worked that 
+day and week is not over the limits established in this Act or any rules adopted under this Act; and
+ (J) the waiver request was received by the 
+Department at least 72 hours prior to the overnight hours to be worked.
+ (d) An employer applying for the waiver shall submit to the Director, or the Director's authorized representative, a completed application on the form that the Director provides. The waiver shall contain signatures that show the consent of a parent or legal guardian of the minor, the employer, and an authorized representative of a collective bargaining unit if a collective bargaining unit represents the minor upon employment.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/55) 
+ Sec. 55. Employment certificates. 
+ (a) Any employer who employs, allows, or permits a minor to work shall ensure that the minor holds a valid employment certificate issued by a school issuing officer.
+ (b) An application for an employment certificate must be submitted by the minor and the minor's parent or legal guardian to the minor's school issuing officer as follows. 
+ (1) The application shall be signed by the 
+applicant's parent or legal guardian.
+ (2) The application shall be submitted in person by 
+the minor desiring employment, unless the school issuing officer determines that the minor may utilize a remote application process.
+ (3) The minor shall be accompanied by his or her 
+parent, guardian, or custodian, whether applying in person or remotely. 
+ (4) The following papers shall be submitted with the 
+application:
+ (A) A statement of intention to employ signed by 
+the prospective employer, or by someone duly authorized by the prospective employer, setting forth the specific nature of the occupation in which the prospective employer intends to employ the minor and the exact hours of the day and number of hours per day and days per week during which the minor shall be employed.
+ (B) Evidence of age showing that the minor is of 
+the age required by this Act, which evidence shall be documentary, and shall be required in the order designated, as follows:
+ (i) a birth certificate; or 
+ (ii) if a birth certificate is unavailable, 
+the parent or legal guardian may present other reliable proof of the minor's identity and age that is supported by a sworn statement explaining why the birth certificate is not available. Other reliable proof of the minor's identity and age includes a passport, visa, or other governmental documentation of the minor's identity. If the student was not born in the United States, the school issuing officer must accept birth certificates or other reliable proof from a foreign government.
+ (C) A statement on a form approved by the 
+Department and signed by the school issuing officer, showing the minor's name, address, grade last completed, the hours the minor's school is in session, and other relevant information, as determined by the school issuing officer, about the minor's school schedule, and the names of the minor's parent or legal guardian. If any of the information required to be on the work permit changes, the issuing officer must update the work permit and provide an updated copy to the Department, the minor's employer, and the minor's parent or legal guardian. If the minor does not have a permanent home address or is otherwise eligible for services under the federal McKinney-Vento Homeless Assistance Act, the lack of a birth certificate or permanent home address alone shall not be a barrier to receiving an employment certificate.
+ (D) A statement of physical fitness signed by a 
+health care professional who has examined the minor, certifying that the minor is physically fit to be employed in all legal occupations or to be employed in legal occupations under limitations specified, or, at the discretion of the school issuing officer, the minor's most recent school physical. If the statement of physical fitness is limited, the employment certificate issued thereon shall state clearly the limitations upon its use, and shall be valid only when used under the limitations so stated. In any case where the health care professional deems it advisable that he or she may issue a certificate of physical fitness for a specified period of time, at the expiration of which the person for whom it was issued shall appear and be re-examined before being permitted to continue work. Examinations shall be made in accordance with the standards and procedures prescribed by the Director, in consultation with the Director of the Department of Public Health and the State Superintendent of Education, and shall be recorded on a form furnished by the Department. When made by public health or public school physicians, the examination shall be made without charge to the minor. If a public health or public school health care professional is not available, a statement from a private health care professional who has examined the minor may be accepted, provided that the examination is made in accordance with the standards and procedures established by the Department. For purposes of this paragraph, "health care professional" means a physician licensed to practice medicine in all its branches, a licensed advanced practice registered nurse, or a licensed physician assistant.
+ (5) The school issuing officer shall have authority 
+to verify the representations provided in the employment certificate application as required by Section 55. A school issuing officer shall not charge a fee for the consideration of an employment certificate application. 
+ (6) It shall be the duty of the school board or local 
+school authority to designate a place or places where certificates shall be issued and recorded, and physical examinations made without fee, and to establish and maintain the necessary records and clerical services for carrying out the provisions of this Act.
+ (c) Upon receipt of an application for an employment certificate, a school issuing officer shall issue an employment certificate only after examining and approving the written application and other papers required under this Section, and determining that the employment shall not be detrimental to the minor's health, welfare, and education. The school issuing officer shall consider any report of death, injury, or illness of a minor at that workplace, received under the requirements of Section 35, in the prior 2 years in determining whether the employment shall be detrimental to the minor's health, welfare, and education. Upon issuing an employment certificate to a minor, the school issuing officer shall notify the principal of the school attended by the minor, and provide copies to the Department, the minor's employer, and the minor's parent or legal guardian. The employment certificate shall be valid for a period of one year from the date of issuance, unless suspended or revoked.
+ (d) If the school issuing officer refuses to issue a certificate to a minor, the school issuing officer shall send to the principal of the school attended by the minor a notice of the refusal, including the name and address of the minor and of the minor's parent or legal guardian, and the reason for the refusal to issue the certificate. 
+ (e) If a minor from another state seeks to obtain an Illinois employment certificate, the Department shall work with the State Superintendent of Education, or his or her duly authorized agents, to issue the certificate if the State Superintendent of Education deems that all requirements for issuance have been met. 
+ (f) Upon request, the school issuing officer shall issue a certificate of age to any person between 16 and 20 years of age upon presentation of the same proof of age as is required for the issuance of employment certificates under this Act.
+ (g) Any certificate duly issued in accordance with this Act shall be prima facie evidence of the age of the minor for whom it was issued in any proceeding involving the employment of the minor under this Act, as to any act occurring subsequent to its issuance, or until revoked.
+ (h) The Department may suspend any certificate as an emergency action imperatively required for the health, safety, welfare, or education of the minor if:
+ (1) the parent or legal guardian of a minor, the 
+school issuing officer, or the principal of the school attended by the minor for whom an employment certificate has been issued has asked for the revocation of the certificate by petition to the Department in writing, stating the reasons he or she believes that the employment is interfering with the health, safety, welfare, or education of the minor; or 
+ (2) in the judgment of the Director, the employment 
+certificate was improperly issued or if the minor is illegally employed. 
+ If the certificate is suspended, the Department shall notify the employer of the minor, the parent or guardian of the minor, the minor's school principal, and the school issuing officer of the suspension in writing and shall schedule an administrative hearing to take place within 21 days after the date of any suspension. The minor shall not thereafter be employed, allowed, or permitted to work unless and until his or her employment certificate has been reinstated. After the hearing, an administrative law judge shall issue a final order either reinstating or revoking the employment certificate. If the certificate is revoked, the employer shall not thereafter employ, permit, or allow the minor to work until the minor has obtained a new employment certificate authorizing the minor's employment by that employer.
+(Source: P.A. 103-721, eff. 1-1-25; 104-417, eff. 8-15-25.)
+ (820 ILCS 206/57) 
+ Sec. 57. Prohibition on retaliation.
+ (a) An employer, or agent or officer of an employer, violates this Act if he or she takes an adverse action against, or in any other manner discriminates against, any person because that person has: 
+ (1) exercised a right under this Act; 
+ (2) made a complaint to the minor's employer or to 
+the Director, or the Director's authorized representative; 
+ (3) caused to be instituted or is about to cause to 
+be instituted any proceeding under or related to this Act; 
+ (4) participated in or cooperated with an 
+investigation or proceeding under this Act; or 
+ (5) testified or is about to testify in an 
+investigation or proceeding under this Act.
+ (b) An employer, or agent or officer of an employer, does not violate this Act if he or she discharges a minor from employment because the employment was found to be unlawful or the Department suspended or revoked the minor's employment certificate.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/60) 
+ Sec. 60. Department powers. 
+ (a) The Department shall make, adopt, and enforce reasonable rules relating to the administration and enforcement of the provisions of this Act, including the issuance of employment certificates authorized under this Act, as may be deemed expedient. The rules shall be designed to protect the health, safety, welfare, and education of minors and to ensure that the conditions under which minors are employed, allowed, or permitted to work shall not impair their health, welfare, development, or education.
+ (b) In order to promote uniformity and efficiency of issuance, the Department shall, in consultation with the State Superintendent of Education, formulate the forms on which certificates shall be issued and also forms needed in connection with the issuance, and it shall supply the forms to the school issuing officers.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/65) 
+ Sec. 65. Investigation. 
+ (a) It shall be the duty of the Department to enforce the provisions of this Act. The Department shall have the power to conduct investigations in connection with the administration and enforcement of this Act and the authorized officers and employees of the Department are hereby authorized and empowered, to visit and inspect, at all reasonable times and as often as possible, all places covered by this Act. 
+ (b) The Director, or the Director's authorized representative, may compel by subpoena, the attendance and testimony of witnesses and the production of books, payrolls, records, papers, and other evidence in any investigation or hearing and may administer oaths to witnesses. 
+ (c) No employer may interfere with or obstruct an investigation conducted under this Act.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/70) 
+ Sec. 70. Enforcement. 
+ (a) The Department shall conduct hearings in accordance with the Illinois Administrative Procedure Act if, upon investigation, the Department finds cause to believe the Act, or any rules adopted thereunder, has been violated; or to consider whether to reinstate or revoke a minor's employment certificate in accordance with Section 55.
+ (b) After the hearing, if supported by the evidence, the Department may issue and cause to be served on any party an order to cease and desist from violation of the Act, take further affirmative or other action as deemed reasonable to eliminate the effect of the violation, and may revoke any certificate issued under the Act and determine the amount of any civil penalty allowed by the Act. The Department may serve orders by certified mail or by sending a copy by email to an email address previously designated by the party for purposes of receiving notice under this Act. An email address provided by the party in the course of the administrative proceeding shall not be used in any subsequent proceedings, unless the party designates that email address for the subsequent proceeding.
+ (c) Any party to a proceeding under the Act may apply for and obtain judicial review of an order of the Department entered under this Act in accordance with the provisions of the Administrative Review Law, and the Department in proceedings under this Section may obtain an order of court for the enforcement of its order.
+ (d) Whenever it appears that any employer has violated a valid order of the Department issued under this Act, the Director may commence an action and obtain from the court an order upon the employer commanding them to obey the order of the Department or be adjudged guilty of contempt of court and punished accordingly.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/75) 
+ (Text of Section from P.A. 104-2)
+ Sec. 75. Civil penalties. 
+ (a) Any person employing, allowing, or permitting a minor to work who violates any of the provisions of this Act or any rule adopted under the Act shall be subject to civil penalties as follows: 
+ (1) if a minor dies while working for an employer who 
+is found by the Department to have been employing, allowing, or permitting the minor to work in violation of this Act, the employer is subject to a penalty not to exceed $60,000, payable to the Department;
+ (2) if a minor receives an illness or an injury that 
+is required to be reported to the Department under Section 35 while working for an employer who is found by the Department to have been employing, allowing, or permitting the minor to work in violation of this Act, the employer is subject to a penalty not to exceed $30,000, payable to the Department;
+ (3) an employer who employs, allows, or permits a 
+minor to work in violation of Section 40 shall be subject to a penalty not to exceed $15,000, payable to the Department; 
+ (4) an employer who fails to post or provide the 
+required notice under subsection (g) of Section 35 shall be subject to a penalty not to exceed $500, payable to the Department; and
+ (5) an employer who commits any other violation of 
+this Act shall be subject to a penalty not to exceed $10,000, payable to the Department.
+ In determining the amount of the penalty, the appropriateness of the penalty to the size of the business of the employer charged and the gravity of the violation shall be considered. 
+ Each day during which any violation of this Act continues shall constitute a separate and distinct offense, and the employment of any minor in violation of the Act shall, with respect to each minor so employed, constitute a separate and distinct offense.
+ (b) Any administrative determination by the Department of the amount of each penalty shall be final unless reviewed as provided in Section 70. 
+ (c) The amount of the penalty, when finally determined, may be recovered in a civil action brought by the Director in any circuit court, in which litigation the Director shall be represented by the Attorney General. In an action brought by the Department, the Department may request, and the Court may impose on a defendant employer, an additional civil penalty of up to an amount equal to the penalties assessed by the Department to be distributed to an impacted minor. In an action concerning multiple minors, any such penalty imposed by the Court shall be distributed equally among the minors employed in violation of this Act by the defendant employer.
+ (d) Penalties recovered under this Section shall be paid by certified check, money order, or by an electronic payment system designated by the Department, and deposited into the Child Labor and Day and Temporary Labor Services Enforcement Fund, a special fund in the State treasury. Moneys in the Fund shall be used, subject to appropriation, for exemplary programs, demonstration projects, and other activities or purposes related to the enforcement of this Act, for the activities or purposes related to the enforcement of the Day and Temporary Labor Services Act, for the activities or purposes related to the enforcement of the Private Employment Agency Act, for the activities or purposes related to the enforcement of the Job Opportunities for Qualified Applicants Act, and for the activities or purposes related to the enforcement of the Family Bereavement Leave Act.
+(Source: P.A. 103-721, eff. 1-1-25; 104-2, eff. 6-16-25.)
+ (Text of Section from P.A. 104-455)
+ Sec. 75. Civil penalties. 
+ (a) Any person employing, allowing, or permitting a minor to work who violates any of the provisions of this Act or any rule adopted under the Act shall be subject to civil penalties as follows: 
+ (1) if a minor dies while working for an employer who 
+is found by the Department to have been employing, allowing, or permitting the minor to work in violation of this Act, the employer is subject to a penalty not to exceed $60,000, payable to the Department;
+ (2) if a minor receives an illness or an injury that 
+is required to be reported to the Department under Section 35 while working for an employer who is found by the Department to have been employing, allowing, or permitting the minor to work in violation of this Act, the employer is subject to a penalty not to exceed $30,000, payable to the Department;
+ (3) an employer who employs, allows, or permits a 
+minor to work in violation of Section 40 shall be subject to a penalty not to exceed $15,000, payable to the Department; 
+ (4) an employer who fails to post or provide the 
+required notice under subsection (g) of Section 35 shall be subject to a penalty not to exceed $500, payable to the Department; and
+ (5) an employer who commits any other violation of 
+this Act shall be subject to a penalty not to exceed $10,000, payable to the Department.
+ In determining the amount of the penalty, the appropriateness of the penalty to the size of the business of the employer charged and the gravity of the violation shall be considered. 
+ Each day during which any violation of this Act continues shall constitute a separate and distinct offense, and the employment of any minor in violation of the Act shall, with respect to each minor so employed, constitute a separate and distinct offense.
+ (b) Any administrative determination by the Department of the amount of each penalty shall be final unless reviewed as provided in Section 70. 
+ (c) The amount of the penalty, when finally determined, may be recovered in a civil action brought by the Director in any circuit court, in which litigation the Director shall be represented by the Attorney General. In an action brought by the Department, the Department may request, and the Court may impose on a defendant employer, an additional civil penalty of up to an amount equal to the penalties assessed by the Department to be distributed to an impacted minor. In an action concerning multiple minors, any such penalty imposed by the Court shall be distributed equally among the minors employed in violation of this Act by the defendant employer.
+ (d) Penalties recovered under this Section shall be paid by certified check, money order, or by an electronic payment system designated by the Department, and deposited into the Child Labor and Day and Temporary Labor Services Enforcement Fund, a special fund in the State treasury. Moneys in the Fund shall be used, subject to appropriation, for exemplary programs, demonstration projects, and other activities or purposes related to the enforcement of this Act or for the activities or purposes related to the enforcement of the Day and Temporary Labor Services Act, the Private Employment Agency Act, or the Right to Privacy in the Workplace Act.
+(Source: P.A. 103-721, eff. 1-1-25; 104-455, eff. 12-12-25.)
+ (820 ILCS 206/80) 
+ Sec. 80. Criminal penalties. 
+ (a) Any person who engages in any of the following activities shall be guilty of a Class A misdemeanor and shall be subject to a civil penalty of no less than $500 and no more than $2,500: 
+ (1) employs, allows, or permits any minor to work in 
+violation of this Act, or of any rule, order, or ruling issued under the provisions of this Act;
+ (2) obstructs the Department, its inspectors or 
+deputies, or any other person authorized to inspect places of employment under this Act; or
+ (3) willfully fails to comply with the provisions of 
+this Act.
+ (b) Whenever in the opinion of the Department a violation of this Act has occurred, it shall report the violation to the Attorney General who shall prosecute all violations reported.
+ (c) The amount of the penalty, when finally determined, shall be ordered by the court, in an action brought for a criminal violation, to be paid to the Department.
+ (d) Penalties recovered under this Section shall be paid into the Child Labor and Day and Temporary Labor Services Enforcement Fund.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/85) 
+ Sec. 85. Department reporting and outreach. 
+ (a) The Department shall maintain a toll-free telephone number to facilitate information requests concerning the issuance of certificates under this Act and the reporting of violations of this Act.
+ (b) The Department shall conduct ongoing outreach and education efforts concerning this Act targeted toward school districts, employers, and other appropriate community organizations. The Department shall, to the extent possible, coordinate these outreach and education activities with other appropriate local, State, and federal agencies.
+ (c) The Department shall file with the General Assembly, no later than January 1 each year, a report of its activities regarding administration and enforcement of this Act for the preceding fiscal year.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/90) 
+ Sec. 90. Child performers; trust fund. 
+ (a) As used in this Section:
+ "Artistic or creative services" includes, but is not limited to, services as: an actor, actress, dancer, musician, comedian, singer, stunt person, voice-over artist, runway or print model, other performer or entertainer, songwriter, musical producer, arranger, writer, director, producer, production executive, choreographer, composer, conductor, or designer.
+ "Child performer" means an unemancipated person under the age of 16 who is employed in this State and who agrees to render artistic or creative services.
+ (b) In addition to the requirements of Section 55, the person authorized to issue employment certificates must determine that a trust account, established by the child performer's parent or guardian, that meets the requirements of subsection (c) has been established designating the minor as the beneficiary of the trust account before an employment certificate for work as a child performer may be issued for a minor under the age of 16 years. The person authorized to issue employment certificates shall issue a temporary employment certificate having a duration of not more than 15 days without the establishment of a trust fund to permit a minor to provide artistic or creative services. No more than one temporary employment certificate may be issued for each child performer. The Department shall prescribe the form in which temporary employment certificates shall be issued and shall make the forms available on its website.
+ (c) A trust account subject to this Section must provide, at a minimum, the following:
+ (1) that at least 15% of the gross earnings of the 
+child performer shall be deposited into the account;
+ (2) that the funds in the account shall be available 
+only to the child performer;
+ (3) that the account shall be held by a bank, 
+corporate fiduciary, or trust company, as those terms are defined in the Corporate Fiduciary Act;
+ (4) that the funds in the account shall become 
+available to the child performer upon the child performer attaining the age of 18 years or upon the child performer being declared emancipated; and
+ (5) that the account meets the requirements of the 
+Illinois Uniform Transfers to Minors Act.
+ (d) The parent or guardian of the child performer shall provide the employer with the information necessary to transfer moneys into the trust account. Once the child performer's employer deposits the money into the trust account, the child performer's employer shall have no further obligation or duty to monitor or account for the money. The trustee or trustees of the trust shall be the only individual, individuals, entity, or entities with the obligation or duty to monitor and account for money once it has been deposited by the child performer's employer.
+ (e) If the parent or guardian of the child performer fails to provide the employer with the information necessary to transfer funds into the trust account within 30 days after an employment certificate has been issued, the funds that were to be transferred to the trust account shall be transferred to the Office of the State Treasurer in accordance with Section 15-608 of the Revised Uniform Unclaimed Property Act.
+ (f) This Section does not apply to an employer of a child performer employed to perform services as an extra, services as a background performer, or services in a similar capacity.
+ (g) The Department may adopt rules to implement this Section.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/95) 
+ Sec. 95. Minors featured in vlogs. 
+ (a) A minor under the age of 16 is considered engaged in the work of vlogging when the following criteria are met at any time during the previous 12-month period:
+ (1) at least 30% of the vlogger's compensated video 
+content produced within a 30-day period included the likeness, name, or photograph of the minor. Content percentage is measured by the percentage of time the likeness, name, or photograph of the minor visually appears or is the subject of an oral narrative in a video segment, as compared to the total length of the segment; and
+ (2) the number of views received per video segment on 
+any online platform met the online platform's threshold for the generation of compensation or the vlogger received actual compensation for video content equal to or greater than $0.10 per view.
+ (b) With the exception of Section 100, the provisions of this Act do not apply to a minor engaged in the work of vlogging.
+ (c) All vloggers whose content features a minor under the age of 16 engaged in the work of vlogging shall maintain the following records and shall provide them to the minor on an ongoing basis:
+ (1) the name and documentary proof of the age of the 
+minor engaged in the work of vlogging;
+ (2) the number of vlogs that generated compensation 
+as described in subsection (a) during the reporting period;
+ (3) the total number of minutes of the vlogs that the 
+vlogger received compensation for during the reporting period;
+ (4) the total number of minutes each minor was 
+featured in vlogs during the reporting period;
+ (5) the total compensation generated from vlogs 
+featuring a minor during the reporting period; and
+ (6) the amount deposited into the trust account for 
+the benefit of the minor engaged in the work of vlogging, as required by Section 100.
+ (d) If a vlogger whose vlog content features minors under the age of 16 engaged in the work of vlogging fails to maintain the records as provided in subsection (c), the minor may commence a civil action to enforce the provisions of this Section.
+(Source: P.A. 103-721, eff. 7-30-24.)
+ (820 ILCS 206/100) 
+ Sec. 100. Minor engaged in the work of vlogging; trust fund. 
+ (a) A minor satisfying the criteria described in subsection (a) of Section 95 must be compensated by the vlogger. The vlogger must set aside gross earnings on the video content, including the likeness, name, or photograph of the minor in a trust account to be preserved for the benefit of the minor upon reaching the age of majority, according to the following distribution:
+ (1) where only one minor meets the content threshold 
+described in Section 95, the percentage of total gross earnings on any video segment, including the likeness, name, or photograph of the minor that is equal to or greater than half of the content percentage that includes the minor as described in Section 95; or
+ (2) where more than one minor meets the content 
+threshold described in Section 95 and a video segment includes more than one of those minors, the percentage described in paragraph (1) for all minors in any segment must be equally divided between the minors, regardless of differences in percentage of content provided by the individual minors.
+ (b) A trust account required under this Section must provide, at a minimum, the following: 
+ (1) that the funds in the account shall be available 
+only to the minor engaged in the work of vlogging;
+ (2) that the account shall be held by a bank, 
+corporate fiduciary, or trust company, as those terms are defined in the Corporate Fiduciary Act;
+ (3) that the funds in the account shall become 
+available to the minor engaged in the work of vlogging upon the minor attaining the age of 18 years or upon the minor being declared emancipated; and
+ (4) that the account meets the requirements of the 
+Illinois Uniform Transfers to Minors Act.
+ (c) If a vlogger knowingly or recklessly violates this Section, a minor satisfying the criteria described in subsection (a) of Section 95 may commence an action to enforce the provisions of this Section regarding the trust account. The court may award, to a minor who prevails in any action brought in accordance with this Section, the following damages:
+ (1) actual damages;
+ (2) punitive damages; and
+ (3) the costs of the action, including attorney's 
+fees and litigation costs.
+ (d) This Section does not affect a right or remedy available under any other law of the State.
+ (e) Nothing in this Section shall be interpreted to have any effect on a party that is neither the vlogger nor the minor engaged in the work of vlogging.
+(Source: P.A. 103-721, eff. 7-30-24.)
+ (820 ILCS 206/105) 
+ Sec. 105. No limitations on other laws. Nothing in this Act shall limit another State agency's authority to enforce violations of any other State law.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/110) 
+ Sec. 110. Severability. If any part of this Act is decided to be unconstitutional and void, the decision shall not affect the validity of the remaining parts of this Act unless the part held void is indispensable to the operation of the remaining parts.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/115) 
+ Sec. 115. Procedural changes from prior law. In accordance with Section 4 of the Statute on Statutes, any procedural change as compared to prior law effected by the repeal of the Child Labor Law and the enactment of this Act shall be applied retroactively. Any substantive change as compared to prior law effected by the repeal of the Child Labor Law and the enactment of this Act shall be applied prospectively only. Any changes to the remedies available to redress a legal violation are procedural in nature.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/900) 
+ Sec. 900. The Child Labor Law is repealed.
+(Source: P.A. 103-721, eff. 1-1-25.)
+ (820 ILCS 206/905) 
+ Sec. 905. (Amendatory provisions; text omitted).
+(Source: P.A. 103-721, eff. 1-1-25; text omitted.)
+ (820 ILCS 206/910) 
+ Sec. 910. (Amendatory provisions; text omitted).
+(Source: P.A. 103-721, eff. 1-1-25; text omitted.)
+ (820 ILCS 206/915) 
+ Sec. 915. (Amendatory provisions; text omitted).
+(Source: P.A. 103-721, eff. 1-1-25; text omitted.)
+ (820 ILCS 206/920) 
+ Sec. 920. (Amendatory provisions; text omitted).
+(Source: P.A. 103-721, eff. 1-1-25; text omitted.)
+ (820 ILCS 206/925) 
+ Sec. 925. (Amendatory provisions; text omitted).
+(Source: P.A. 103-721, eff. 1-1-25; text omitted.)
+ (820 ILCS 206/999) 
+ Sec. 999. Effective date. This Act shall take effect January 1, 2025, with the exception of Sections 95 and 100, which shall take effect July 1, 2024.
+(Source: P.A. 103-721, eff. 1-1-25.)

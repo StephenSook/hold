@@ -1,0 +1,189 @@
+# Coogan trust facts, five states (PLAN.md D17): display facts, never scheduling constraints (params.kind: trust).
+# Georgia carries no trust set-aside; api/hold/trust.py states that explicitly. Every quote is verbatim from a
+# committed snapshot under rules/sources/ and checked by api/tests/test_quotes.py. D4: cite or refuse.
+
+- id: CA_FAM_6752_c_1_coogan_set_aside
+  jurisdiction: CA
+  authority: California Legislature, Family Code
+  citation: Cal. Fam. Code 6752(c)(1)
+  title: California: 15 percent of the minor's gross earnings set aside by the employer (Coogan)
+  quote: |
+    Notwithstanding any other statute, for any minor's contract of a type described in Section
+    6750 that is not being submitted for approval by the court pursuant to Section 6751, or for
+    which the court has issued a final order denying approval, 15 percent of the minor's gross
+    earnings pursuant to the contract shall be set aside by the minor's employer, except an
+    employer of a minor for services as an extra, background performer, or in a similar
+    capacity, as described in paragraph (3) of subdivision (b) of Section 6750.
+  source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=FAM&sectionNum=6752.
+  valid_from: "2020-01-01"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "CA"
+    percent: 15
+  verified: VERIFIED
+  note: Court-approved contracts carry the same 15 percent under 6752(b)(1). Applies to contracts of the kinds in Section 6750 (artistic or creative services); extras and background performers are excepted. Effective date from the section history (Stats. 2019, Ch. 115, effective January 1, 2020).
+
+- id: CA_FAM_6753_a_coogan_trust_account
+  jurisdiction: CA
+  authority: California Legislature, Family Code
+  citation: Cal. Fam. Code 6753(a)
+  title: California: the Coogan Trust Account, opened within seven business days of signing
+  quote: |
+    The trustee or trustees shall establish a trust account, that shall be known as a Coogan
+    Trust Account, pursuant to this section at a bank, savings and loan institution, credit
+    union, brokerage firm, or company registered under the Investment Company Act of 1940, that
+    is located in the State of California, unless a similar trust has been previously
+    established, for the purpose of preserving for the benefit of the minor the portion of the
+    minor's gross earnings pursuant to paragraph (1) of subdivision (b) of Section 6752 or
+    pursuant to paragraph (1) of subdivision (c) of Section 6752. The trustee or trustees shall
+    establish the trust pursuant to this section within seven business days after the minor's
+    contract is signed by the minor, the third-party individual or personal services corporation
+    (loan-out company), and the employer.
+  source_url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=FAM&sectionNum=6753.
+  valid_from: "2004-01-01"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "CA"
+    setup_business_days: 7
+  verified: VERIFIED
+  note: Effective date from the section history (Stats. 2003, Ch. 667, effective January 1, 2004). No withdrawal before 18 without a court order (6753(b)).
+
+- id: NY_12_NYCRR_186_4_5_b_trust_transfer
+  jurisdiction: NY
+  authority: New York State Department of Labor, 12 NYCRR Part 186 (Child Performers)
+  citation: 12 NYCRR 186-4.5(b)
+  title: New York: the employer transfers 15 percent or more of gross earnings into the child performer trust account
+  quote: |
+    Each employer, or payroll service company, of a child performer shall transfer 15 percent or
+    more, as specified by the parent, guardian or custodian in writing, of the child performer's
+    gross earnings from the employer into the child performer trust account.
+  source_url: https://www.law.cornell.edu/regulations/new-york/12-NYCRR-186-4.5
+  valid_from: "2026-09-02"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "NY"
+    percent: 15
+  verified: VERIFIED
+  note: Snapshot from the Legal Information Institute mirror of the NYCRR; the Department's own page (dol.ny.gov/part-186-child-performers) refuses scripted fetches. The page prints no effective date, so valid_from is the verification date and Part 186 predates it. 186-3.5 puts the account on the parent or guardian before the first paid employment; without account details the 15 percent goes to the Comptroller's holding fund (186-4.5(d)).
+
+- id: IL_820_ILCS_206_90_a_child_performer_under_16
+  jurisdiction: IL
+  authority: Illinois General Assembly, Child Labor Law of 2024
+  citation: 820 ILCS 206/90(a)
+  title: Illinois: the trust duty covers child performers under 16
+  quote: |
+    "Child performer" means an unemancipated person under the age of 16 who is employed in this
+    State and who agrees to render artistic or creative services.
+  source_url: https://www.ilga.gov/Legislation/ILCS/Articles?ActID=4524&ChapterID=68&Print=True
+  valid_from: "2025-01-01"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "IL"
+    covers_under_age: 16
+  verified: VERIFIED
+  note: P.A. 103-721, effective 1-1-25 (source line on the Act page). A 16- or 17-year-old is outside this definition.
+
+- id: IL_820_ILCS_206_90_c_1_trust_deposit
+  jurisdiction: IL
+  authority: Illinois General Assembly, Child Labor Law of 2024
+  citation: 820 ILCS 206/90(c)(1)
+  title: Illinois: at least 15% of the child performer's gross earnings deposited into the trust account
+  quote: |
+    that at least 15% of the gross earnings of the child performer shall be deposited into the
+    account;
+  source_url: https://www.ilga.gov/Legislation/ILCS/Articles?ActID=4524&ChapterID=68&Print=True
+  valid_from: "2025-01-01"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "IL"
+    percent: 15
+  verified: VERIFIED
+  note: P.A. 103-721, effective 1-1-25. Extras and background performers are excepted (90(f)); an employment certificate for a performer under 16 needs the account first (90(b)).
+
+- id: LA_RS_51_2132_a_scope_500_dollars
+  jurisdiction: LA
+  authority: Louisiana Legislature, Child Performer Trust Act (R.S. 51:2131 to 2135)
+  citation: La. R.S. 51:2132(A)
+  title: Louisiana: the trust chapter applies to contracts of $500 or more
+  quote: |
+    The provisions of this Chapter shall apply to any contract in which a minor is employed or
+    agrees to render artistic or creative services for compensation of five hundred dollars or
+    more in this state which is not otherwise prohibited under Chapter 3 of Title 23 of the
+    Louisiana Revised Statutes of 1950, directly or through a third-party individual or personal
+    services corporation, a loan-out company, or through an agency or service that provides
+    artistic or creative services including, but not limited to, a casting agency or other
+    similar entity.
+  source_url: https://legis.la.gov/legis/Law.aspx?d=104228
+  valid_from: "2026-09-02"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "LA"
+    threshold_usd: 500
+  verified: VERIFIED
+  note: Acts 2005, No. 147, Section 2. The section page prints no effective date, so valid_from is the verification date.
+
+- id: LA_RS_51_2133_a_1_fifteen_percent_trust
+  jurisdiction: LA
+  authority: Louisiana Legislature, Child Performer Trust Act (R.S. 51:2131 to 2135)
+  citation: La. R.S. 51:2133(A)(1)
+  title: Louisiana: fifteen percent of the minor's gross earnings placed in a trust fund
+  quote: |
+    Every contract executed by or on behalf of a minor rendering artistic or creative services
+    for compensation in this state shall require that fifteen percent of the gross earnings for
+    the minor under the contract be placed in a trust fund created for the benefit of the minor
+    and, except as provided in Subsection G of this Section, that the trust fund be created in a
+    state or federally chartered financial institution, including trust companies, operating in
+    this state through one or more branches.
+  source_url: https://legis.la.gov/legis/Law.aspx?d=104229
+  valid_from: "2026-09-02"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "LA"
+    percent: 15
+  verified: VERIFIED
+  note: Acts 2005, No. 147 and Acts 2006, No. 594 (no effective date on the section page, so valid_from is the verification date). Funds are blocked until eighteen (2133(A)(2)); an unestablished account sends the fifteen percent to the state treasurer (2133(E)).
+
+- id: NM_11_1_4_13_a_trust_account_1000_dollars
+  jurisdiction: NM
+  authority: New Mexico Department of Workforce Solutions, 11.1.4 NMAC (Wage and Hour and Employment of Children)
+  citation: 11.1.4.13(A) NMAC
+  title: New Mexico: a trust account for every child performer contract of $1,000 or more
+  quote: |
+    Each time a child performer is employed in the state of New Mexico with a contract equal or
+    greater than $1000, a trust account will be created for the child performer.
+  source_url: https://www.srca.nm.gov/wp-content/uploads/attachments/11.001.0004.pdf
+  valid_from: "2017-11-14"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "NM"
+    threshold_usd: 1000
+  verified: VERIFIED
+  note: The rule implements NMSA 1978 Section 50-6-19, read on law.justia.com, which refuses scripted fetches, so the statute is not snapshotted and the Department's rule is quoted. Effective date from the rule's history line (11/14/2017).
+
+- id: NM_11_1_4_13_e_fifteen_percent_deposit
+  jurisdiction: NM
+  authority: New Mexico Department of Workforce Solutions, 11.1.4 NMAC (Wage and Hour and Employment of Children)
+  citation: 11.1.4.13(E) NMAC
+  title: New Mexico: the employer deposits not less than fifteen percent within 15 business days
+  quote: |
+    The employer shall deposit not less than fifteen percent of the child's gross earnings
+    directly into the child trust account within 15 business days of the work performance.
+  source_url: https://www.srca.nm.gov/wp-content/uploads/attachments/11.001.0004.pdf
+  valid_from: "2017-11-14"
+  valid_to: null
+  params:
+    kind: "trust"
+    state: "NM"
+    percent: 15
+    deposit_business_days: 15
+  verified: VERIFIED
+  note: Effective date from the rule's history line (11/14/2017). An unestablished account means the employer withholds the fifteen percent (11.1.4.13(E)).
+

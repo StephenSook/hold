@@ -1,0 +1,34 @@
+# Snapshot of https://legis.la.gov/legis/Law.aspx?d=104228
+# fetched_at 2026-09-03T02:38:28+00:00 sha256(original) 381b4629be7b82c1ff96d7a919997a598347c579e9734232a9d397e13da362bb bytes 23842
+# Plain text derived from the original for substring verification of rules/*.yaml quotes.
+
+Louisiana Laws - Louisiana State Legislature
+ Login 
+ Sign-Up 
+ Home
+ Laws
+ Bills
+ Sessions
+ House
+ Senate
+ Committees
+ Legislators
+ My Legis
+ 2026 Regular Session
+ Other Sessions
+ 2026 Regular Session
+ Other Sessions
+ House Committees
+ Senate Committees
+ Miscellaneous Committees
+ Scheduled Meetings
+ Representatives
+ Senators
+ Caucuses and Delegations
+ RS 51:2132 
+§2132. Child performer contract; scope
+A. The provisions of this Chapter shall apply to any contract in which a minor is employed or agrees to render artistic or creative services for compensation of five hundred dollars or more in this state which is not otherwise prohibited under Chapter 3 of Title 23 of the Louisiana Revised Statutes of 1950, directly or through a third-party individual or personal services corporation, a loan-out company, or through an agency or service that provides artistic or creative services including, but not limited to, a casting agency or other similar entity.
+B. As used in this Chapter, "artistic or creative services" includes, but is not limited to, services as an actor, actress, dancer, musician, comedian, singer, stunt-person, voice-over artist or other performer or entertainer in any motion picture, television, radio, theatrical or sports production or commercial production.
+Acts 2005, No. 147, §2.
+ If you experience any technical difficulties navigating this website, contact the webmaster. 
+P.O. Box 94062 (900 North Third Street) Baton Rouge, Louisiana 70804-9062
