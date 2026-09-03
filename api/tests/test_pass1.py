@@ -397,3 +397,29 @@ def test_illegal_violations_exclude_minors_with_no_scene_that_day() -> None:
     assert result.verdict.witness is None
     ids = {v.rule_id for v in result.verdict.violations}
     assert not {r for r in ids if "16_17" in r}, ids
+
+
+# ---------------------------------------------------------------------------
+# The previous-dismissal override reaches the checker; the CA school-day cap binds
+# ---------------------------------------------------------------------------
+
+def test_prev_dismissal_override_reaches_the_checker() -> None:
+    """With a three-day gap the schedule implies no turnaround; the override says 22:00 yesterday."""
+    schedule, meta = _load(FIXTURES / "turnaround-school-day.json")
+    days = list(schedule.days)
+    days[0] = ShootDay(date=date(2026, 10, 4), call=days[0].call, wrap=days[0].wrap, school_day=days[0].school_day)
+    shifted = schedule.model_copy(update={"days": days})
+    result = pass1_day(shifted, 1, day_scene_ids=_day_scenes(meta, 1), prev_dismissal=time(22, 0), time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    core = set(result.verdict.core_rule_ids)
+    assert "CA_11760_i_turnaround_12_hours" in core
+    violation_ids = {v.rule_id for v in result.verdict.violations}
+    assert core <= violation_ids, (core - violation_ids, violation_ids)
+
+
+def test_school_day_three_hour_cap_binds_in_the_solver() -> None:
+    days = [_day(date(2026, 10, 5), "07:00", "16:00", school_day=True)]
+    schedule = _schedule([_scene(1, 32, ["cM", "cA"])], days, [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert set(result.verdict.core_rule_ids) == {"CA_11760_e_work_hours_9_15_school_day"}, result.per_rule
+    assert result.per_rule["GA_300_7_1_03_ages_9_15_work_hours"] == "FEASIBLE"

@@ -207,7 +207,9 @@ def pass1_day(
         else:
             witness = _witness(dm, solver, schedule)
         feasible_table: dict[str, str] = dict.fromkeys(rule_ids, "FEASIBLE")
-        leftovers = check_day_legality(schedule, day_index, rules_dir=rules_dir, timeline=_timeline(witness))
+        leftovers = check_day_legality(
+            schedule, day_index, rules_dir=rules_dir, timeline=_timeline(witness), prev_dismissal=prev_dismissal
+        )
         if leftovers:
             return Pass1Result(
                 verdict=Verdict(status="UNDETERMINED", day=day_index, violations=leftovers, core_rule_ids=[], witness=witness),
@@ -262,7 +264,9 @@ def pass1_day(
             "the crew-window checker cannot judge this, so the day is not proven either way",
         )
 
-    violations = check_day_legality(schedule, day_index, rules_dir=rules_dir, on_set=set(dm.minors))
+    violations = check_day_legality(
+        schedule, day_index, rules_dir=rules_dir, on_set=set(dm.minors), prev_dismissal=prev_dismissal
+    )
     return Pass1Result(
         verdict=Verdict(status="ILLEGAL", day=day_index, violations=violations, core_rule_ids=list(core), witness=None),
         solver_status=full_status,

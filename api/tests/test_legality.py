@@ -530,3 +530,15 @@ def test_on_set_filter_skips_minor_without_a_scene() -> None:
     on_set_ids = {v.rule_id for v in check_day_legality(schedule, 0, on_set={"cM"})}
     assert "GA_300_7_1_03_ages_16_17_location_hours" not in on_set_ids
     assert "GA_300_7_1_03_ages_9_15_location_hours" in on_set_ids
+
+
+def test_prev_dismissal_override_in_checker() -> None:
+    """A caller who knows yesterday's dismissal can supply it across a calendar gap."""
+    days = [
+        _day(date(2026, 10, 4), "07:00", "22:00", school_day=False),
+        _day(date(2026, 10, 8), "07:00", "11:00", school_day=False),
+    ]
+    schedule = _make_schedule(days)
+    assert "CA_11760_i_turnaround_12_hours" not in {v.rule_id for v in check_day_legality(schedule, 1)}
+    ids = {v.rule_id for v in check_day_legality(schedule, 1, prev_dismissal=time(22, 0))}
+    assert "CA_11760_i_turnaround_12_hours" in ids

@@ -135,7 +135,11 @@ class DayContext(NamedTuple):
     consecutive_run: int  # how many consecutive shoot days ending on this day
 
 
-def build_day_context(schedule: ScheduleInput, day_index: int) -> DayContext:
+def build_day_context(
+    schedule: ScheduleInput, day_index: int, prev_dismissal: time | None = None
+) -> DayContext:
+    """prev_dismissal overrides the previous consecutive calendar day's crew wrap when the
+    caller knows yesterday's real dismissal (the solver threads the same value through)."""
     days = schedule.days
     sd = days[day_index]
     loc_hours = _duration_hours(sd.call, sd.wrap)
@@ -153,8 +157,8 @@ def build_day_context(schedule: ScheduleInput, day_index: int) -> DayContext:
     # when the NEXT day is a school day. Use the next shoot day's school_day flag.
 
     # Previous wrap for turnaround
-    prev_wrap: time | None = None
-    if day_index > 0 and (sd.date - days[day_index - 1].date).days == 1:
+    prev_wrap: time | None = prev_dismissal
+    if prev_wrap is None and day_index > 0 and (sd.date - days[day_index - 1].date).days == 1:
         prev_wrap = days[day_index - 1].wrap
 
     # Consecutive run: count backwards how many consecutive days in the list
@@ -380,26 +384,20 @@ def _check_work_hours(
     and a flagged check is labeled as a proxy). On the timeline path it is exact.
     """
     params = rule.params
-    age_min = int(params.get("age_min", 0))
-    age_max = int(params.get("age_max", 99))
-    if not (age_min <= age <= age_max):
+    if not age_applies(rule, age):
         return None
 
-    # Select the relevant limit
+    # One key-selection rule, shared with the solver
+    cap = work_cap_hours(rule, school_day)
+    if cap is None:
+        return None
+    limit = cap
     if school_day and "max_work_hours_school_day" in params:
-        limit = float(params["max_work_hours_school_day"])
         label = "work (school day)"
     elif not school_day and "max_work_hours_non_school_day" in params:
-        limit = float(params["max_work_hours_non_school_day"])
         label = "work (non-school day)"
-    elif "max_work_hours" in params:
-        limit = float(params["max_work_hours"])
-        label = "work"
-    elif "max_work_hours_day" in params:
-        limit = float(params["max_work_hours_day"])
-        label = "work"
     else:
-        return None
+        label = "work"
 
     if work_hours > limit:
         over = work_hours - limit
@@ -528,6 +526,7 @@ def check_day_legality(
     rules_dir: Path | None = None,
     timeline: DayTimeline | None = None,
     on_set: set[str] | None = None,
+    prev_dismissal: time | None = None,
 ) -> list[ViolationRecord]:
     """
     Enumerate every legality violation for one shoot day.
@@ -539,6 +538,8 @@ def check_day_legality(
         timeline: Concrete per-minor times. None means the crew-window proxy.
         on_set: Cast ids on set this day. On the proxy path, minors not in it are skipped
             (a minor with no scene that day was not there). None means every minor.
+        prev_dismissal: Yesterday's dismissal when the caller knows it; default is the
+            previous consecutive calendar day's crew wrap.
 
     Returns:
         List of ViolationRecord. Empty means LEGAL for that day.
@@ -550,7 +551,7 @@ def check_day_legality(
         rules_dir = _RULES_DIR
 
     shoot_day = schedule.days[day_index]
-    ctx = build_day_context(schedule, day_index)
+    ctx = build_day_context(schedule, day_index, prev_dismissal=prev_dismissal)
 
     # Load all rules valid on this shooting date
     all_rules = load_rules(rules_dir, shooting_date=shoot_day.date)
