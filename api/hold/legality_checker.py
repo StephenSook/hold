@@ -120,17 +120,9 @@ def _turnaround_hours(prev_wrap: time, next_call: time) -> float:
     return (1440 - wrap_m + call_m) / 60.0
 
 
-def _minor_on_set_day(cast_member: CastMember, day_index: int, schedule: ScheduleInput) -> bool:
-    """True if the minor appears in at least one scene assigned to this day index."""
-    # We don't have scene-to-day assignment in ScheduleInput directly.
-    # Use cast_ids presence in any scene as the conservative assumption:
-    # if the minor is in ANY scene in the production, they may be called on any day.
-    # The caller is responsible for passing only days where the minor is scheduled.
-    # For task 2.9 the checker is called with the full schedule; the caller
-    # should determine which minors appear on which days based on the solved order.
-    # Fallback: if no day assignment info, assume minor is on set every day they appear.
-    _ = day_index  # day assignment resolution is task 2.7/2.8's job
-    return any(cast_member.id in scene.cast_ids for scene in schedule.scenes)
+def is_minor(member: CastMember) -> bool:
+    """A cast member with a recorded age under 18. Adults may carry an age on file."""
+    return member.age is not None and member.age < 18
 
 
 class DayContext(NamedTuple):
@@ -535,6 +527,7 @@ def check_day_legality(
     day_index: int,
     rules_dir: Path | None = None,
     timeline: DayTimeline | None = None,
+    on_set: set[str] | None = None,
 ) -> list[ViolationRecord]:
     """
     Enumerate every legality violation for one shoot day.
@@ -544,6 +537,8 @@ def check_day_legality(
         day_index: 0-based index into schedule.days.
         rules_dir: Override for the rules directory (tests inject a temp dir).
         timeline: Concrete per-minor times. None means the crew-window proxy.
+        on_set: Cast ids on set this day. On the proxy path, minors not in it are skipped
+            (a minor with no scene that day was not there). None means every minor.
 
     Returns:
         List of ViolationRecord. Empty means LEGAL for that day.
@@ -569,7 +564,7 @@ def check_day_legality(
             seen_rule_ids.add(v.rule_id)
 
     # Determine which minor cast members are relevant for this day
-    minors = [m for m in schedule.cast if m.age is not None]
+    minors = [m for m in schedule.cast if is_minor(m) and (on_set is None or m.id in on_set)]
     if not minors:
         return []
 

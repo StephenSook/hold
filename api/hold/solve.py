@@ -262,7 +262,7 @@ def pass1_day(
             "the crew-window checker cannot judge this, so the day is not proven either way",
         )
 
-    violations = check_day_legality(schedule, day_index, rules_dir=rules_dir)
+    violations = check_day_legality(schedule, day_index, rules_dir=rules_dir, on_set=set(dm.minors))
     return Pass1Result(
         verdict=Verdict(status="ILLEGAL", day=day_index, violations=violations, core_rule_ids=list(core), witness=None),
         solver_status=full_status,

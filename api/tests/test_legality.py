@@ -505,3 +505,28 @@ def test_timeline_skips_absent_minor() -> None:
     days = [_day(date(2026, 10, 5), "07:00", "23:00", school_day=False)]
     schedule = _make_schedule(days)
     assert check_day_legality(schedule, 0, timeline=DayTimeline(minors={})) == []
+
+
+# ---------------------------------------------------------------------------
+# Test 13: who is a minor, and the on-set filter
+# ---------------------------------------------------------------------------
+
+def test_recorded_age_eighteen_gets_no_minor_rules() -> None:
+    adult = CastMember(id="cX", letter="X", age=18, resident_state="CA", day_rate_cents=81000, rate_tier="low_budget")
+    days = [_day(date(2026, 10, 7), "07:00", "23:00", school_day=False), _day(date(2026, 10, 8), "07:00", "16:00", school_day=True)]
+    schedule = _make_schedule(days, minor=adult)
+    assert check_day_legality(schedule, 0) == []
+
+
+def test_on_set_filter_skips_minor_without_a_scene() -> None:
+    older = CastMember(id="cZ", letter="Z", age=17, resident_state=None, day_rate_cents=81000, rate_tier="low_budget")
+    days = [_day(date(2026, 10, 5), "07:00", "20:00", school_day=False)]  # 13h: both brackets breach
+    schedule = ScheduleInput(
+        scenes=[_SCENE_WITH_MINOR], cast=[_MINOR_M, _ADULT_A, older], days=days, constraints=[],
+        jurisdiction=_GA_JURISDICTION, constructed=True,
+    )
+    all_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
+    assert "GA_300_7_1_03_ages_16_17_location_hours" in all_ids
+    on_set_ids = {v.rule_id for v in check_day_legality(schedule, 0, on_set={"cM"})}
+    assert "GA_300_7_1_03_ages_16_17_location_hours" not in on_set_ids
+    assert "GA_300_7_1_03_ages_9_15_location_hours" in on_set_ids

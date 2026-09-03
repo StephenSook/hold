@@ -49,6 +49,7 @@ from api.hold.legality_checker import (
     build_day_context,
     curfew_limit_minutes,
     earliest_call_applies,
+    is_minor,
     rule_applies_to_minor,
     turnaround_applies,
     work_cap_hours,
@@ -170,7 +171,7 @@ def build_day_model(
     # Minor variables
     minors: dict[str, MinorVars] = {}
     for member in schedule.cast:
-        if member.age is None:
+        if not is_minor(member):
             continue
         own = [sid for sid in day_scene_ids if member.id in scenes_by_id[sid].cast_ids]
         if not own:
@@ -179,6 +180,7 @@ def build_day_model(
         dismiss_v = model.new_int_var(call_m, wrap_m, f"dismiss_{member.id}")
         model.add_min_equality(call_v, [starts[sid] for sid in own])
         model.add_max_equality(dismiss_v, [starts[sid] + durations[sid] for sid in own])
+        assert member.age is not None  # narrowed by is_minor
         minors[member.id] = MinorVars(
             cast_id=member.id,
             age=member.age,

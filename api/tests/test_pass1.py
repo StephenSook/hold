@@ -337,3 +337,63 @@ def test_pass1_schedule_raises_on_a_missing_day_key() -> None:
     incomplete = {0: _day_scenes(meta, 0)}  # day 1 missing on purpose
     with pytest.raises(KeyError):
         pass1_schedule(schedule, day_scene_ids=incomplete, time_limit_s=TIME_LIMIT)
+
+
+# ---------------------------------------------------------------------------
+# Who is a minor, and which minors were on set
+# ---------------------------------------------------------------------------
+
+def _cast(cid: str, age: int | None, state: str | None = None) -> CastMember:
+    return CastMember(id=cid, letter=cid[-1], age=age, resident_state=state, day_rate_cents=81000, rate_tier="low_budget")
+
+
+def test_recorded_age_eighteen_is_an_adult() -> None:
+    """An 18-year-old with an age on file is not a minor: a 23:00 school-night wrap is legal."""
+    adult = _cast("cX", 18, "CA")
+    days = [_day(date(2026, 10, 7), "14:00", "23:00"), _day(date(2026, 10, 8), "07:00", "11:00", school_day=True)]
+    schedule = _schedule([_scene(1, 24, ["cA"]), _scene(2, 24, ["cA"]), _scene(3, 24, ["cX"])], days, [adult, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "LEGAL", (result.verdict.status, result.per_rule)
+    assert result.per_rule == {}
+    assert check_day_legality(schedule, 0) == []
+
+
+def _bracket_day(age: int) -> tuple[ScheduleInput, list[str]]:
+    """Minor opens and closes a 13-hour GA day around an 11-hour adult block (span 12.5 h)."""
+    minor = _cast("cY", age)
+    days = [_day(date(2026, 10, 5), "07:00", "20:00")]
+    scenes = [_scene(1, 6, ["cY"]), _scene(2, 88, ["cA"]), _scene(3, 6, ["cY"])]
+    return _schedule(scenes, days, [minor, _A]), ["s1", "s2", "s3"]
+
+
+def test_fifteen_is_in_the_nine_to_fifteen_bracket() -> None:
+    schedule, ids = _bracket_day(15)
+    result = pass1_day(schedule, 0, day_scene_ids=ids, time_limit_s=TIME_LIMIT)
+    assert set(result.verdict.core_rule_ids) == {"GA_300_7_1_03_ages_9_15_location_hours"}
+
+
+def test_sixteen_is_in_the_sixteen_to_seventeen_bracket() -> None:
+    schedule, ids = _bracket_day(16)
+    result = pass1_day(schedule, 0, day_scene_ids=ids, time_limit_s=TIME_LIMIT)
+    assert set(result.verdict.core_rule_ids) == {"GA_300_7_1_03_ages_16_17_location_hours"}
+    assert "GA_300_7_1_03_ages_9_15_location_hours" not in result.per_rule
+
+
+def test_seventeen_is_still_covered() -> None:
+    schedule, ids = _bracket_day(17)
+    result = pass1_day(schedule, 0, day_scene_ids=ids, time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    assert "GA_300_7_1_03_ages_16_17_location_hours" in result.verdict.core_rule_ids
+
+
+def test_illegal_violations_exclude_minors_with_no_scene_that_day() -> None:
+    """A 17-year-old in the cast but not on set must not put 16-17 rules on the verdict card."""
+    older = _cast("cZ", 17)
+    days = [_day(date(2026, 10, 5), "07:00", "20:00")]
+    scenes = [_scene(1, 6, ["cM"]), _scene(2, 88, ["cA"]), _scene(3, 6, ["cM"])]
+    schedule = _schedule(scenes, days, [_M, _A, older])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    assert result.verdict.witness is None
+    ids = {v.rule_id for v in result.verdict.violations}
+    assert not {r for r in ids if "16_17" in r}, ids
