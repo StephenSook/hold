@@ -43,16 +43,22 @@ def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
     # of id convention is never read as an extraction error (round eight, finding 3).
     got_letter = {c.id: c.letter for c in g.cast}
     want_letter = {c.id: c.letter for c in w.cast}
-    assert [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(got_letter.get(i, i) for i in s.cast_ids)) for s in g.scenes] == [
-        (s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(want_letter.get(i, i) for i in s.cast_ids)) for s in w.scenes
+    # Every id a scene or constraint names must be a cast record on both sides: a fallback to the raw
+    # id would let "A" compare equal to "cA", and pass 1 refuses that schedule (round nine, finding 2).
+    for schedule, letters, side in ((g, got_letter, "live"), (w, want_letter, "golden")):
+        used = {cid for s in schedule.scenes for cid in s.cast_ids} | {c.cast_id for c in schedule.constraints if c.cast_id}
+        assert used <= set(letters), f"{side} names cast ids with no cast record: {sorted(used - set(letters))}"
+    assert [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(got_letter[i] for i in s.cast_ids)) for s in g.scenes] == [
+        (s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(want_letter[i] for i in s.cast_ids)) for s in w.scenes
     ]
     assert [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in g.cast] == [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in w.cast]
     assert [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in g.days] == [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in w.days]
     assert g.jurisdiction == w.jurisdiction and g.constructed is True
+    assert g.overnight_location == w.overnight_location  # pass 2 prices hold days from this
     scene_number = {s.id: s.number for s in g.scenes}
-    got_constraints = sorted((c.type, got_letter.get(c.cast_id or "", c.cast_id), scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
+    got_constraints = sorted((c.type, got_letter[c.cast_id] if c.cast_id else None, scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
     want_number = {s.id: s.number for s in w.scenes}
-    want_constraints = sorted((c.type, want_letter.get(c.cast_id or "", c.cast_id), want_number.get(c.scene_id_a or ""), want_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in w.constraints)
+    want_constraints = sorted((c.type, want_letter[c.cast_id] if c.cast_id else None, want_number.get(c.scene_id_a or ""), want_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in w.constraints)
     assert got_constraints == want_constraints
 
 
@@ -76,3 +82,16 @@ def test_golden_files_are_valid_extract_results() -> None:
             assert result.schedule is not None and result.schedule.constructed is True
         else:
             assert result.status == "needs_clarification" and result.schedule is None and result.questions
+
+
+@pytest.mark.network
+@pytest.mark.parametrize("name", ["callsheet-day3", "constraints-note"])
+def test_every_cast_id_the_live_answer_uses_is_defined(name: str) -> None:
+    """Round nine, finding 2: a scene that names a cast id with no cast record is refused by pass 1
+    (Pass1ScopeError), so the golden comparison must never accept one by falling back to the raw id."""
+    got = _extract((SAMPLES / f"{name}.txt").read_text())
+    assert got.schedule is not None
+    defined = {c.id for c in got.schedule.cast}
+    used = {cid for s in got.schedule.scenes for cid in s.cast_ids}
+    used |= {c.cast_id for c in got.schedule.constraints if c.cast_id}
+    assert used <= defined, f"cast ids with no cast record: {sorted(used - defined)}"
