@@ -16,6 +16,12 @@ from scripts.check_licenses import blocked_reason
         "GPL",
         "GPLv2",
         "AGPL-3.0",
+        "AGPLv3",  # a common setup.py value; the word boundary used to break on the v
+        "AGPLv3+",
+        "agplv3",
+        "Apache-2.0 WITH Commons-Clause",  # the SPDX spelling, hyphenated
+        "LicenseRef-Commons-Clause",
+        "GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 " + "x" * 400,  # a pasted licence body
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "SSPL-1.0",
         "Commons Clause",

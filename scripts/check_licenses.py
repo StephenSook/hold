@@ -18,11 +18,13 @@ import re
 import sys
 
 _BLOCKED: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"\bagpl\b|\bgnu affero\b", re.IGNORECASE), "AGPL"),
-    (re.compile(r"\bsspl\b|server side public license", re.IGNORECASE), "SSPL"),
-    (re.compile(r"\bcommons clause\b", re.IGNORECASE), "Commons Clause"),
-    # GPL in any form, but never LGPL: the negative lookbehind keeps "LGPL-2.1" out.
-    (re.compile(r"(?<![a-z])gpl\b|(?<![a-z])gplv?[0-9]|\bgnu general public license\b", re.IGNORECASE), "GPL"),
+    # "AGPLv3" and "AGPLv3+" are common setup.py values, so the version suffix is part of the token.
+    (re.compile(r"(?<![a-z])agpl(?![a-z])|\bgnu affero\b", re.IGNORECASE), "AGPL"),
+    (re.compile(r"(?<![a-z])sspl(?![a-z])|server side public license", re.IGNORECASE), "SSPL"),
+    # Both the prose form and the SPDX form, which uses a hyphen: "Apache-2.0 WITH Commons-Clause".
+    (re.compile(r"\bcommons[ -]clause\b", re.IGNORECASE), "Commons Clause"),
+    # GPL in any form, but never LGPL: the negative lookbehind keeps "LGPL-2.1" and "LGPLv3" out.
+    (re.compile(r"(?<![a-z])gpl(?![a-z])|(?<![a-z])gplv?[0-9]|\bgnu general public license\b", re.IGNORECASE), "GPL"),
 )
 
 
@@ -41,8 +43,8 @@ def offenders() -> list[str]:
         name = dist.metadata.get("Name", "unknown")
         classifiers = " ".join(c for c in (dist.metadata.get_all("Classifier") or []) if "License" in c)
         short = dist.metadata.get("License-Expression") or dist.metadata.get("License") or ""
-        if len(short) > 200:  # some wheels paste the whole license body into this field
-            short = ""
+        # Some wheels paste the whole licence body into this field. That is exactly where a GPL text
+        # hides, so it is scanned rather than discarded; the patterns are specific enough to survive it.
         reason = blocked_reason(f"{classifiers} {short}")
         if reason:
             found.append(f"{name}: {reason} (classifiers={classifiers!r} license={short!r})")
