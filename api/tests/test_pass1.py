@@ -442,3 +442,31 @@ def test_seven_hours_after_the_meal_is_not_legal() -> None:
     assert result.verdict.status != "LEGAL", (result.verdict.status, result.verdict.witness)
     assert "CA_11761_meal_period_6_hours" in result.per_rule
     assert result.per_rule["CA_11761_meal_period_6_hours"] == "INFEASIBLE"
+
+
+# ---------------------------------------------------------------------------
+# Dangling or duplicate cast references are not a verdict
+# ---------------------------------------------------------------------------
+
+def test_scene_referencing_unknown_cast_id_is_undetermined() -> None:
+    """Second-model finding: cast=[] with a scene naming a missing minor solved as LEGAL."""
+    schedule = _schedule([_scene(1, 8, ["ghost"])], [_day(date(2026, 10, 5), "07:00", "16:00")], [])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "ghost" in result.note
+    assert result.solver_status == "NOT_RUN"
+
+
+def test_duplicate_cast_ids_are_undetermined() -> None:
+    twin = _cast("cM", 17)
+    schedule = _schedule([_scene(1, 8, ["cM"])], [_day(date(2026, 10, 5), "07:00", "16:00")], [_M, twin])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "duplicate" in result.note
+
+
+def test_duplicate_scene_ids_are_undetermined() -> None:
+    schedule = _schedule([_scene(1, 8, ["cM"]), _scene(1, 8, ["cA"])], [_day(date(2026, 10, 5), "07:00", "16:00")], [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "duplicate" in result.note

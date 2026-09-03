@@ -142,9 +142,18 @@ def build_day_model(
         raise Pass1ScopeError("wrap at or before call: same-day windows only in pass 1")
 
     scenes_by_id = {s.id: s for s in schedule.scenes}
+    if len(scenes_by_id) != len(schedule.scenes):
+        raise Pass1ScopeError("duplicate scene ids in the schedule")
+    cast_ids = [c.id for c in schedule.cast]
+    if len(set(cast_ids)) != len(cast_ids):
+        raise Pass1ScopeError("duplicate cast ids in the schedule")
     unknown = [sid for sid in day_scene_ids if sid not in scenes_by_id]
     if unknown:
         raise Pass1ScopeError(f"unknown scene ids for day {day_index}: {unknown}")
+    known_cast = set(cast_ids)
+    dangling = sorted({cid for sid in day_scene_ids for cid in scenes_by_id[sid].cast_ids if cid not in known_cast})
+    if dangling:
+        raise Pass1ScopeError(f"scenes on day {day_index} reference cast ids with no cast record: {dangling}")
 
     model = cp_model.CpModel()
     durations: dict[str, int] = {}
