@@ -230,3 +230,7 @@ class SetEvent(BaseModel):
     kind: Literal["actor_late", "scene_dropped", "weather_cover"]
     payload: dict[str, object]
     source: Literal["ui", "simulation"]
+    # The plan the caller means to edit, read from the previous answer's base_job_id. Optional: when
+    # it is absent the event edits whatever plan is latest, which is fine for one caller and wrong
+    # for two, since the service takes concurrent requests on a single instance.
+    base_job_id: str | None = None

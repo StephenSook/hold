@@ -14,7 +14,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from api.hold.bus import BUS
-from api.hold.jobs import JOBS
+from api.hold.jobs import JOBS, StaleBaseError
 from api.hold.schemas import SetEvent
 from api.hold.set_events import SetEventError, apply_set_event
 from api.hold.streaming import BRIDGE, TOPIC_SET_EVENTS
@@ -79,9 +79,16 @@ async def events(
 @router.post("/api/set-events", status_code=202)
 async def set_event(event: SetEvent) -> dict[str, Any]:
     try:
-        chained = JOBS.edit_and_submit(lambda schedule: apply_set_event(schedule, event), source=f"set-event:{event.kind}:{event.source}")
+        chained = JOBS.edit_and_submit(
+            lambda schedule: apply_set_event(schedule, event),
+            source=f"set-event:{event.kind}:{event.source}",
+            expect_base=event.base_job_id,
+        )
     except SetEventError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except StaleBaseError as exc:
+        # Someone else's plan is on top. Editing it would silently rewrite their schedule.
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     if chained is None:
         raise HTTPException(status_code=409, detail="no schedule to apply the event to; POST /api/solve first")
     base, job, change = chained
@@ -97,7 +104,16 @@ def handle_external_set_event(payload: dict[str, Any]) -> str | None:
     """A set event published on hold.set-events by another producer: edit the latest schedule (solved
     or still solving, so consecutive events chain) and queue a re-solve, exactly like the route does."""
     event = SetEvent.model_validate(payload)
-    chained = JOBS.edit_and_submit(lambda schedule: apply_set_event(schedule, event), source=f"confluent:{event.kind}:{event.source}")
+    try:
+        chained = JOBS.edit_and_submit(
+            lambda schedule: apply_set_event(schedule, event),
+            source=f"confluent:{event.kind}:{event.source}",
+            expect_base=event.base_job_id,
+        )
+    except StaleBaseError:
+        # The producer named a plan that is no longer on top. Skipping is counted and reported on
+        # /api/status with its reason; applying it anyway would edit a schedule nobody asked about.
+        return None
     if chained is None:
         return None
     base, job, change = chained

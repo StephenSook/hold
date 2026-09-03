@@ -51,6 +51,15 @@ class Job:
         }
 
 
+class StaleBaseError(Exception):
+    """The plan a set event named is no longer the one an edit would read."""
+
+    def __init__(self, expected: str, actual: str) -> None:
+        super().__init__(f"base_job_id {expected} is not the current plan; the latest is {actual}")
+        self.expected = expected
+        self.actual = actual
+
+
 class JobStore:
     def __init__(self) -> None:
         self._jobs: dict[str, Job] = {}
@@ -71,13 +80,21 @@ class JobStore:
         with self._lock:
             return list(self._order)
 
-    def edit_and_submit(self, apply: Callable[[ScheduleInput], tuple[ScheduleInput, str]], source: str) -> tuple[Job, Job, str] | None:
+    def edit_and_submit(
+        self, apply: Callable[[ScheduleInput], tuple[ScheduleInput, str]], source: str, expect_base: str | None = None
+    ) -> tuple[Job, Job, str] | None:
         """Read the latest schedule, apply one edit and queue its re-solve without another edit reading the
-        same base in between. Returns (base, job, change), or None when nothing has been submitted yet."""
+        same base in between. Returns (base, job, change), or None when nothing has been submitted yet.
+
+        expect_base names the plan the caller believes it is editing. The comparison happens inside the
+        same lock that reads the base, so a concurrent caller cannot move the base between the check and
+        the edit. A mismatch raises StaleBaseError rather than editing someone else's schedule."""
         with self._chain:
             base = self.latest_base()
             if base is None:
                 return None
+            if expect_base is not None and base.id != expect_base:
+                raise StaleBaseError(expect_base, base.id)
             edited, change = apply(base.schedule)
             return base, self.submit(edited, source=source), change
 

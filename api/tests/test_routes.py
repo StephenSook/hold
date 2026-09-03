@@ -338,3 +338,40 @@ def test_a_failed_job_publishes_before_it_reads_failed(client: TestClient) -> No
                 break
             time.sleep(0.001)
         assert seen == 1, seen
+
+
+def test_a_set_event_naming_a_stale_plan_is_refused_and_changes_nothing(client: TestClient) -> None:
+    """Round eleven: the store binds an event to whatever job is newest, and the service takes 80
+    concurrent requests on one instance, so without this a second caller edits the first caller's
+    plan. A caller that names its base gets a refusal instead of someone else's schedule."""
+    first = client.post("/api/solve", json=_demo()).json()["job_id"]
+    second = client.post("/api/solve", json=_demo()).json()["job_id"]  # another caller arrives
+    assert first != second
+    other = JOBS.get(second)
+    assert other is not None
+    before_jobs, before_schedule = len(JOBS.order()), other.schedule.model_dump(mode="json")
+
+    stale = client.post(
+        "/api/set-events",
+        json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui", "base_job_id": first},
+    )
+    assert stale.status_code == 409, stale.text
+    assert first in stale.json()["detail"] and second in stale.json()["detail"]
+    assert len(JOBS.order()) == before_jobs, "a refused event still submitted a job"
+    assert other.schedule.model_dump(mode="json") == before_schedule, "the refused event edited the other caller's schedule"
+
+    ok = client.post(
+        "/api/set-events",
+        json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui", "base_job_id": second},
+    )
+    assert ok.status_code == 202, ok.text
+    assert ok.json()["base_job_id"] == second
+
+
+def test_an_unbound_set_event_still_edits_the_latest_plan(client: TestClient) -> None:
+    """The walkthrough body in JUDGE.md and simulate_set_day.py send no base_job_id, so the old
+    behaviour has to stand when the field is absent."""
+    job_id = client.post("/api/solve", json=_demo()).json()["job_id"]
+    answer = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
+    assert answer.status_code == 202, answer.text
+    assert answer.json()["base_job_id"] == job_id

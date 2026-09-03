@@ -32,6 +32,18 @@
           ],
           "title": "Source",
           "type": "string"
+        },
+        "base_job_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Job Id"
         }
       },
       "required": [
