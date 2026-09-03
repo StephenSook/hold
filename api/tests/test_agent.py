@@ -123,3 +123,49 @@ def test_extraction_agent_carries_no_tools() -> None:
     assert extract_agent.tools == []
     assert extract_agent.output_schema is ExtractResult
     assert extract_agent.model == GEMINI_MODEL
+
+
+class _Ctx:
+    """Stand-in for ToolContext: the guard reads and writes invocation-scoped state."""
+
+    def __init__(self) -> None:
+        self.state: dict[str, Any] = {}
+
+
+def test_guard_ends_a_refusal_loop_with_a_terminal_answer() -> None:
+    """Live diagnosis: the model retried check_legality with an empty schedule until the call ceiling.
+    After the budget the guard answers with a terminal instruction instead of another refusal."""
+    from api.agents.hold_agent.callbacks import MAX_TOOL_CALLS_PER_REQUEST, guard_tool_call
+
+    tool = FunctionTool(check_legality)
+    ctx = _Ctx()
+    bad = {"schedule": {"scenes": None, "cast": None, "days": None}, "day_index": 0}
+    refusals = [guard_tool_call(tool, bad, ctx) for _ in range(MAX_TOOL_CALLS_PER_REQUEST)]  # type: ignore[arg-type]
+    assert all(r is not None and r.get("field") for r in refusals)
+    terminal = guard_tool_call(tool, bad, ctx)  # type: ignore[arg-type]
+    assert terminal is not None and terminal["stop"] is True
+    assert "no more tool calls" in terminal["error"] and "needs_clarification" in terminal["instruction"]
+    assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, ctx) is not None  # type: ignore[arg-type]  # budget spent: even a valid call is refused now
+    assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, _Ctx()) is None  # type: ignore[arg-type]  # a new request starts fresh
+
+
+def test_guard_tolerates_a_context_without_state() -> None:
+    from api.agents.hold_agent.callbacks import guard_tool_call
+
+    assert guard_tool_call(FunctionTool(lookup_rule), {"rule_id": "GA_300_7_1_03_earliest_call"}, None) is None  # type: ignore[arg-type]
+
+
+def test_malformed_base64_is_a_client_error_not_a_500(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "0")
+    monkeypatch.setenv("GOOGLE_CLOUD_PROJECT", "hold-2026")
+    response = TestClient(app).post("/api/extract", json={"text": "x", "image_base64": "%%%not-base64%%%", "mime_type": "image/png"})
+    assert response.status_code == 422 and "image_base64" in response.json()["detail"]
+
+
+def test_extraction_error_never_carries_the_model_text() -> None:
+    from api.agents.hold_agent.runner import ExtractionError, parse_extract_result
+
+    with pytest.raises(ExtractionError) as info:
+        parse_extract_result("PRIVATE-CALL-SHEET-ALPHA")
+    assert "PRIVATE-CALL-SHEET-ALPHA" not in str(info.value)
+    assert "not an ExtractResult" in str(info.value)

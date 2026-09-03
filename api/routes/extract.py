@@ -7,6 +7,7 @@ route refuses with 503 rather than pretending (wired-or-cut).
 from __future__ import annotations
 
 import base64
+import binascii
 import json
 import logging
 import os
@@ -40,7 +41,10 @@ async def extract(request: ExtractRequest) -> ExtractResult:
             status_code=503,
             detail="extraction not configured: GOOGLE_CLOUD_PROJECT is unset (PLAN.md task 0.1); the task 3.1 agent runs only with Vertex AI credentials",
         )
-    image = base64.b64decode(request.image_base64) if request.image_base64 else None
+    try:
+        image = base64.b64decode(request.image_base64, validate=True) if request.image_base64 else None
+    except (ValueError, binascii.Error) as exc:
+        raise HTTPException(status_code=422, detail="image_base64 is not valid base64") from exc
     try:
         return await run_extract(request.text, image, request.mime_type, timeout_s=EXTRACT_TIMEOUT_S)
     except TimeoutError as exc:

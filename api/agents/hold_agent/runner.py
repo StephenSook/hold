@@ -6,6 +6,7 @@ only when Vertex AI is configured (GOOGLE_CLOUD_PROJECT); HOLD_FAKE_EXTERNALS=1 
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import uuid
 
@@ -17,6 +18,8 @@ from google.genai import types
 
 from api.agents.hold_agent.agent import extract_agent, root_agent
 from api.hold.schemas import ExtractResult
+
+log = logging.getLogger(__name__)
 
 APP_NAME = "hold"
 # With tools and an output schema the ADK loop needs more than one model call per request (a
@@ -57,10 +60,18 @@ async def extract(text: str, image: bytes | None = None, mime_type: str = "image
                 final_text.append("".join(p.text or "" for p in event.content.parts))
 
     await asyncio.wait_for(run(), timeout=timeout_s)
-    text_out = "".join(final_text).strip()
+    return parse_extract_result("".join(final_text))
+
+
+def parse_extract_result(text_out: str) -> ExtractResult:
+    """The model's final text as an ExtractResult. The error names the failing fields only; the
+    text itself (which may be a private document echoed back) stays in the log."""
+    text_out = text_out.strip()
     if not text_out:
         raise ExtractionError("the model returned no final text")
     try:
         return ExtractResult.model_validate_json(text_out)
     except ValueError as exc:
-        raise ExtractionError(f"the model's final text is not an ExtractResult: {exc}") from exc
+        fields = sorted({".".join(str(p) for p in e.get("loc", ())) or "<root>" for e in getattr(exc, "errors", lambda: [])()}) or ["<json>"]
+        log.warning("extraction: final text is not an ExtractResult (%s)", exc)
+        raise ExtractionError(f"the model's final text is not an ExtractResult (fields: {', '.join(fields)})") from exc
