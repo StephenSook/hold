@@ -51,6 +51,15 @@ def git_sha(root: Path) -> str:
     return out.stdout.strip() or "unknown"
 
 
+def load_adk_eval(root: Path) -> dict[str, Any] | None:
+    """The recorded adk eval summary (docs/adk_eval.json, written by scripts/adk_eval.py), or None."""
+    path = root / "docs" / "adk_eval.json"
+    if not path.exists():
+        return None
+    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return data
+
+
 def compute_facts(root: Path, time_limit_s: float = 60.0) -> dict[str, Any]:
     """Every FACTS.json field from a real run over data/demo. One worker, so the run is repeatable."""
     rules_dir = root / "rules"
@@ -100,8 +109,8 @@ def compute_facts(root: Path, time_limit_s: float = 60.0) -> dict[str, Any]:
         "solve_ms": round(outcome.solve_ms, 1),
         "pass2_status": outcome.result.status,
         "checker_agrees": bool(outcome.checker.agrees),
-        "adk_eval": None,
-        "adk_eval_note": "task 3.4 has not run; null until a real adk eval score is recorded",
+        "adk_eval": load_adk_eval(root),
+        "adk_eval_note": "recorded by scripts/adk_eval.py from a real adk eval run" if load_adk_eval(root) else "task 3.4 has not run; null until a real adk eval score is recorded",
         "rules": {
             "records": counts["records"],
             "verified": counts["verified"],
