@@ -74,11 +74,26 @@ def build_status() -> dict[str, Any]:
     }
 
 
-def bob_usage() -> dict[str, Any]:
+# Every repository file the status page reads at runtime; a test holds .dockerignore to this list
+# (live outage 2026-09-03: the evidence directory was excluded from the image and the page answered 500).
+RUNTIME_FILES = (
+    "docs/FACTS.json",
+    "bench/results.json",
+    "docs/bob-evidence/bob-usage-evidence.json",
+    "docs/bob-evidence/ATTRIBUTION.md",
+)
+
+
+def bob_usage(root: Path = ROOT) -> dict[str, Any]:
     """The committed Bob evidence aggregate (tasks 3.13 and 5.12): the session-store export's totals and
-    the trailer counts ATTRIBUTION.md records from git history. Never a live count."""
-    export = json.loads((ROOT / "docs" / "bob-evidence" / "bob-usage-evidence.json").read_text(encoding="utf-8"))
-    attribution = (ROOT / "docs" / "bob-evidence" / "ATTRIBUTION.md").read_text(encoding="utf-8")
+    the trailer counts ATTRIBUTION.md records from git history. Never a live count. A missing file is a
+    stated absence, never an exception: the status page must answer whatever the image carries."""
+    export_path = root / "docs" / "bob-evidence" / "bob-usage-evidence.json"
+    attribution_path = root / "docs" / "bob-evidence" / "ATTRIBUTION.md"
+    if not export_path.exists() or not attribution_path.exists():
+        return {"available": False, "reason": "docs/bob-evidence is not in this image; the aggregate is in the repository"}
+    export = json.loads(export_path.read_text(encoding="utf-8"))
+    attribution = attribution_path.read_text(encoding="utf-8")
 
     def row(label: str) -> str | None:
         found = re.search(rf"^\| {re.escape(label)} \| ([^|]+) \|", attribution, re.M)
@@ -86,6 +101,7 @@ def bob_usage() -> dict[str, Any]:
 
     total, bob = row("Total commits"), row("Bob-authored commits (Tool: IBM-Bob trailer)")
     return {
+        "available": True,
         "source": "docs/bob-evidence/bob-usage-evidence.json",
         "generated_at": export.get("generated_at"),
         "task_count": export.get("task_count"),

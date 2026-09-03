@@ -17,5 +17,5 @@ private
 !.env.example
 *.local.json
 .bob
-docs/bob-evidence
+docs/bob-evidence/*.png
 bench/instances
