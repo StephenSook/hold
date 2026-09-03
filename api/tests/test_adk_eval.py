@@ -119,3 +119,16 @@ def test_facts_adk_eval_equals_the_recorded_file() -> None:
     root = Path(__file__).resolve().parents[2]
     facts = json.loads((root / "docs" / "FACTS.json").read_text(encoding="utf-8"))
     assert facts["adk_eval"] == load_adk_eval(root)
+
+
+def test_the_call_sheet_case_prompt_is_the_committed_sample() -> None:
+    """Round seven, finding 2: the prompt drifted from the sample (it lacked the AGREEMENT line) while the
+    gold answered with the rate from the sample; the two are held together here."""
+    root = Path(__file__).resolve().parents[2]
+    evalset = json.loads((root / "api" / "agents" / "hold_agent" / "evalset.json").read_text(encoding="utf-8"))
+    case = next(c for c in evalset["eval_cases"] if c["eval_id"] == "extract_callsheet")
+    inv = case["conversation"][0]
+    prompt = inv["user_content"]["parts"][0]["text"].strip()
+    assert prompt == (root / "data" / "demo" / "samples" / "callsheet-day3.txt").read_text(encoding="utf-8").strip()
+    gold = json.loads("".join(p.get("text", "") for p in inv["final_response"]["parts"]))
+    assert gold["status"] == "ok" and gold["questions"] == []
