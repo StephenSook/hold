@@ -123,8 +123,20 @@ and the in-process bus is the transport. The deployed instance has them. `script
   records only. Its Coogan trust records are real and display only.
 - The solver runs on the server. The phone app is not in this repository yet; when it lands it
   displays and caches rather than solving.
-- Practitioner interview: five practitioners were written to on 2026-09-02; no reply as of
-  2026-09-03. Nothing here claims a working assistant director has used HOLD.
+- Practitioner outreach: five were written to on 2026-09-02. One replied on 2026-09-03, a business
+  representative at a SAG-AFTRA local, and confirmed the cumulative reading this engine implements:
+  California's rules follow a California-resident minor to another state, and a stricter Georgia
+  provision prevails over them. The example offered, that Georgia requires a child labor coordinator
+  on set as well as a studio teacher, is already carried here from the primary regulation as
+  `GA_300_7_1_04_coordinator_ratio` and `GA_300_7_1_09_studio_teacher_ratio`, both display facts
+  rather than scheduling constraints. It is not an endorsement and not a legal opinion, it is
+  recorded without a name because no attribution consent was given, and nobody has used HOLD on a
+  real production.
+- That reply is worded more broadly than the regulation HOLD cites for the same point. 8 CCR 11756
+  conditions the out-of-state case on a California employer and a contract made in California; HOLD
+  applies the California records whenever the minor's resident state is California, on residency
+  alone. The two readings differ, and HOLD takes the broader one, so its error direction is toward
+  applying more law to a minor rather than less.
 
 ## Streaming
 
