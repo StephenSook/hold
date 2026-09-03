@@ -77,12 +77,14 @@ Contract changes: announce in PLAN.md Shared Contracts first, `CONTRACT:` commit
 
 ---
 
-## MCP server (self-referential, task 1.11): planned, not built
+## MCP server (self-referential, task 1.11)
 
-The plan was a `.bob/mcp.json` entry registering HOLD's own MCP server (`api/hold/mcp_server.py`)
-so Bob could call `solve_schedule`, `check_legality`, `lookup_rule` and `run_residual` while
-building HOLD, over stdio, never mounted in production. Neither file exists: every Bob account
-was exhausted during Phase 2, and the task stays TODO in PLAN.md.
+`.bob/mcp.json` registers HOLD's own MCP server (`api/hold/mcp_server.py`, the MCP Python SDK over
+stdio) so an MCP client can call `solve_schedule`, `check_legality`, `lookup_rule` and
+`run_residual` while working on HOLD. It is never mounted in production.
+`api/tests/test_mcp_server.py` spawns it and calls it through the protocol. Bob never invoked it:
+every Bob account was exhausted before the server existed, so the "Bob calls run_residual from a
+Plan session" half of the task did not happen and PLAN.md says so.
 
 ---
 

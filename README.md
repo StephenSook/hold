@@ -145,7 +145,10 @@ _See `docs/bob-evidence/` for the session export, screenshots and the per-commit
 Trailer `Tool: IBM-Bob` on every Bob-authored commit. Test count in every engine commit
 subject. Five write-scoped custom modes: `solver-engine`, `agent-runtime`, `mobile-shell`,
 `frontend`, `evidence-writer`. Real Plan-mode outputs under `.bob/plans/`. Spec Kit
-artifacts under `specs/`. The self-referential MCP server (task 1.11) was planned and not built: every Bob account was exhausted first.
+artifacts under `specs/`. The self-referential MCP server (task 1.11, `api/hold/mcp_server.py`, registered in
+`.bob/mcp.json`) exposes `solve_schedule`, `check_legality`, `lookup_rule` and `run_residual` over stdio and is
+driven by a test through the protocol; Bob never invoked it, because every Bob account was exhausted before
+it existed.
 
 ## License
 

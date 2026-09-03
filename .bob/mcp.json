@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "hold": {
+      "command": "uv",
+      "args": ["run", "python", "-m", "api.hold.mcp_server"],
+      "cwd": ".",
+      "env": { "HOLD_FAKE_EXTERNALS": "1" }
+    }
+  }
+}

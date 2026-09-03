@@ -30,6 +30,9 @@ sys.path.insert(0, str(ROOT))
 
 from api.hold.streaming import TOPIC_SET_EVENTS, TOPIC_VERDICTS, ConfluentConfig  # noqa: E402
 
+# The client is httpx.Client from main() or the FastAPI TestClient from the tests; the two stop sharing a
+# base class once httpx2 is installed beside httpx, so the parameter is typed Any and used as .get / .post.
+
 DEFAULT_EVENTS: list[dict[str, Any]] = [
     {"kind": "actor_late", "payload": {"cast_id": "cB", "day_index": 1}, "source": "simulation"},
     {"kind": "scene_dropped", "payload": {"scene_id": "s6"}, "source": "simulation"},
@@ -42,7 +45,7 @@ def _demo() -> dict[str, Any]:
     return {k: v for k, v in raw.items() if not k.startswith("_")}
 
 
-def _wait(client: httpx.Client, job_id: str, timeout_s: float) -> dict[str, Any]:
+def _wait(client: Any, job_id: str, timeout_s: float) -> dict[str, Any]:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         body: dict[str, Any] = client.get(f"/api/jobs/{job_id}").json()
@@ -67,7 +70,7 @@ def _summary(body: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def simulate(client: httpx.Client, events: list[dict[str, Any]] = DEFAULT_EVENTS, delay_s: float = 2.0, timeout_s: float = 120.0) -> dict[str, Any]:
+def simulate(client: Any, events: list[dict[str, Any]] = DEFAULT_EVENTS, delay_s: float = 2.0, timeout_s: float = 120.0) -> dict[str, Any]:
     """Run the day over HTTP: baseline solve, then each event, waiting for its re-solve. Returns the report."""
     schedule, baseline = _baseline(client, timeout_s)
     report: dict[str, Any] = {"source": "simulation", "transport": "http", "constructed": bool(schedule.get("constructed")), "baseline": _summary(baseline), "steps": []}
@@ -80,7 +83,7 @@ def simulate(client: httpx.Client, events: list[dict[str, Any]] = DEFAULT_EVENTS
     return report
 
 
-def _baseline(client: httpx.Client, timeout_s: float) -> tuple[dict[str, Any], dict[str, Any]]:
+def _baseline(client: Any, timeout_s: float) -> tuple[dict[str, Any], dict[str, Any]]:
     schedule = _demo()
     posted = client.post("/api/solve", json=schedule)
     posted.raise_for_status()
@@ -125,7 +128,7 @@ def _drain(consumer: Any, job_id: str, quiet_s: float = 1.0) -> int:
 
 
 def simulate_confluent(
-    client: httpx.Client,
+    client: Any,
     producer: Any,
     consumer: Any,
     events: list[dict[str, Any]] = DEFAULT_EVENTS,
