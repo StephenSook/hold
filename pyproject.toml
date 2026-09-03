@@ -54,3 +54,8 @@ ignore = ["E501"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+    "google-adk[eval]==2.6.3",
+]
