@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-09-03T03:16:59+00:00",
+  "run_sha": "5fb1dad",
+  "written_by": "scripts/facts.py (PLAN.md D7: no headline number is typed by hand)",
+  "demo_file": "data/demo/hold-demo.json",
+  "before_file": "data/demo/before-order.json",
+  "constructed": true,
+  "overnight_location": true,
+  "hold_days_before": 4,
+  "hold_days_after": 0,
+  "payroll_removed_cents": 406992,
+  "payroll_removed_usd": 4069.92,
+  "holding_before_cents": 406992,
+  "holding_after_cents": 0,
+  "illegal_days_before": 1,
+  "undetermined_days_before": 0,
+  "illegal_days_after": 0,
+  "benchmark_matched": "8/8",
+  "benchmark_run_sha": "c8b17d3d72e7f4d4a097670e63fec1709c4d89db",
+  "solve_ms": 140.5,
+  "pass2_status": "OPTIMAL",
+  "checker_agrees": true,
+  "adk_eval": null,
+  "adk_eval_note": "task 3.4 has not run; null until a real adk eval score is recorded",
+  "rules": {
+    "records": 63,
+    "verified": 62,
+    "unverifiable": 1,
+    "assumed_params": 1,
+    "trust_states": [
+      "CA",
+      "IL",
+      "LA",
+      "NM",
+      "NY"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 """
 HOLD FastAPI application entry point.
 
-Task 1.10: stub deploy.
+Task 1.10 deploy shell; task 3.6 mounts /api/status from api/routes/status.py.
 - API routes are mounted first; all /api/* paths are handled here.
 - A catch-all GET serves web/dist/index.html for non-/api paths (SPA fallback).
 - CORS allows capacitor://localhost, http://localhost, https://localhost, and the
@@ -19,6 +19,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+
+from api.routes.status import router as status_router
 
 # ---------------------------------------------------------------------------
 # CORS origins
@@ -52,29 +54,10 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# API routes (stub - full routes added in Phase 3 task 3.5)
+# API routes. Registered before the SPA catch-all so /api/* never falls through.
 # ---------------------------------------------------------------------------
 
-
-@app.get("/api/status")
-async def status() -> JSONResponse:
-    """
-    Stub status endpoint.
-    Shape frozen by PLAN.md Shared Contracts; full implementation in task 3.6.
-    Returns enough for the CI web-check and /judge skeleton to render.
-    """
-    return JSONResponse(
-        {
-            "benchmark_matched": "8/8",
-            "mode": "stub",
-            "runtime": {
-                "gemini_model": os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
-                "adk_version": "2.6.3",
-                "ortools_version": "9.11",
-                "confluent": {"connected": False},
-            },
-        }
-    )
+app.include_router(status_router)
 
 
 # ---------------------------------------------------------------------------
