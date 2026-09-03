@@ -56,7 +56,10 @@ def quote_matches(quote: str, variants: tuple[str, str]) -> bool:
 # `params` are transcribed by hand, so each one must appear in the quote, in a second verbatim
 # fragment named in the note (evidence: "..."; evidence[<snapshot>]: "..." for another listed
 # snapshot), be derived from evidenced numbers (derived: 7 = 5 + 2), or be a counted assumption
-# (assumption: 1.0). A number that meets none of these is reported.
+# (assumption: 1.0). A number that meets none of these is reported. What this proves: the quote
+# exists, each fragment exists in its snapshot, the arithmetic holds, and the assumption count
+# is pinned. What it cannot prove: that a fragment belongs to the param it backs, so the records
+# that use derived:, evidence: or assumption: are pinned by name in api/tests/test_quotes.py.
 # ---------------------------------------------------------------------------
 
 _WORDS = {

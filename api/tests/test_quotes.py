@@ -105,3 +105,24 @@ def test_number_candidates_cover_the_ways_sources_write_numbers() -> None:
     assert "half" in number_candidates("max_meal_extension_minutes", 30)
     assert "$834" in number_candidates("day_rate_cents", 83400)
     assert "five hundred" in number_candidates("threshold_usd", 500)
+
+
+def test_derived_and_evidence_uses_are_exactly_the_known_records() -> None:
+    """derived: proves arithmetic and evidence: proves a fragment exists in the snapshot; neither proves the
+    fragment belongs to the param. The records that use them are pinned, so a new use is a visible review event."""
+    from api.hold.registry import load_rules
+
+    notes = {r.id: r.note for r in load_rules(RULES)}
+    assert {rid for rid, n in notes.items() if "derived:" in n} == {
+        "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL", "SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL",
+    }
+    assert {rid for rid, n in notes.items() if "assumption:" in n} == {"SAG_RATES_HOLD_DAY_FULL_RATE"}
+    assert {rid for rid, n in notes.items() if 'evidence' in n and '"' in n} == {
+        "CA_11760_e_work_hours_9_15_non_school_day", "CA_11760_f_work_hours_16_17_non_school_day",
+        "GA_300_7_1_03_ages_9_15_location_hours", "GA_300_7_1_03_ages_9_15_work_hours",
+        "GA_300_7_1_03_school_night_curfew", "GA_300_7_1_03_non_school_night_curfew",
+        "GA_300_7_1_03_ages_16_17_location_hours", "GA_300_7_1_03_ages_16_17_work_hours",
+        "GA_300_7_1_03_ages_16_17_school_night_curfew", "GA_300_7_1_03_ages_16_17_non_school_night_curfew",
+        "GA_300_7_1_03_first_meal_within_6_hours",
+        "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL", "SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL",
+    }
