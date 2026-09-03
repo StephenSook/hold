@@ -60,6 +60,7 @@ class Fetched:
     body: str
     is_pdf: bool
     note: str = ""  # the exception class when the transport failed, so an error row says what happened
+    raw: bytes = b""  # the original bytes: a PDF must not be decoded as text before pdftotext reads it
 
 
 def plan(rules_dir: Path) -> list[Source]:
@@ -79,22 +80,41 @@ def fetch(url: str, timeout_s: float = 60.0) -> Fetched:
     try:
         with urllib.request.urlopen(request, timeout=timeout_s) as response:
             raw = response.read()
-            return Fetched(status=response.status, body=raw.decode("utf-8", "ignore"), is_pdf=raw[:5] == b"%PDF-" or url.lower().endswith(".pdf"))
+            is_pdf = raw[:5] == b"%PDF-" or url.lower().endswith(".pdf")
+            return Fetched(status=response.status, body="" if is_pdf else raw.decode("utf-8", "ignore"), is_pdf=is_pdf, raw=raw)
     except urllib.error.HTTPError as exc:
         return Fetched(status=exc.code, body="", is_pdf=False, note=f"HTTP {exc.code}")
     except Exception as exc:
         return Fetched(status=0, body="", is_pdf=False, note=type(exc).__name__)
 
 
+def pdf_text(raw: bytes) -> str | None:
+    """The text of a PDF, or None when it cannot be extracted (a truncated file, a scan, no pdftotext).
+    Never guess: an unreadable PDF is reported, never treated as a match."""
+    if not raw.startswith(b"%PDF-"):
+        return None
+    try:
+        run = subprocess.run(["pdftotext", "-", "-"], input=raw, capture_output=True, check=False)
+    except FileNotFoundError:
+        return None
+    text = run.stdout.decode("utf-8", "ignore").strip()
+    return text or None
+
+
 def classify(fetched: Fetched, quotes: list[str]) -> str:
     """What the fetched body says about the snapshot, judged by content: unchanged, drifted, refused,
-    blocked (the site turns scripts away) or error."""
+    blocked (the site turns scripts away), unreadable (a PDF whose text cannot be extracted) or error.
+    A PDF is read the same way an HTML page is: its text must contain every quote (round nine, finding 1)."""
     if fetched.status in (401, 403, 429):
         return "blocked"
     if fetched.status != 200:
         return "error"
     if fetched.is_pdf:
-        return "unchanged" if fetched.body.startswith("%PDF") else "refused"
+        text = pdf_text(fetched.raw or fetched.body.encode("utf-8", "ignore"))
+        if text is None:
+            return "unreadable" if (fetched.raw or fetched.body.encode()).startswith(b"%PDF-") else "refused"
+        variants = (normalize(text), normalize(text))
+        return "unchanged" if all(quote_matches(q, variants) for q in quotes) else "drifted"
     if len(fetched.body) < _MIN_HTML or _STUB.search(fetched.body[:4000]):
         return "refused"
     text = normalize(html.unescape(re.sub(r"<[^>]+>", " ", fetched.body)))  # &amp; in the page is & in the quote
@@ -125,8 +145,11 @@ def main() -> int:
         fetched = fetch(row.url)
         verdict = classify(fetched, row.quotes)
         counts[verdict] += 1
-        if fetched.body:
-            (CACHE / (row.snapshot or re.sub(r"\W+", "-", row.url)[:80])).write_text(fetched.body, encoding="utf-8")
+        name = row.snapshot or re.sub(r"\W+", "-", row.url)[:80]
+        if fetched.raw:  # the original bytes, so a cached PDF stays a readable PDF
+            (CACHE / name).write_bytes(fetched.raw)
+        elif fetched.body:
+            (CACHE / name).write_text(fetched.body, encoding="utf-8")
         detail = describe(fetched) if verdict == "error" else verdict
         print(f"| {row.url} | {row.snapshot or '(none)'} | {len(row.record_ids)} | {detail} |")
         if args.write and args.write == row.snapshot and row.snapshot:
@@ -135,11 +158,11 @@ def main() -> int:
                 return 2
             target = ROOT / "rules" / "sources" / row.snapshot
             header = target.read_text(encoding="utf-8").split("\n\n", 1)[0]
-            body = subprocess.run(["pdftotext", "-", "-"], input=fetched.body.encode(), capture_output=True).stdout.decode() if fetched.is_pdf else re.sub(r"<[^>]+>", " ", fetched.body)
+            body = (pdf_text(fetched.raw) or "") if fetched.is_pdf else re.sub(r"<[^>]+>", " ", fetched.body)
             target.write_text(header + "\n\n" + body, encoding="utf-8")
             print(f"\nrewrote {target.relative_to(ROOT)} from the fetched body; commit it with the header's fetched_at updated")
     print("\n" + ", ".join(f"{v} {k}" for k, v in sorted(counts.items())))
-    return 1 if counts["drifted"] or counts["error"] else 0
+    return 1 if counts["drifted"] or counts["error"] or counts["unreadable"] else 0
 
 
 if __name__ == "__main__":

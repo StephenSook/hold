@@ -28,8 +28,7 @@ def test_classify_judges_the_body_not_the_status() -> None:
     assert classify(Fetched(status=200, body=page.format(quote).replace("<html>", "<html>Request unsuccessful. Incapsula "), is_pdf=False), [quote]) == "refused"
     assert classify(Fetched(status=200, body=f"<html>{quote}</html>", is_pdf=False), [quote]) == "refused"  # too small to be the real page
     assert classify(Fetched(status=403, body="", is_pdf=False), [quote]) == "blocked"
-    assert classify(Fetched(status=200, body="%PDF-1.7 binary", is_pdf=True), [quote]) == "unchanged"
-    assert classify(Fetched(status=200, body="not a pdf at all", is_pdf=True), [quote]) == "refused"
+    assert classify(Fetched(status=200, body="not a pdf at all", is_pdf=True, raw=b"not a pdf at all"), [quote]) == "refused"
     assert classify(Fetched(status=500, body="", is_pdf=False), [quote]) == "error"
 
 
@@ -47,3 +46,35 @@ def test_error_rows_say_what_happened() -> None:
     assert describe(Fetched(status=0, body="", is_pdf=False, note="TimeoutError")) == "error (TimeoutError)"
     assert describe(Fetched(status=500, body="", is_pdf=False)) == "error (HTTP 500)"
     assert describe(Fetched(status=200, body="", is_pdf=False)) == ""
+
+
+def _pdf(text: str) -> bytes:
+    """A minimal one-page PDF carrying `text`, enough for pdftotext to extract it."""
+    stream = f"BT /F1 12 Tf 40 700 Td ({text}) Tj ET".encode()
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+        b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = []
+    for i, obj in enumerate(objects, 1):
+        offsets.append(len(out))
+        out += f"{i} 0 obj\n".encode() + obj + b"\nendobj\n"
+    xref = len(out)
+    out += f"xref\n0 {len(objects) + 1}\n0000000000 65535 f \n".encode()
+    for off in offsets:
+        out += f"{off:010d} 00000 n \n".encode()
+    out += f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode()
+    return bytes(out)
+
+
+def test_a_pdf_is_judged_by_its_extracted_text_not_its_magic_bytes() -> None:
+    """Round nine, finding 1: any body starting with %PDF was called unchanged without reading it, so
+    five sources carrying 23 verified records were reported as checked when nothing was compared."""
+    quote = "No work day shall start earlier than 5:00 A.M."
+    assert classify(Fetched(status=200, body="", is_pdf=True, raw=_pdf(quote)), [quote]) == "unchanged"
+    assert classify(Fetched(status=200, body="", is_pdf=True, raw=_pdf("an unrelated sentence")), [quote]) == "drifted"
+    assert classify(Fetched(status=200, body="", is_pdf=True, raw=b"%PDF-1.4 not really a pdf"), [quote]) == "unreadable"
