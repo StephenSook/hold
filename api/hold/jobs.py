@@ -16,6 +16,7 @@ from typing import Any, Literal
 from api.hold.bus import BUS
 from api.hold.pass2 import pass2, to_solve_result
 from api.hold.schemas import ObjectiveEvent, ScheduleInput, SolveResult, VerdictEvent
+from api.hold.streaming import BRIDGE, TOPIC_VERDICTS
 
 JobStatus = Literal["queued", "running", "done", "failed"]
 
@@ -95,7 +96,9 @@ class JobStore:
             job.status = "done"
             for p in outcome.pass1:
                 if outcome.day_scene_ids.get(p.verdict.day):
-                    BUS.publish(VerdictEvent(job_id=job.id, verdict=p.verdict).model_dump(mode="json"))
+                    verdict_event = VerdictEvent(job_id=job.id, verdict=p.verdict).model_dump(mode="json")
+                    BUS.publish(verdict_event)
+                    BRIDGE.publish(TOPIC_VERDICTS, job.id, verdict_event)
         except Exception as exc:  # the failure must reach the client, never a silent queued job
             job.error = f"{type(exc).__name__}: {exc}"
             job.status = "failed"

@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HOLD Kafka payloads",
+  "description": "Messages on hold.set-events (SetEvent, plus job_id when the API mirrors its own event) and hold.verdicts (VerdictEvent). Generated from api/hold/schemas.py by scripts/events_schema.py; hand edits fail CI.",
+  "definitions": {
+    "SetEvent": {
+      "description": "Emitted when an on-set event (actor late, scene dropped, weather cover)\ntriggers a re-solve.\nsource='ui': user action; source='simulation': simulate_set_day.py script.",
+      "properties": {
+        "event": {
+          "default": "set-event",
+          "title": "Event",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "actor_late",
+            "scene_dropped",
+            "weather_cover"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "source": {
+          "enum": [
+            "ui",
+            "simulation"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "payload",
+        "source"
+      ],
+      "title": "SetEvent",
+      "type": "object"
+    },
+    "VerdictEvent": {
+      "$defs": {
+        "Verdict": {
+          "description": "Legality verdict for one shooting day.\nviolations: filled by the checker (complete enumeration).\ncore_rule_ids: filled by the solver pass-1 (sufficient infeasibility core).\nwitness: the legal call sheet when status='LEGAL'.",
+          "properties": {
+            "status": {
+              "enum": [
+                "LEGAL",
+                "ILLEGAL",
+                "UNDETERMINED"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "day": {
+              "title": "Day",
+              "type": "integer"
+            },
+            "violations": {
+              "items": {
+                "$ref": "#/$defs/ViolationRecord"
+              },
+              "title": "Violations",
+              "type": "array"
+            },
+            "core_rule_ids": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Core Rule Ids",
+              "type": "array"
+            },
+            "witness": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Witness"
+            },
+            "reason": {
+              "default": "",
+              "title": "Reason",
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "day"
+          ],
+          "title": "Verdict",
+          "type": "object"
+        },
+        "ViolationRecord": {
+          "description": "One violated rule on one shooting day.",
+          "properties": {
+            "rule_id": {
+              "title": "Rule Id",
+              "type": "string"
+            },
+            "citation": {
+              "title": "Citation",
+              "type": "string"
+            },
+            "title": {
+              "title": "Title",
+              "type": "string"
+            },
+            "limit": {
+              "title": "Limit",
+              "type": "string"
+            },
+            "computed": {
+              "title": "Computed",
+              "type": "string"
+            },
+            "over_by": {
+              "title": "Over By",
+              "type": "string"
+            },
+            "quote": {
+              "title": "Quote",
+              "type": "string"
+            },
+            "source_url": {
+              "title": "Source Url",
+              "type": "string"
+            },
+            "jurisdiction": {
+              "title": "Jurisdiction",
+              "type": "string"
+            }
+          },
+          "required": [
+            "rule_id",
+            "citation",
+            "title",
+            "limit",
+            "computed",
+            "over_by",
+            "quote",
+            "source_url",
+            "jurisdiction"
+          ],
+          "title": "ViolationRecord",
+          "type": "object"
+        }
+      },
+      "description": "Emitted when a day's verdict is computed or updated.",
+      "properties": {
+        "event": {
+          "default": "verdict",
+          "title": "Event",
+          "type": "string"
+        },
+        "job_id": {
+          "title": "Job Id",
+          "type": "string"
+        },
+        "verdict": {
+          "$ref": "#/$defs/Verdict"
+        }
+      },
+      "required": [
+        "job_id",
+        "verdict"
+      ],
+      "title": "VerdictEvent",
+      "type": "object"
+    }
+  }
+}

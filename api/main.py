@@ -13,6 +13,8 @@ our own routes (api/routes/).
 from __future__ import annotations
 
 import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -20,6 +22,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from api.hold.streaming import BRIDGE
+from api.routes.events import handle_external_set_event
 from api.routes.events import router as events_router
 from api.routes.extract import router as extract_router
 from api.routes.rules import router as rules_router
@@ -47,7 +51,19 @@ _ORIGINS: list[str] = _ALWAYS_ALLOWED + (
 # App
 # ---------------------------------------------------------------------------
 
-app = FastAPI(title="HOLD", version="0.1.0", docs_url="/api/docs")
+@asynccontextmanager
+async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """Start the Confluent bridge when it is configured (metadata call proves the broker); the
+    in-process bus needs nothing. Stop it on shutdown."""
+    BRIDGE.on_set_event = handle_external_set_event
+    BRIDGE.start()
+    try:
+        yield
+    finally:
+        BRIDGE.stop()
+
+
+app = FastAPI(title="HOLD", version="0.1.0", docs_url="/api/docs", lifespan=_lifespan)
 
 app.add_middleware(
     CORSMiddleware,

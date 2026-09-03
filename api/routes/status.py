@@ -17,8 +17,9 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from api.hold.config import ADK_VERSION, GEMINI_MODEL, GOOGLE_CLOUD_LOCATION, env_value
+from api.hold.config import ADK_VERSION, GEMINI_MODEL, GOOGLE_CLOUD_LOCATION
 from api.hold.facts import HEADLINE_FIELDS
+from api.hold.streaming import BRIDGE
 
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_TTL_S = 600.0
@@ -55,7 +56,7 @@ def build_status() -> dict[str, Any]:
             "gemini_location": os.environ.get("GOOGLE_CLOUD_LOCATION", GOOGLE_CLOUD_LOCATION),
             "adk_version": _version("google-adk", ADK_VERSION),
             "ortools_version": _version("ortools", "unknown"),
-            "confluent": {"connected": False, "bootstrap_configured": env_value("CONFLUENT_BOOTSTRAP") is not None},
+            "confluent": BRIDGE.status(),
             "mode": "fake externals" if fake else "live",
             "invoked_by_this_endpoint": [],
             "note": "This endpoint reads committed files and invokes no model and no broker; Gemini is invoked by "

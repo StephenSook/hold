@@ -17,6 +17,7 @@ from api.hold.bus import BUS
 from api.hold.jobs import JOBS
 from api.hold.schemas import SetEvent
 from api.hold.set_events import SetEventError, apply_set_event
+from api.hold.streaming import BRIDGE, TOPIC_SET_EVENTS
 
 router = APIRouter()
 KEEPALIVE_S = 15.0
@@ -81,5 +82,21 @@ async def set_event(event: SetEvent) -> dict[str, Any]:
     except SetEventError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     job = JOBS.submit(edited, source=f"set-event:{event.kind}:{event.source}")
-    BUS.publish({**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change, "transport": "in-process"})
-    return {"job_id": job.id, "base_job_id": base.id, "change": change, "poll": f"/api/jobs/{job.id}"}
+    transport = BRIDGE.status()["transport"]
+    echo = {**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change, "transport": transport}
+    BUS.publish(echo)
+    BRIDGE.publish(TOPIC_SET_EVENTS, job.id, echo)  # mirrored with job_id; the consumer ignores its own echo
+    return {"job_id": job.id, "base_job_id": base.id, "change": change, "poll": f"/api/jobs/{job.id}", "transport": transport}
+
+
+def handle_external_set_event(payload: dict[str, Any]) -> str | None:
+    """A set event published on hold.set-events by another producer: edit the latest solved schedule
+    and queue a re-solve, exactly like the route does for a POST."""
+    base = JOBS.latest_done()
+    if base is None:
+        return None
+    event = SetEvent.model_validate(payload)
+    edited, change = apply_set_event(base.schedule, event)
+    job = JOBS.submit(edited, source=f"confluent:{event.kind}:{event.source}")
+    BUS.publish({**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change, "transport": "confluent"})
+    return job.id
