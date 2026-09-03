@@ -1,7 +1,7 @@
 """
 HOLD FastAPI application entry point.
 
-Task 1.10 deploy shell; task 3.6 mounts /api/status from api/routes/status.py.
+Task 1.10 deploy shell; tasks 3.5 and 3.6 mount the routes from api/routes/.
 - API routes are mounted first; all /api/* paths are handled here.
 - A catch-all GET serves web/dist/index.html for non-/api paths (SPA fallback).
 - CORS allows capacitor://localhost, http://localhost, https://localhost, and the
@@ -20,6 +20,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from api.routes.events import router as events_router
+from api.routes.extract import router as extract_router
+from api.routes.rules import router as rules_router
+from api.routes.solve import router as solve_router
 from api.routes.status import router as status_router
 
 # ---------------------------------------------------------------------------
@@ -57,7 +61,8 @@ app.add_middleware(
 # API routes. Registered before the SPA catch-all so /api/* never falls through.
 # ---------------------------------------------------------------------------
 
-app.include_router(status_router)
+for _router in (status_router, solve_router, events_router, extract_router, rules_router):
+    app.include_router(_router)
 
 
 # ---------------------------------------------------------------------------

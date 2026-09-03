@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import os
 import time as _time
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -194,6 +195,9 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
     for cons in schedule.constraints:
         if cons.type == "precedence" and cons.scene_id_a and cons.scene_id_b:
             m.add(pos[idx[cons.scene_id_a]] < pos[idx[cons.scene_id_b]])
+        elif cons.type == "availability" and cons.scene_id_a and cons.unavailable_day_indices and not cons.cast_id:
+            for d in cons.unavailable_day_indices:
+                m.add(x[idx[cons.scene_id_a]][d] == 0)
         elif cons.type == "availability" and cons.cast_id and cons.unavailable_day_indices:
             for i, s in enumerate(scenes):
                 if cons.cast_id in s.cast_ids:
@@ -317,14 +321,31 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
     return _Model(model=m, pos=pos, scene_at=scene_at, x=x, start=start, pres=pres, hold=hold, literals=literals, cost=cost, paid=paid)
 
 
-def _solve(mm: _Model, time_limit_s: float, num_workers: int, assumptions: list[Any] | None = None) -> tuple[str, cp_model.CpSolver]:
+OnSolution = Callable[[int, int, float], None]
+
+
+class _Progress(cp_model.CpSolverSolutionCallback):
+    """Reports each improving solution: objective value, best bound, wall time in ms."""
+
+    def __init__(self, on_solution: OnSolution) -> None:
+        super().__init__()
+        self._on_solution = on_solution
+
+    def on_solution_callback(self) -> None:
+        self._on_solution(int(self.objective_value), int(self.best_objective_bound), self.wall_time * 1000.0)
+
+
+def _solve(
+    mm: _Model, time_limit_s: float, num_workers: int, assumptions: list[Any] | None = None, on_solution: OnSolution | None = None
+) -> tuple[str, cp_model.CpSolver]:
     mm.model.clear_assumptions()
     if assumptions:
         mm.model.add_assumptions(assumptions)
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = time_limit_s
     solver.parameters.num_workers = num_workers
-    return solver.status_name(solver.solve(mm.model)), solver
+    callback = _Progress(on_solution) if on_solution is not None else None
+    return solver.status_name(solver.solve(mm.model, callback)), solver
 
 
 # ---------------------------------------------------------------------------
@@ -337,8 +358,10 @@ def pass2(
     rules_dir: Path | None = None,
     time_limit_s: float = 60.0,
     num_workers: int | None = None,
+    on_solution: OnSolution | None = None,
 ) -> Pass2Outcome:
-    """Solve pass 2, then re-judge every used day with pass 1 and recount the hold days."""
+    """Solve pass 2, then re-judge every used day with pass 1 and recount the hold days.
+    on_solution, when given, hears every improving solution (value, bound, ms) from the solver thread."""
     rules_dir = rules_dir or _RULES_DIR
     workers = num_workers or (os.cpu_count() or 8)
     rules = load_rules(rules_dir)
@@ -361,7 +384,7 @@ def pass2(
         mm = _build(schedule, rules, rules_dir, explain=False)
     except ValueError as exc:
         return undetermined(["window"], f"out of scope: {exc}")
-    status, solver = _solve(mm, time_limit_s, workers)
+    status, solver = _solve(mm, time_limit_s, workers, on_solution=on_solution)
 
     if status == "UNKNOWN":
         return undetermined(["time limit"], "time limit reached before a schedule was decided")
