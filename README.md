@@ -54,7 +54,8 @@ writes from a real run and CI recomputes; a mismatch fails the build.
    optimum. The plain-Python recount agrees with the solver to the cent.
 3. **The verdict.** Every rule record carries a quote that CI verifies as a verbatim substring
    of a committed snapshot of its source, and every number a record carries is evidenced by
-   that source. The agent's eval set passes 4 of 4 cases.
+   that source. The agent's eval set (run against the tool-bearing agent; the extraction route's schema
+   path is covered by the recorded live goldens) passes 4 of 4 cases.
 
 ## Architecture, as the runtime reports it
 

@@ -78,3 +78,17 @@ def test_models_invoked_lists_every_model_the_log_sent_requests_to() -> None:
 
     log = "x - Sending out request, model: gemini-3.1-flash-lite, backend: VERTEX_AI\ny - Sending out request, model: gemini-2.5-flash, backend: VERTEX_AI\nz - Sending out request, model: gemini-3.1-flash-lite, backend: VERTEX_AI\n"
     assert models_invoked(log) == ["gemini-2.5-flash", "gemini-3.1-flash-lite"]
+
+
+def test_every_json_expectation_in_the_eval_set_is_a_valid_extract_result() -> None:
+    """Round six, finding 2: an expected answer the API's own schema refuses cannot prove the extraction path."""
+    from api.hold.schemas import ExtractResult
+
+    evalset = json.loads((Path(__file__).resolve().parents[2] / "api" / "agents" / "hold_agent" / "evalset.json").read_text(encoding="utf-8"))
+    parsed = 0
+    for case in evalset["eval_cases"]:
+        text = "".join(p.get("text", "") for p in case["conversation"][0]["final_response"]["parts"]).strip()
+        if text.startswith("{"):
+            ExtractResult.model_validate_json(text)
+            parsed += 1
+    assert parsed >= 3
