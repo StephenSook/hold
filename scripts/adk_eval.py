@@ -68,28 +68,44 @@ def models_invoked(log: str) -> list[str]:
     return sorted(set(_MODEL.findall(log)))
 
 
-def newest_history() -> Path | None:
-    files = sorted(HISTORY.glob("*.evalset_result.json"), key=lambda p: p.stat().st_mtime)
-    return files[-1] if files else None
+def pick_history(history_dir: Path, passed: int, failed: int, not_before: float | None = None) -> Path:
+    """The result file that belongs to the summary being recorded: pass and fail counts must agree, and
+    when the run was started by this script the file must have been created after that start. Anything
+    else is refused rather than overlaid (round six, finding 5)."""
+    candidates = []
+    for path in sorted(history_dir.glob("*.evalset_result.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not_before is not None and float(data.get("creation_timestamp", 0)) < not_before:
+            continue
+        statuses = [int(c["final_eval_status"]) for c in data.get("eval_case_results", [])]
+        if statuses.count(1) == passed and statuses.count(2) == failed:
+            candidates.append(path)
+    if not candidates:
+        raise ValueError(f"no result file under {history_dir} matches passed={passed} failed={failed}" + (" after the run started" if not_before else ""))
+    return candidates[0]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--log", type=Path, help="parse this log instead of running adk eval")
     args = parser.parse_args()
+    started: float | None = None
+    exit_code: int | None = None
     if args.log:
         log = args.log.read_text(encoding="utf-8")
     else:
+        started = datetime.now(UTC).timestamp()
         cmd = ["uv", "run", "adk", "eval", str(AGENT), str(AGENT / "evalset.json"), "--config_file_path", str(AGENT / "test_config.json")]
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
         log = run.stdout + run.stderr
+        exit_code = run.returncode
     summary = parse_summary(log)
-    history = newest_history()
-    if history is not None:
-        data = json.loads(history.read_text(encoding="utf-8"))
-        summary["cases"] = parse_history(data)
-        summary["history_file"] = history.name
-        summary["run_at"] = datetime.fromtimestamp(float(data["creation_timestamp"]), UTC).replace(microsecond=0).isoformat()
+    history = pick_history(HISTORY, summary["passed"], summary["failed"], not_before=started)
+    data = json.loads(history.read_text(encoding="utf-8"))
+    summary["cases"] = parse_history(data)
+    summary["history_file"] = history.name
+    summary["run_at"] = datetime.fromtimestamp(float(data["creation_timestamp"]), UTC).replace(microsecond=0).isoformat()
+    summary["adk_eval_exit_code"] = exit_code
     record = {
         **summary,
         "recorded_at": datetime.now(UTC).replace(microsecond=0).isoformat(),

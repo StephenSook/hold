@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-03T17:40:33+00:00",
-  "run_sha": "23c6ba4",
+  "generated_at": "2026-09-03T17:44:00+00:00",
+  "run_sha": "a35a561",
   "written_by": "scripts/facts.py (PLAN.md D7: no headline number is typed by hand)",
   "demo_file": "data/demo/hold-demo.json",
   "before_file": "data/demo/before-order.json",
@@ -16,7 +16,7 @@
   "undetermined_days_before": 0,
   "illegal_days_after": 0,
   "benchmark_matched": "8/8",
-  "solve_ms": 174.3,
+  "solve_ms": 137.5,
   "pass2_status": "OPTIMAL",
   "checker_agrees": true,
   "adk_eval": {
@@ -87,7 +87,8 @@
     },
     "history_file": "hold_agent_hold_extraction_v1_1788457166.9429271.evalset_result.json",
     "run_at": "2026-09-03T17:39:26+00:00",
-    "recorded_at": "2026-09-03T17:39:29+00:00",
+    "adk_eval_exit_code": null,
+    "recorded_at": "2026-09-03T17:43:40+00:00",
     "model": "gemini-3.1-flash-lite",
     "models_invoked": [
       "gemini-2.5-flash",

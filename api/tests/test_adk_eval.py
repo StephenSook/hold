@@ -4,6 +4,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.adk_eval import parse_summary
 
 SAMPLE = """
@@ -92,3 +94,28 @@ def test_every_json_expectation_in_the_eval_set_is_a_valid_extract_result() -> N
             ExtractResult.model_validate_json(text)
             parsed += 1
     assert parsed >= 3
+
+
+def test_history_is_paired_by_counts_and_a_mismatch_is_refused(tmp_path: Path) -> None:
+    """Round six, finding 5: the recorder overlaid the newest result file onto any log, so a log with
+    three failures could be recorded with four PASSED cases from an older run."""
+    from scripts.adk_eval import pick_history
+
+    (tmp_path / "old.evalset_result.json").write_text(json.dumps({"creation_timestamp": 1.0, "eval_case_results": [{"eval_id": "a", "final_eval_status": 1, "overall_eval_metric_results": []}]}))
+    (tmp_path / "new.evalset_result.json").write_text(json.dumps({"creation_timestamp": 2.0, "eval_case_results": [{"eval_id": "a", "final_eval_status": 2, "overall_eval_metric_results": []}]}))
+    assert pick_history(tmp_path, passed=1, failed=0).name == "old.evalset_result.json"
+    assert pick_history(tmp_path, passed=0, failed=1).name == "new.evalset_result.json"
+    with pytest.raises(ValueError, match="no result file"):
+        pick_history(tmp_path, passed=2, failed=2)
+    assert pick_history(tmp_path, passed=0, failed=1, not_before=1.5).name == "new.evalset_result.json"
+    with pytest.raises(ValueError, match="no result file"):
+        pick_history(tmp_path, passed=1, failed=0, not_before=1.5)
+
+
+def test_facts_adk_eval_equals_the_recorded_file() -> None:
+    """A hand edit of either docs/adk_eval.json or the adk_eval block in FACTS fails here."""
+    from api.hold.facts import load_adk_eval
+
+    root = Path(__file__).resolve().parents[2]
+    facts = json.loads((root / "docs" / "FACTS.json").read_text(encoding="utf-8"))
+    assert facts["adk_eval"] == load_adk_eval(root)
