@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-03T19:18:45+00:00",
-  "run_sha": "aff6678",
+  "generated_at": "2026-09-03T19:25:07+00:00",
+  "run_sha": "9713845",
   "written_by": "scripts/facts.py (PLAN.md D7: no headline number is typed by hand)",
   "demo_file": "data/demo/hold-demo.json",
   "before_file": "data/demo/before-order.json",
@@ -16,13 +16,13 @@
   "undetermined_days_before": 0,
   "illegal_days_after": 0,
   "benchmark_matched": "8/8",
-  "solve_ms": 152.6,
+  "solve_ms": 165.3,
   "pass2_status": "OPTIMAL",
   "checker_agrees": true,
   "adk_eval": {
     "eval_set_id": "hold_extraction_v1",
-    "passed": 2,
-    "failed": 2,
+    "passed": 3,
+    "failed": 1,
     "cases": {
       "rule_lookup_trajectory": {
         "status": "PASSED",
@@ -40,31 +40,16 @@
         }
       },
       "ambiguity_refusal": {
-        "status": "FAILED",
+        "status": "PASSED",
         "metrics": {
           "tool_trajectory_avg_score": {
-            "status": "FAILED",
-            "score": 0.0,
+            "status": "PASSED",
+            "score": 1.0,
             "threshold": 1.0
           },
           "final_response_match_v2": {
             "status": "PASSED",
             "score": 1.0,
-            "threshold": 0.8
-          }
-        }
-      },
-      "extract_callsheet": {
-        "status": "FAILED",
-        "metrics": {
-          "tool_trajectory_avg_score": {
-            "status": "FAILED",
-            "score": 0.0,
-            "threshold": 1.0
-          },
-          "final_response_match_v2": {
-            "status": "FAILED",
-            "score": 0.0,
             "threshold": 0.8
           }
         }
@@ -83,12 +68,27 @@
             "threshold": 0.8
           }
         }
+      },
+      "extract_callsheet": {
+        "status": "FAILED",
+        "metrics": {
+          "tool_trajectory_avg_score": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 1.0
+          },
+          "final_response_match_v2": {
+            "status": "FAILED",
+            "score": 0.0,
+            "threshold": 0.8
+          }
+        }
       }
     },
-    "history_file": "hold_agent_hold_extraction_v1_1788463103.803618.evalset_result.json",
-    "run_at": "2026-09-03T19:18:23+00:00",
+    "history_file": "hold_agent_hold_extraction_v1_1788463440.78913.evalset_result.json",
+    "run_at": "2026-09-03T19:24:00+00:00",
     "adk_eval_exit_code": 0,
-    "recorded_at": "2026-09-03T19:18:28+00:00",
+    "recorded_at": "2026-09-03T19:24:02+00:00",
     "model": "gemini-3.1-flash-lite",
     "models_invoked": [
       "gemini-2.5-flash",
