@@ -238,25 +238,29 @@ def test_timing_only_core_is_undetermined_with_named_rule() -> None:
 def test_joint_only_infeasibility_reports_sufficient_core() -> None:
     """
     Non-GA shoot. Day 1 follows a 22:00 wrap (CA turnaround: call at or after 10:00) and precedes
-    a school day (CA 1308.7(a): dismissed by 22:00). M brackets a 10.5-hour adult scene, so the two
-    rules bind only together: neither alone makes the day impossible, both together do.
+    a school day (CA 1308.7(a): dismissed by 22:00). M opens and closes a day of exactly twelve
+    hours of scenes (1h, 5h, 5h, 1h). Each rule alone is satisfiable: turnaround alone shifts the
+    day to 10:00 to 22:00, the curfew alone is met from 07:00, the meal rule alone fits a 30-minute
+    break between the two adult scenes. All three together cannot hold: the meal stretches the
+    span to 12.5 hours, which no longer fits between a 10:00 call and a 22:00 dismissal.
     """
-    scenes = [_scene(1, 8, ["cM"]), _scene(2, 8, ["cM"]), _scene(3, 84, ["cA"]), _scene(4, 8, ["cM"])]
+    scenes = [_scene(1, 8, ["cM"]), _scene(2, 8, ["cM"]), _scene(3, 40, ["cA"]), _scene(4, 40, ["cA"]), _scene(5, 8, ["cM"])]
     days = [
         _day(date(2026, 10, 7), "07:00", "22:00"),
         _day(date(2026, 10, 8), "07:00", "23:30"),
         _day(date(2026, 10, 9), "07:00", "11:00", school_day=True),
     ]
     schedule = _schedule(scenes, days, [_M, _A], state="other")
-    result = pass1_day(schedule, 1, day_scene_ids=["s2", "s3", "s4"], time_limit_s=TIME_LIMIT)
+    result = pass1_day(schedule, 1, day_scene_ids=["s2", "s3", "s4", "s5"], time_limit_s=TIME_LIMIT)
     assert result.solver_status != "UNKNOWN"
     assert result.individually_sufficient == [], result.per_rule
-    assert set(result.sufficient_core) == {"CA_11760_i_turnaround_12_hours", "CA_1308_7_curfew_school_night"}
+    joint = {"CA_11760_i_turnaround_12_hours", "CA_1308_7_curfew_school_night", "CA_11761_meal_period_6_hours"}
+    assert joint <= set(result.sufficient_core), result.sufficient_core
     assert result.verdict.status == "ILLEGAL"
     assert "joint" in result.note.lower()
     assert set(result.verdict.core_rule_ids) == set(result.sufficient_core)
     proxy_ids = {v.rule_id for v in check_day_legality(schedule, 1)}
-    assert set(result.verdict.core_rule_ids) <= proxy_ids
+    assert set(result.verdict.core_rule_ids) <= proxy_ids | TIMING_ONLY_RULE_IDS
 
 
 def test_turnaround_uses_previous_consecutive_day_only() -> None:
