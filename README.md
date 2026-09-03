@@ -54,7 +54,7 @@ writes from a real run and CI recomputes; a mismatch fails the build.
    optimum. The plain-Python recount agrees with the solver to the cent.
 3. **The verdict.** Every rule record carries a quote that CI verifies as a verbatim substring
    of a committed snapshot of its source, and every number a record carries is evidenced by
-   that source. The agent's eval set (run against the tool-bearing agent; the extraction route's schema
+   that source, except one that its source does not state: see the hold-day multiplier below. The agent's eval set (run against the tool-bearing agent; the extraction route's schema
    path is covered by the recorded live goldens) passes 4 of 4 cases at the last recorded run.
 
 ## Architecture, as the runtime reports it
@@ -112,7 +112,10 @@ and the in-process bus is the transport. The deployed instance has them. `script
   functions with their records and tests. The optimizer minimizes hold days; it does not yet
   price forced calls or meal penalties into the objective.
 - Every rule quote is verbatim from a committed snapshot under `rules/sources/` and checked in
-  CI, and every number a rule carries is evidenced by its source. A page that refuses scripted
+  CI. Every number a rule carries is evidenced by its source but one: the hold-day rate multiplier
+  is 1.0 because the FAQ says the consecutive day is paid and names no multiplier, so the tier day
+  rate is taken at face value. That record says `assumption:`, and FACTS counts it as the single
+  assumed parameter. A page that refuses scripted
   fetches is captured from a browser and the snapshot header says so; a quote with no snapshot
   at all would be labeled UNVERIFIABLE and excluded from claims (none is, at this writing).
 - Louisiana hour caps are unverified; the registry refuses them rather than guessing.
