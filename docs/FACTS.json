@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-03T14:53:18+00:00",
-  "run_sha": "48e23ab",
+  "generated_at": "2026-09-03T16:08:26+00:00",
+  "run_sha": "5732e5c",
   "written_by": "scripts/facts.py (PLAN.md D7: no headline number is typed by hand)",
   "demo_file": "data/demo/hold-demo.json",
   "before_file": "data/demo/before-order.json",
@@ -16,11 +16,91 @@
   "undetermined_days_before": 0,
   "illegal_days_after": 0,
   "benchmark_matched": "8/8",
-  "solve_ms": 138.8,
+  "solve_ms": 142.9,
   "pass2_status": "OPTIMAL",
   "checker_agrees": true,
-  "adk_eval": null,
-  "adk_eval_note": "task 3.4 has not run; null until a real adk eval score is recorded",
+  "adk_eval": {
+    "eval_set_id": "hold_extraction_v1",
+    "passed": 4,
+    "failed": 0,
+    "cases": {
+      "rule_lookup_trajectory": {
+        "status": "PASSED",
+        "metrics": {
+          "tool_trajectory_avg_score": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 1.0
+          },
+          "final_response_match_v2": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 0.8
+          }
+        }
+      },
+      "ambiguity_refusal": {
+        "status": "PASSED",
+        "metrics": {
+          "tool_trajectory_avg_score": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 1.0
+          },
+          "final_response_match_v2": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 0.8
+          }
+        }
+      },
+      "nl_constraints": {
+        "status": "PASSED",
+        "metrics": {
+          "tool_trajectory_avg_score": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 1.0
+          },
+          "final_response_match_v2": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 0.8
+          }
+        }
+      },
+      "extract_callsheet": {
+        "status": "PASSED",
+        "metrics": {
+          "tool_trajectory_avg_score": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 1.0
+          },
+          "final_response_match_v2": {
+            "status": "PASSED",
+            "score": 1.0,
+            "threshold": 0.8
+          }
+        }
+      }
+    },
+    "history_file": "hold_agent_hold_extraction_v1_1788451609.3528152.evalset_result.json",
+    "run_at": "2026-09-03T16:06:49+00:00",
+    "recorded_at": "2026-09-03T16:08:25+00:00",
+    "model": "gemini-3.1-flash-lite",
+    "models_invoked": [
+      "gemini-2.5-flash",
+      "gemini-3.1-flash-lite"
+    ],
+    "location": "global",
+    "criteria": {
+      "tool_trajectory_avg_score": 1.0,
+      "final_response_match_v2": 0.8
+    },
+    "written_by": "scripts/adk_eval.py from a real adk eval run"
+  },
+  "adk_eval_note": "recorded by scripts/adk_eval.py from a real adk eval run",
   "rules": {
     "records": 63,
     "verified": 62,

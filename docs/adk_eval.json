@@ -1,0 +1,81 @@
+{
+  "eval_set_id": "hold_extraction_v1",
+  "passed": 4,
+  "failed": 0,
+  "cases": {
+    "rule_lookup_trajectory": {
+      "status": "PASSED",
+      "metrics": {
+        "tool_trajectory_avg_score": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 1.0
+        },
+        "final_response_match_v2": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 0.8
+        }
+      }
+    },
+    "ambiguity_refusal": {
+      "status": "PASSED",
+      "metrics": {
+        "tool_trajectory_avg_score": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 1.0
+        },
+        "final_response_match_v2": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 0.8
+        }
+      }
+    },
+    "nl_constraints": {
+      "status": "PASSED",
+      "metrics": {
+        "tool_trajectory_avg_score": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 1.0
+        },
+        "final_response_match_v2": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 0.8
+        }
+      }
+    },
+    "extract_callsheet": {
+      "status": "PASSED",
+      "metrics": {
+        "tool_trajectory_avg_score": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 1.0
+        },
+        "final_response_match_v2": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 0.8
+        }
+      }
+    }
+  },
+  "history_file": "hold_agent_hold_extraction_v1_1788451609.3528152.evalset_result.json",
+  "run_at": "2026-09-03T16:06:49+00:00",
+  "recorded_at": "2026-09-03T16:08:25+00:00",
+  "model": "gemini-3.1-flash-lite",
+  "models_invoked": [
+    "gemini-2.5-flash",
+    "gemini-3.1-flash-lite"
+  ],
+  "location": "global",
+  "criteria": {
+    "tool_trajectory_avg_score": 1.0,
+    "final_response_match_v2": 0.8
+  },
+  "written_by": "scripts/adk_eval.py from a real adk eval run"
+}
