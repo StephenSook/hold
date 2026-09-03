@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from datetime import date
 
+import pytest
+
 from api.hold.penalties import hold_day_cost_cents, hold_days_total_cents
 from api.hold.schemas import CastMember
 
@@ -117,3 +119,12 @@ def test_registry_low_budget_rate_on_a_demo_date() -> None:
     assert get_rule(rules_dir, "SAG_RATES_LOW_BUDGET_DAY", shooting_date=date(2027, 8, 1)) is None
     later = get_rule(rules_dir, "SAG_RATES_LOW_BUDGET_DAY_2027", shooting_date=date(2027, 8, 1))
     assert later is not None and int(later.params["day_rate_cents"]) > rate
+
+
+def test_a_date_no_rate_record_covers_is_refused_not_defaulted() -> None:
+    """D4: no P&H record covers 2019, so the cost is refused instead of silently taking 21 percent."""
+    from api.hold.penalties import RatesError
+
+    member = CastMember(id="cA", letter="A", age=None, resident_state=None, day_rate_cents=10000, rate_tier="low_budget")
+    with pytest.raises(RatesError, match="2019-01-01"):
+        hold_day_cost_cents(member, date(2019, 1, 1))

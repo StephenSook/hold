@@ -19,13 +19,16 @@ from api.hold.schemas import CastMember
 _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
 
 
+class RatesError(ValueError):
+    """No rate record covers the shooting date (D4: cite or refuse, never a default)."""
+
+
 def _get_ph_rate_bps(shooting_date: date, rules: list[RuleRecord]) -> int:
-    """Return the P&H rate in basis points for a given shooting date."""
+    """The P&H rate in basis points for a shooting date, from the record valid on that date."""
     for rule in rules:
         if rule.id in ("SAG_RATES_PH_21_PCT", "SAG_RATES_PH_22_PCT") and rule.params and "ph_rate_bps" in rule.params:
             return int(rule.params["ph_rate_bps"])
-    # Fallback to 2100 bps (21%) if no rule matched - should not happen
-    return 2100
+    raise RatesError(f"no P&H record covers {shooting_date.isoformat()}; the registry starts at the 7/1/2026 rate sheets")
 
 
 def hold_day_cost_cents(

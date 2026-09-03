@@ -42,7 +42,7 @@ from api.hold.legality_checker import (
     turnaround_applies,
     work_cap_hours,
 )
-from api.hold.penalties import hold_day_cost_cents
+from api.hold.penalties import RatesError, hold_day_cost_cents
 from api.hold.registry import RuleRecord, load_rules
 from api.hold.schemas import CheckerResult, Pass2Result, ScheduleInput, SolveResult
 from api.hold.solve import Pass1Result, pass1_schedule
@@ -382,6 +382,8 @@ def pass2(
 
     try:
         mm = _build(schedule, rules, rules_dir, explain=False)
+    except RatesError as exc:
+        return undetermined(["rates"], f"no rate record covers the shoot dates: {exc}")
     except ValueError as exc:
         return undetermined(["window"], f"out of scope: {exc}")
     status, solver = _solve(mm, time_limit_s, workers, on_solution=on_solution)

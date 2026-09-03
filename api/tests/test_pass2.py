@@ -175,3 +175,11 @@ def test_to_solve_result_carries_two_separate_panels() -> None:
     assert sr.checker.agrees
     assert sr.benchmark is None
     assert sr.model_dump()["pass2"]["holding_cents"] == 0
+
+
+def test_shoot_dates_outside_every_rate_record_are_undetermined_with_a_rates_reason() -> None:
+    days = [_day(date(2019, 10, 5), "07:00", "19:00"), _day(date(2019, 10, 6), "07:00", "19:00")]
+    outcome = _run(_schedule([_scene(1, 8, ["cA"]), _scene(2, 8, ["cA"])], days, [_A]))
+    assert outcome.result.status == "UNDETERMINED"
+    assert outcome.result.reasons == ["rates"], outcome.result.reasons
+    assert "2019" in outcome.note
