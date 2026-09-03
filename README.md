@@ -130,7 +130,9 @@ and the in-process bus is the transport. The deployed instance has them. `script
 
 `POST /api/set-events` applies an event to the latest plan (solved or still solving, so
 consecutive events chain), queues a re-solve and mirrors the event onto `hold.set-events` with
-its job id. A consumer in the API re-solves events that other producers publish on that topic
+its job id. A caller that means one particular plan sends `base_job_id` from the previous answer:
+the service compares it while holding the lock that reads the base and answers 409 if the plan has
+moved, which is what stops two people using the demo at once from editing each other's schedules. A consumer in the API re-solves events that other producers publish on that topic
 and mirrors every verdict onto `hold.verdicts`. The response names the transport that carried
 the event; the in-process bus is the whole transport whenever the broker is unconfigured or
 refuses a publish, and `/api/status` says which one is live. On the deployed instance and the
