@@ -102,5 +102,5 @@ _An architecture diagram lands with task 5.6. Runtime self-reported at `/api/sta
 
 Apache-2.0. See [LICENSE](LICENSE).
 
-Third-party notices: [docs/THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md) (populated
-at Phase 5).
+Third-party notices: [docs/THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md), generated from the
+installed dependency metadata.
