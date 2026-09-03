@@ -134,8 +134,8 @@ its job id. A consumer in the API re-solves events that other producers publish 
 and mirrors every verdict onto `hold.verdicts`. The response names the transport that carried
 the event; the in-process bus is the whole transport whenever the broker is unconfigured or
 refuses a publish, and `/api/status` says which one is live. On the deployed instance and the
-live cluster, an event produced by the simulation script came back as a verdict on the second
-topic in under a second.
+live cluster, the three events the simulation script produced came back as verdicts on the second
+topic in 839.8 ms, 455.8 ms and 571.1 ms; that run is recorded in the PLAN.md notes for task 4.2.
 
 ## How IBM Bob was used
 
