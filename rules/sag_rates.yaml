@@ -169,17 +169,26 @@
   jurisdiction: SAG-AFTRA
   authority: SAG-AFTRA
   citation: SAG-AFTRA, Consecutive Employment (Theatrical Basic Agreement summary)
-  title: Basic Agreement: performers are paid on a consecutive basis
+  title: Basic Agreement: performers are paid on a consecutive basis, with a firm pick-up exception
   quote: |
     Performers shall be paid on a consecutive basis from the first day they are instructed to
-    report for work
+    report for work, subject to the following:
+
+    Day Performers:
+
+    If, at the time of original engagement, the day performer is given a firm pick-up date which
+    is more than 10 calendar days (for films shooting entirely in the USA) or 14 calendar days
+    (for all other films) after the close of his initial employment, compensation need not be
+    paid for the intervening time.
   source_url: https://www.sagaftra.org/consecutive-employment
   valid_from: "2026-07-01"
   valid_to: null
   params:
-    hold_days_paid: "always"
+    hold_days_paid: "consecutive"
+    firm_pickup_gap_days_usa: 10
+    firm_pickup_gap_days_other: 14
   verified: VERIFIED
-  note: The page answers HTTP 403 to scripted fetches; the snapshot is the page's main text as rendered in Chrome on 2026-09-03 (header states the capture and a sha256 of the text).
+  note: The page answers HTTP 403 to scripted fetches; the snapshot is the page's main text as rendered in Chrome on 2026-09-03 (header states the capture and a sha256 of the text). The firm pick-up exception is not modeled; under the Basic Agreement tier the solver counts every calendar day between a performer's first and last working day as paid.
 
 - id: SAG_RATES_REST_PERIOD_12_HOURS
   jurisdiction: SAG-AFTRA

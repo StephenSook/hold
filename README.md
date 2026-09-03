@@ -103,7 +103,9 @@ and the in-process bus is the transport. The deployed instance has them. `script
   every violation.
 - Hold days: under the SAG-AFTRA low-budget agreements a day between work days is paid only on
   an overnight location (SAGindie FAQ, quoted in `rules/sag_rates.yaml`); the demo declares one.
-  The Basic Agreement pays consecutive employment everywhere. HOLD counts every calendar day
+  The Basic Agreement pays consecutive employment, with a day-performer exception when a firm pick-up date
+  is more than 10 calendar days out (14 for films not shot entirely in the USA); HOLD does not model that
+  exception. HOLD counts every calendar day
   between a performer's first and last working day that they do not work, listed as a shoot day
   or not.
 - The rest-period, forced-call and meal-penalty rules (task 2.11) exist as cent-exact library
