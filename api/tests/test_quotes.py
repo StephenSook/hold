@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 from api.hold.quotes import (
@@ -101,12 +102,20 @@ def test_assumed_params_are_exactly_the_known_set() -> None:
     assert counts["assumed_params"] == 1, counts  # hold_day_rate_multiplier: the FAQ says the day is paid, not a multiplier
 
 
+def _matches(key: str, value: object, text: str) -> bool:
+    return any(pattern.search(text) for pattern in number_candidates(key, value))
+
+
 def test_number_candidates_cover_the_ways_sources_write_numbers() -> None:
-    assert "sixteen" in number_candidates("age_max", 15)  # exclusive upper bound phrasing
-    assert "21%" in number_candidates("ph_rate_bps", 2100)
-    assert "half" in number_candidates("max_meal_extension_minutes", 30)
-    assert "$834" in number_candidates("day_rate_cents", 83400)
-    assert "five hundred" in number_candidates("threshold_usd", 500)
+    assert _matches("age_max", 15, "not attained the age of sixteen (16) years")  # exclusive upper bound phrasing
+    assert _matches("ph_rate_bps", 2100, "contribution is 21% for performers")
+    assert _matches("max_meal_extension_minutes", 30, "longer than one half (1/2) hour")
+    assert _matches("day_rate_cents", 83400, "Low Budget Daily Rate: $834")
+    assert _matches("threshold_usd", 500, "compensation of five hundred dollars or more")
+    assert _matches("max_location_hours", 9.5, "maximum of 9.5 hours on the set")
+    assert _matches("max_work_hours_school_day", 5, "not more than five (5) hours of work")
+    assert _matches("min_meal_duration_minutes", 30, "alternative 30-minute meal break")
+    assert not _matches("min_meal_duration_minutes", 6, "within six (6) hours of start time")
 
 
 def test_derived_and_evidence_uses_are_exactly_the_known_records() -> None:
@@ -128,3 +137,48 @@ def test_derived_and_evidence_uses_are_exactly_the_known_records() -> None:
         "GA_300_7_1_03_first_meal_within_6_hours",
         "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL", "SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL",
     }
+
+
+def _mutated(tmp_path: Path, yaml_name: str, old: str, new: str) -> list[str]:
+    rules_copy = Path(tempfile.mkdtemp(dir=tmp_path)) / "rules"  # a fresh copy per mutation
+    shutil.copytree(RULES, rules_copy)
+    target = rules_copy / yaml_name
+    text = target.read_text()
+    assert text.count(old) == 1, (old, text.count(old))
+    target.write_text(text.replace(old, new))
+    problems, _ = verify_rules(rules_copy, rules_copy / "sources", rules_copy / "verification.json")
+    return [p.record_id for p in problems]
+
+
+def test_a_number_must_carry_its_unit_in_the_evidence(tmp_path: Path) -> None:
+    """Round three, finding 2: a bare digit elsewhere in the sentence must not evidence a param."""
+    assert "GA_300_7_1_03_first_meal_within_6_hours" in _mutated(tmp_path, "ga.yaml", "min_meal_duration_minutes: 30", "min_meal_duration_minutes: 6")  # "six (6) hours" is not six minutes
+    assert "GA_300_7_1_03_ages_9_15_location_hours" in _mutated(tmp_path, "ga.yaml", "max_location_hours: 10\n    age_min: 9\n    age_max: 15", "max_location_hours: 12\n    age_min: 9\n    age_max: 15")  # "12:00 midnight" is not 12 hours
+    assert "SAG_RATES_PH_21_PCT" in _mutated(tmp_path, "sag_rates.yaml", "ph_rate_bps: 2100", "ph_rate_bps: 21")  # "21%" is 2100 bps, not 21
+    assert "GA_300_7_1_03_school_night_curfew" in _mutated(tmp_path, "ga.yaml", 'curfew_school_night: "22:00"\n    age_min: 9', 'curfew_school_night: "23:00"\n    age_min: 9')  # a clock time is checked too
+
+
+def test_derived_is_addition_of_evidenced_numbers_only(tmp_path: Path) -> None:
+    assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in _mutated(
+        tmp_path, "sag_minors.yaml", "max_work_hours_non_school_day: 7\n", "max_work_hours_non_school_day: 10\n"
+    )
+    assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in _mutated(
+        tmp_path, "sag_minors.yaml", "derived: 7 = 5 + 2;", "derived: 7 = 5 * 2 - 3;"
+    )
+
+
+def test_assumed_and_derived_values_are_pinned_exactly() -> None:
+    from api.hold.registry import load_rules
+
+    notes = {r.id: r.note for r in load_rules(RULES)}
+    assert "assumption: 1.0 " in notes["SAG_RATES_HOLD_DAY_FULL_RATE"]
+    assert "derived: 7 = 5 + 2;" in notes["SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL"]
+    assert "derived: 8 = 6 + 2;" in notes["SAG_MINORS_16_17_WORK_HOURS_NON_SCHOOL"]
+
+
+def test_word_numbers_match_whole_words_only() -> None:
+    assert not any(pattern.search("done and dusted") for pattern in number_candidates("max_work_hours", 1))
+    assert any(pattern.search("one (1) hour of rest") for pattern in number_candidates("min_rest_minutes", 60))
+    assert any(pattern.search("no later than 10:00 p.m.") for pattern in number_candidates("curfew_school_night", "22:00"))
+    assert any(pattern.search("and 12:00 midnight on") for pattern in number_candidates("curfew_non_school_night", "00:00"))
+    assert not any(pattern.search("no later than 10:00 p.m.") for pattern in number_candidates("curfew_school_night", "23:00"))

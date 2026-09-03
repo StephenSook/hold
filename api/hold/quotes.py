@@ -71,56 +71,100 @@ _WORDS = {
     1000: "one thousand",
 }
 _EVIDENCE = re.compile(r'evidence(?:\[([^\]]+)\])?: "([^"]+)"')
-_DERIVED = re.compile(r"derived: ([0-9.]+) = ([0-9.+\-*/() ]+?)(?=[;,.]|$)")
+_DERIVED = re.compile(r"derived: ([0-9.]+) = ([0-9.]+) \+ ([0-9.]+)")  # addition of two evidenced numbers, nothing else
 _ASSUMPTION = re.compile(r"assumption: ([0-9.]+)")
+_CLOCK = re.compile(r"^\d{1,2}:\d{2}$")
+_LEAD = r"(?<![\w.$])"  # a number starts at a word edge, never inside another number or a price
 
 
-def _plain(value: float) -> set[str]:
-    out = {f"{value:g}"}
-    if float(value).is_integer() and int(value) in _WORDS:
-        out.add(_WORDS[int(value)])
+def _num(value: float) -> str:
+    """A regex alternation for one number: digits, or the word with an optional "(N)" after it."""
+    if float(value).is_integer():
+        digits = str(int(value))
+        alts = [re.escape(digits)]
+        if int(value) in _WORDS:
+            alts.append(rf"{re.escape(_WORDS[int(value)])}(?: \({digits}\))?")
+        return "(?:" + "|".join(alts) + ")"
+    if value % 1 == 0.5:
+        whole = int(value)
+        alts = [rf"{whole}\.5", rf"{whole} 1/2"]
+        if whole in _WORDS:
+            alts.append(rf"{_WORDS[whole]} and (?:one[- ]half|a half)")
+        return "(?:" + "|".join(alts) + ")"
+    return re.escape(f"{value:g}")
+
+
+def _money(dollars: float) -> str:
+    if float(dollars).is_integer():
+        return rf"(?:{re.escape(f'{int(dollars):,}')}|{int(dollars)})(?:\.00)?"
+    return re.escape(f"{dollars:,.2f}")
+
+
+def _clock(value: str) -> list[str]:
+    """Spellings of a clock time: 22:00, 10:00 p.m., 10 p.m., 12:00 midnight, 5:00 A.M."""
+    hour, minute = (int(x) for x in value.split(":"))
+    h12 = hour % 12 or 12
+    meridiem = "a" if hour < 12 else "p"
+    minutes = f":{minute:02d}" if minute else f"(?::{minute:02d})?"
+    out = [rf"\b{hour:02d}:{minute:02d}\b", rf"\b{h12}{minutes}\s?{meridiem}\.?m\b\.?"]
+    if (hour, minute) == (0, 0):
+        out.append(r"\bmidnight\b")
+    if (hour, minute) == (12, 0):
+        out.append(r"\bnoon\b")
     return out
 
 
-def number_candidates(key: str, value: float) -> set[str]:
-    """The spellings a source may use for one param value, keyed by the param's unit suffix."""
-    out = _plain(value)
-    if key.endswith("_minutes"):
-        out |= _plain(value / 60)
-        if value == 30:
-            out |= {"half", "1/2"}
-        if value == 15:
-            out.add("quarter")
-    if key.endswith("_cents"):
-        dollars = value / 100
-        out |= {f"${dollars:,.0f}", f"${dollars:,.2f}", f"{dollars:,.0f}", f"{dollars:.0f}"}
-    if key.endswith("_bps"):
-        pct = value / 100
-        out |= {f"{pct:g}%", f"{pct:g} percent"}
-    if key.endswith("_usd"):
-        out |= {f"${value:,.0f}", f"${value:.0f}", f"{value:,.0f}"}
-    if key == "age_max":
-        out |= _plain(value + 1)  # "not attained the age of sixteen (16)", "9 years to 16 years"
-    if key.endswith("_hours") and value % 1 == 0.5:
-        whole = int(value)
-        out |= {f"{whole} 1/2", f"{_WORDS.get(whole, '')} and one-half", f"{_WORDS.get(whole, '')} and a half"}
-    return {c for c in out if c and not c.startswith(" and")}
+def number_candidates(key: str, value: object) -> list[re.Pattern[str]]:
+    """The spellings a source may use for one param value, with the unit the key names: a minutes
+    value must read as minutes (or a half hour), an hours value as hours, a rate as dollars, a
+    share as a percentage, a clock time as a time. Bare numbers are accepted only for ages and
+    for keys that name no unit (ratios)."""
+    k = key.lower()
+    if isinstance(value, str):
+        return [re.compile(p, re.IGNORECASE) for p in _clock(value)] if _CLOCK.match(value) else []
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return []
+    v = float(value)
+    num = _num(v)
+    pats: list[str] = []
+    if "cents" in k:
+        pats.append(rf"\$\s?{_money(v / 100)}(?!\d|,\d)")
+    elif "bps" in k:
+        pats.append(rf"{_LEAD}{_num(v / 100)}\s?(?:%|percent)")
+    elif "percent" in k:
+        pats.append(rf"{_LEAD}{num}\s?(?:%|percent)")
+    elif "usd" in k:
+        pats.append(rf"\$\s?{_money(v)}(?!\d|,\d)")
+        pats.append(rf"{_LEAD}{num} dollars")
+    elif "minutes" in k:
+        pats.append(rf"{_LEAD}{num}[- ]?minutes?\b")
+        if v == 30:
+            pats += [r"(?:one[- ])?half(?: \(1/2\))?[- ]hour", r"half[- ]an[- ]hour", r"1/2[- ]hour", r"\b30[- ]minute"]
+        if v == 15:
+            pats.append(r"quarter[- ]hour")
+        if v >= 60 and v % 60 == 0:
+            pats.append(rf"{_LEAD}{_num(v / 60)}[- ]?hours?\b")
+    elif "hours" in k:
+        pats.append(rf"{_LEAD}{num}[- ]?hours?\b")
+    elif "days" in k:
+        pats.append(rf"{_LEAD}{num}[- ]?(?:business |consecutive |calendar |working )?days?\b")
+    elif "age" in k:
+        pats.append(rf"{_LEAD}{num}\b")
+        if k == "age_max":
+            pats.append(rf"{_LEAD}{_num(v + 1)}\b")  # "not attained the age of sixteen (16)", "9 years to 16 years"
+    elif "multiplier" in k:
+        return []  # only an assumption: marker can carry it
+    else:
+        pats.append(rf"{_LEAD}{num}\b")
+    return [re.compile(p, re.IGNORECASE) for p in pats]
 
 
-def _states(text: str, candidate: str) -> bool:
-    """Digit candidates match as whole numbers ("5" is not inside "15"); words match as substrings."""
-    if re.fullmatch(r"[0-9.]+", candidate):
-        return re.search(rf"(?<![0-9.]){re.escape(candidate)}(?![0-9.])", text) is not None
-    return candidate.lower() in text
+def _evidenced(text: str, patterns: list[re.Pattern[str]]) -> bool:
+    return any(p.search(text) for p in patterns)
 
 
-def _safe_eval(expr: str) -> float | None:
-    if not re.fullmatch(r"[0-9.+\-*/() ]+", expr):
-        return None
-    try:
-        return float(eval(expr, {"__builtins__": {}}))  # noqa: S307 - digits and operators only, checked above
-    except (SyntaxError, ZeroDivisionError, TypeError, ValueError):
-        return None
+def _plain(value: float) -> list[re.Pattern[str]]:
+    return [re.compile(rf"{_LEAD}{_num(value)}\b", re.IGNORECASE)]
 
 
 def params_evidence_problems(
@@ -143,28 +187,32 @@ def params_evidence_problems(
             continue
         evidence.append(normalize(fragment))
     text = " ".join([normalize(record.quote), *evidence]).lower()
-    derived = {float(lhs): expr for lhs, expr in _DERIVED.findall(note)}
+    derived = {float(lhs): (float(a), float(b)) for lhs, a, b in _DERIVED.findall(note)}
     assumed = {float(v) for v in _ASSUMPTION.findall(note)}
     assumed_count = 0
     for key, value in record.params.items():
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
+        if isinstance(value, bool) or not isinstance(value, (int, float, str)):
             continue
-        if any(_states(text, c) for c in number_candidates(key, float(value))):
+        if isinstance(value, str) and not _CLOCK.match(value):
             continue
+        candidates = number_candidates(key, value)
+        if candidates and _evidenced(text, candidates):
+            continue
+        if isinstance(value, str):
+            problems.append(Problem(record.id, f"param {key}={value} is not stated as a clock time by the quote or an evidence fragment"))
+            continue
+        shown = f"{float(value):g}"
         expr = derived.get(float(value))
         if expr is not None:
-            result = _safe_eval(expr)
-            operands = re.findall(r"[0-9]+(?:\.[0-9]+)?", expr)
-            if result is not None and abs(result - float(value)) < 1e-9 and all(
-                any(_states(text, c) for c in _plain(float(o))) for o in operands
-            ):
+            a, b = expr
+            if abs(a + b - float(value)) < 1e-9 and _evidenced(text, _plain(a)) and _evidenced(text, _plain(b)):
                 continue
-            problems.append(Problem(record.id, f"param {key}={value:g} derived from {expr!r} but an operand is not evidenced or the arithmetic is wrong"))
+            problems.append(Problem(record.id, f"param {key}={shown} derived from {a:g} + {b:g} but an operand is not evidenced or the sum is wrong"))
             continue
         if float(value) in assumed:
             assumed_count += 1
             continue
-        problems.append(Problem(record.id, f"param {key}={value:g} is not stated by the quote or an evidence fragment (add evidence: \"...\", derived: ..., or assumption: ...)"))
+        problems.append(Problem(record.id, f"param {key}={shown} is not stated with its unit by the quote or an evidence fragment (add evidence: \"...\", derived: a = b + c, or assumption: ...)"))
     return problems, assumed_count
 
 
