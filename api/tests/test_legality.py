@@ -590,3 +590,12 @@ def test_non_school_day_work_cap_records_are_checked() -> None:
     ids = {v.rule_id for v in check_day_legality(_make_schedule([day]), 0)}
     assert "CA_11760_e_work_hours_9_15_non_school_day" in ids, ids
     assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in ids, ids
+
+
+def test_turnaround_respects_the_record_age_bracket() -> None:
+    """The GA turnaround rule reads ages four to eighteen; a three-year-old gets the SAG-AFTRA one only."""
+    toddler = CastMember(id="cM", letter="M", age=3, resident_state=None, day_rate_cents=81000, rate_tier="low_budget")
+    days = [_day(date(2026, 10, 6), "12:00", "22:00"), _day(date(2026, 10, 7), "05:00", "12:00", school_day=True)]
+    ids = {v.rule_id for v in check_day_legality(_make_schedule(days, minor=toddler), 1)}
+    assert "GA_300_7_1_03_turnaround_school_hours" not in ids, ids
+    assert "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY" in ids, ids

@@ -643,6 +643,8 @@ def check_day_legality(
         for rule in all_rules:
             if not rule_applies_to_minor(rule, minor, shoot_state):
                 continue
+            if not age_applies(rule, age):
+                continue  # the record's own age bracket, applied once for every check below
 
             # Curfew checks
             if "curfew_school_night" in rule.params or "curfew_non_school_night" in rule.params:
