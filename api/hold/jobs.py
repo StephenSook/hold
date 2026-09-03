@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 import threading
 import uuid
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -55,6 +56,7 @@ class JobStore:
         self._jobs: dict[str, Job] = {}
         self._order: list[str] = []
         self._lock = threading.Lock()
+        self._chain = threading.Lock()  # read the base, apply an edit, submit: one critical section (round six, finding 3)
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="hold-solve")
 
     def submit(self, schedule: ScheduleInput, source: str = "api") -> Job:
@@ -64,6 +66,20 @@ class JobStore:
             self._order.append(job.id)
         self._executor.submit(self._run, job)
         return job
+
+    def order(self) -> list[str]:
+        with self._lock:
+            return list(self._order)
+
+    def edit_and_submit(self, apply: Callable[[ScheduleInput], tuple[ScheduleInput, str]], source: str) -> tuple[Job, Job, str] | None:
+        """Read the latest schedule, apply one edit and queue its re-solve without another edit reading the
+        same base in between. Returns (base, job, change), or None when nothing has been submitted yet."""
+        with self._chain:
+            base = self.latest_base()
+            if base is None:
+                return None
+            edited, change = apply(base.schedule)
+            return base, self.submit(edited, source=source), change
 
     def get(self, job_id: str) -> Job | None:
         with self._lock:

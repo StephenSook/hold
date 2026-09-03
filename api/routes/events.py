@@ -74,14 +74,13 @@ async def events(
 
 @router.post("/api/set-events", status_code=202)
 async def set_event(event: SetEvent) -> dict[str, Any]:
-    base = JOBS.latest_base()
-    if base is None:
-        raise HTTPException(status_code=409, detail="no schedule to apply the event to; POST /api/solve first")
     try:
-        edited, change = apply_set_event(base.schedule, event)
+        chained = JOBS.edit_and_submit(lambda schedule: apply_set_event(schedule, event), source=f"set-event:{event.kind}:{event.source}")
     except SetEventError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    job = JOBS.submit(edited, source=f"set-event:{event.kind}:{event.source}")
+    if chained is None:
+        raise HTTPException(status_code=409, detail="no schedule to apply the event to; POST /api/solve first")
+    base, job, change = chained
     echo = {**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change}
     # Mirrored with job_id (the consumer skips its own echo). The transport the response names is the
     # one that carried the event: a refused produce is the in-process bus (round five, finding 5).
@@ -93,11 +92,10 @@ async def set_event(event: SetEvent) -> dict[str, Any]:
 def handle_external_set_event(payload: dict[str, Any]) -> str | None:
     """A set event published on hold.set-events by another producer: edit the latest schedule (solved
     or still solving, so consecutive events chain) and queue a re-solve, exactly like the route does."""
-    base = JOBS.latest_base()
-    if base is None:
-        return None
     event = SetEvent.model_validate(payload)
-    edited, change = apply_set_event(base.schedule, event)
-    job = JOBS.submit(edited, source=f"confluent:{event.kind}:{event.source}")
+    chained = JOBS.edit_and_submit(lambda schedule: apply_set_event(schedule, event), source=f"confluent:{event.kind}:{event.source}")
+    if chained is None:
+        return None
+    base, job, change = chained
     BUS.publish({**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change, "transport": "confluent"})
     return job.id

@@ -196,3 +196,40 @@ def test_an_event_chains_on_a_failed_re_solve_instead_of_reverting_it(client: Te
     assert late.json()["base_job_id"] == failed.id
     chained = JOBS.get(late.json()["job_id"])
     assert chained is not None and "s3" not in {s.id for s in chained.schedule.scenes}
+
+
+def test_concurrent_http_and_external_events_chain_under_one_lock(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Round six, finding 3: the route and the consumer read latest_base in separate lock sections, so
+    two overlapping edits both read the same base and neither job carried both edits. The edit is slowed
+    so the overlap is certain."""
+    import threading
+
+    import api.routes.events as events_route
+    from api.hold import set_events as set_events_module
+    from api.hold.jobs import JOBS
+
+    posted = client.post("/api/solve", json=_demo())
+    _wait(client, posted.json()["job_id"])
+    real_apply = set_events_module.apply_set_event
+
+    def slow_apply(schedule: Any, event: Any) -> Any:
+        time.sleep(0.15)
+        return real_apply(schedule, event)
+
+    monkeypatch.setattr(events_route, "apply_set_event", slow_apply)
+    results: dict[str, Any] = {}
+
+    def over_http() -> None:
+        results["http"] = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"}).json()
+
+    t = threading.Thread(target=over_http)
+    t.start()
+    time.sleep(0.05)
+    results["kafka"] = events_route.handle_external_set_event({"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "simulation"})
+    t.join(10)
+    http_job = JOBS.get(results["http"]["job_id"])
+    kafka_job = JOBS.get(results["kafka"])
+    assert http_job is not None and kafka_job is not None
+    first, second = sorted((http_job, kafka_job), key=lambda j: JOBS.order().index(j.id))
+    assert "s3" not in {s.id for s in second.schedule.scenes} and any(c.type == "availability" and c.cast_id == "cM" for c in second.schedule.constraints)
+    assert first.id != second.id
