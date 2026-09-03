@@ -1,19 +1,39 @@
 {
-  "_note": "Unoptimized 'before' scene order. hold_days and illegal_days here are provisional hand counts; the judged figures are written by scripts/facts.py into docs/FACTS.json from a real run (D7).",
+  "_note": "Constructed 'before' plan (D8), the kind of plan an AD writes by set and time of day without looking at cast or the minor's caps: exteriors on the first three days, then every interior on the one school day. hold_days, illegal_days and illegal_reason below are COMPUTED by api/tests/test_pass2.py from this day plan (recount_hold_days and pass 1), never typed; scripts/facts.py (task 3.6) writes the judged figures into docs/FACTS.json from the same run.",
   "scene_order": [
     "s1",
-    "s3",
-    "s7",
     "s9",
+    "s7",
     "s2",
-    "s5",
-    "s6",
-    "s8",
     "s4",
-    "s10"
+    "s10",
+    "s3",
+    "s6",
+    "s5",
+    "s8"
   ],
-  "hold_days": 7,
+  "day_scene_ids": {
+    "0": [
+      "s1"
+    ],
+    "1": [
+      "s9"
+    ],
+    "2": [
+      "s7"
+    ],
+    "3": [
+      "s2",
+      "s4",
+      "s10",
+      "s3",
+      "s6",
+      "s5",
+      "s8"
+    ]
+  },
+  "hold_days": 4,
   "illegal_days": 1,
   "illegal_day_index": 3,
-  "illegal_reason": "Day 3 (2026-10-08, school day, 07:00 to 21:30): minor M is 14.5 h at location, over the GA 10-hour cap for ages 9 to 15 (Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)) and over the CA 3-hour school-day work cap (8 CCR 11760(e)(1)). The 21:30 wrap is inside the 10 p.m. school-night curfew, so the curfew is not the reason."
+  "illegal_reason": "computed by pass 1; see test_demo_before_plan_is_illegal_on_the_school_day"
 }
