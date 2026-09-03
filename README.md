@@ -80,7 +80,7 @@ exports, screenshots, and the ATTRIBUTION.md per-commit breakdown._
 |---|---|
 | Session store export (counts, tokens, cost) | `docs/bob-evidence/bob-usage-evidence.json` |
 | Attribution breakdown | `docs/bob-evidence/ATTRIBUTION.md` |
-| Build trace | `docs/bob-evidence/build-trace.md` |
+| Build trace | the Build trace section of `docs/bob-evidence/ATTRIBUTION.md` (every commit, in order) |
 | Bobcoin screenshots | `docs/bob-evidence/bobcoins-*.png` |
 | Lane-enforcement record | `docs/bob-evidence/lane-enforcement.md` |
 | Spend table | _populated at phase boundary_ |
@@ -88,13 +88,13 @@ exports, screenshots, and the ATTRIBUTION.md per-commit breakdown._
 Trailer `Tool: IBM-Bob` on every Bob-authored commit. Test count in every engine commit
 subject. Five write-scoped custom modes: `solver-engine`, `agent-runtime`, `mobile-shell`,
 `frontend`, `evidence-writer`. Real Plan-mode outputs under `.bob/plans/`. Spec Kit
-artifacts under `specs/`. Self-referential MCP server calling the solver while building it.
+artifacts under `specs/`. The self-referential MCP server (task 1.11) was planned and not built: every Bob account was exhausted first.
 
 ---
 
 ## Architecture
 
-_Diagram at `docs/architecture.svg` after Phase 5. Runtime self-reported at `/api/status`._
+_An architecture diagram lands with task 5.6. Runtime self-reported at `/api/status`._
 
 ---
 
