@@ -1,0 +1,22 @@
+{
+  "_note": "Golden extraction of data/demo/samples/ambiguous-note.txt, recorded from a real run of POST /api/extract on the deployed service (constructed demo data). A refusal to guess: questions vary in wording run to run, so the live test checks the status and that questions are present.",
+  "_live_run": {
+    "url": "https://hold-fwmdq7fc3q-uc.a.run.app/api/extract",
+    "recorded_at": "2026-09-03T06:00:00+00:00",
+    "model": "gemini-3.1-flash-lite",
+    "location": "global",
+    "latency_s": 1.3,
+    "revision_sha": "529f8cc"
+  },
+  "status": "needs_clarification",
+  "schedule": null,
+  "questions": [
+    "Please provide the scene numbers, descriptions, int/ext, and page counts for the three scenes.",
+    "Please identify the minor performer and their daily rate.",
+    "What is the date for tomorrow's shoot?",
+    "What are the specific call and wrap times?",
+    "Please confirm the shoot state (e.g., CA, GA).",
+    "Is this a school day?"
+  ],
+  "notes": ""
+}

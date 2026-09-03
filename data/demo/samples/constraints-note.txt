@@ -1,0 +1,15 @@
+HOLD DEMO - PRODUCTION NOTE (constructed, not a real production)
+
+Shoot state: Georgia. Agreement: SAG-AFTRA Low Budget Theatrical, all performers at scale, $834 per day.
+
+Days:
+  Day 1  Monday October 5, 2026     call 07:00  wrap 19:00   school day
+  Day 2  Tuesday October 6, 2026    call 07:00  wrap 19:00   school day
+
+Scenes:
+  Sc 2  INT Kitchen  DAY  1 page     cast A, C   at the farmhouse
+  Sc 7  EXT Orchard  DAY  2 pages    cast A      at the orchard
+
+Cast: A (adult), C (adult).
+
+Notes from the AD: actor C is unavailable on day 1. Scene 7 must shoot before scene 2.

@@ -1,0 +1,100 @@
+{
+  "_note": "Golden extraction of data/demo/samples/constraints-note.txt, recorded from a real run of POST /api/extract on the deployed service (constructed demo data). Times carry the Z the model appended; ScheduleInput accepts them.",
+  "_live_run": {
+    "url": "https://hold-fwmdq7fc3q-uc.a.run.app/api/extract",
+    "recorded_at": "2026-09-03T06:00:00+00:00",
+    "model": "gemini-3.1-flash-lite",
+    "location": "global",
+    "latency_s": 2.4,
+    "revision_sha": "529f8cc"
+  },
+  "status": "ok",
+  "schedule": {
+    "scenes": [
+      {
+        "id": "sc_2",
+        "number": 2,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Kitchen",
+        "pages_eighths": 8,
+        "cast_ids": [
+          "A",
+          "C"
+        ],
+        "location_id": "farmhouse"
+      },
+      {
+        "id": "sc_7",
+        "number": 7,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "Orchard",
+        "pages_eighths": 16,
+        "cast_ids": [
+          "A"
+        ],
+        "location_id": "orchard"
+      }
+    ],
+    "cast": [
+      {
+        "id": "A",
+        "letter": "A",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "C",
+        "letter": "C",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-05",
+        "call": "07:00:00Z",
+        "wrap": "19:00:00Z",
+        "school_day": true,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-06",
+        "call": "07:00:00Z",
+        "wrap": "19:00:00Z",
+        "school_day": true,
+        "school_night": null
+      }
+    ],
+    "constraints": [
+      {
+        "type": "availability",
+        "cast_id": "C",
+        "scene_id_a": null,
+        "scene_id_b": null,
+        "unavailable_day_indices": [
+          0
+        ]
+      },
+      {
+        "type": "precedence",
+        "cast_id": null,
+        "scene_id_a": "sc_7",
+        "scene_id_b": "sc_2",
+        "unavailable_day_indices": null
+      }
+    ],
+    "jurisdiction": {
+      "shoot_state": "GA"
+    },
+    "constructed": true,
+    "overnight_location": false
+  },
+  "questions": [],
+  "notes": ""
+}
