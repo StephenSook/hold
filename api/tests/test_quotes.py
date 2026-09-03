@@ -56,6 +56,8 @@ def test_letter_hyphens_are_optional_but_digit_hyphens_are_not() -> None:
     assert quote_matches("one halfhour meal break", snapshot_variants("and one half-hour meal break."))
     assert not quote_matches("12 hours", snapshot_variants("at least 1-2 hours"))
     assert not quote_matches("1-2 hours", snapshot_variants("at least 12 hours"))
+    assert not quote_matches("12 hours", snapshot_variants("at least 1-\n2 hours"))  # a line-end hyphen between digits stays
+    assert quote_matches("employment", snapshot_variants("employ-\nment"))
 
 
 def test_a_corrupted_quote_turns_the_check_red(tmp_path: Path) -> None:

@@ -21,7 +21,7 @@ from api.hold.registry import RuleRecord, load_rules
 _QUOTE_MARKS = {"\u2019": "'", "\u2018": "'", "\u201c": '"', "\u201d": '"', "\u2014": "-", "\u2013": "-", "\u00ad": ""}
 
 
-_LINE_END_HYPHEN = re.compile(r"-[ \t]*\n[ \t]*")
+_LINE_END_HYPHEN = re.compile(r"(?<=[A-Za-z])-[ \t]*\n[ \t]*(?=[A-Za-z])")  # only a word broken across a line
 
 
 def normalize(text: str) -> str:
