@@ -104,3 +104,13 @@ def test_days_must_be_chronological_and_unique() -> None:
         ScheduleInput.model_validate(dict(raw, days=[days[1], days[0], *days[2:]]))
     with pytest.raises(ValidationError, match="chronological"):
         ScheduleInput.model_validate(dict(raw, days=[days[0], days[0], *days[1:]]))
+
+
+def test_extract_result_status_matches_its_payload() -> None:
+    """Round four, finding 6: the confirmation UI trusts these two invariants."""
+    with pytest.raises(ValidationError, match="requires a schedule"):
+        ExtractResult.model_validate({"status": "ok", "schedule": None, "questions": [], "notes": ""})
+    with pytest.raises(ValidationError, match="requires questions"):
+        ExtractResult.model_validate({"status": "needs_clarification", "schedule": None, "questions": [], "notes": ""})
+    ok = ExtractResult.model_validate({"status": "needs_clarification", "schedule": None, "questions": ["Which day?"], "notes": ""})
+    assert ok.questions == ["Which day?"]

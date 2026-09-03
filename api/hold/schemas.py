@@ -102,6 +102,15 @@ class ExtractResult(BaseModel):
     questions: list[str] = Field(default_factory=list)
     notes: str = ""
 
+    @model_validator(mode="after")
+    def _status_matches_payload(self) -> ExtractResult:
+        """ok carries a schedule; needs_clarification carries questions and no schedule."""
+        if self.status == "ok" and self.schedule is None:
+            raise ValueError("status ok requires a schedule")
+        if self.status == "needs_clarification" and (self.schedule is not None or not self.questions):
+            raise ValueError("status needs_clarification requires questions and no schedule")
+        return self
+
 
 # ---------------------------------------------------------------------------
 # Verdict (legality check result)
