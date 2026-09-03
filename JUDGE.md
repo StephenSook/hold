@@ -14,8 +14,8 @@ task and is not described here; every step is the API and the repository.
    underscore; they are labels). The answer is a job id. `GET /api/jobs/{id}` returns the order,
    the day assignment, the pass-2 cost with its status (OPTIMAL or FEASIBLE with a bound) and one
    pass-1 verdict per day.
-4. **The verdict.** In that job, `result.pass1[n].verdict` on an illegal day carries
-   `violations`: rule id, citation, limit, computed value, the verbatim quote and the source URL.
+4. **The verdict.** In that job, `result.pass1[n]` on an illegal day carries `violations`: rule
+   id, citation, limit, computed value, the verbatim quote and the source URL.
    `core_rule_ids` are the rules that each alone make the day impossible. The demo's solved plan
    has none; the hand-built order in [`data/demo/before-order.json`](data/demo/before-order.json)
    has one illegal day and four hold days.

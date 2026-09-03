@@ -4,6 +4,7 @@ docs/FACTS.json, so a solver regression fails this test as well as the FACTS che
 from __future__ import annotations
 
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,20 @@ from api.routes.status import reset_cache
 
 ROOT = Path(__file__).resolve().parents[2]
 FACTS = json.loads((ROOT / "docs" / "FACTS.json").read_text(encoding="utf-8"))
+
+
+def _resolve(payload: Any, path: str) -> Any:
+    """Walk a path JUDGE.md prints, like pass1[n].violations, against a real answer. An index means
+    the first element, so an empty list fails here rather than reading as an absent field."""
+    node = payload
+    for part in path.split("."):
+        name, _, index = part.partition("[")
+        assert isinstance(node, dict) and name in node, f"result.{path}: no key {name!r} at this level"
+        node = node[name]
+        if index:
+            assert isinstance(node, list) and node, f"result.{path}: {name} is not a list with a first item"
+            node = node[0]
+    return node
 
 
 @pytest.fixture
@@ -71,6 +86,13 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
     used_days = {int(d) for d, ids in solved["day_scene_ids"].items() if ids}
     verdicts = [v for v in solved["result"]["pass1"] if v["day"] in used_days]
     assert verdicts and all(v["status"] == "LEGAL" for v in verdicts), [v["status"] for v in verdicts]
+
+    # Every path the walkthrough prints must resolve in a real answer. JUDGE.md named a key the API
+    # flattens away, so the one step that shows the verdict found nothing (round eleven, finding 1).
+    documented = re.findall(r"`result\.([A-Za-z0-9_.\[\]]+)`", (ROOT / "JUDGE.md").read_text(encoding="utf-8"))
+    assert documented, "JUDGE.md names no result path, so this guard is checking nothing"
+    for path in documented:
+        _resolve(solved["result"], path)
 
     # Step 4: the hand-built order the demo improves on is the recorded one, and FACTS agrees with it.
     before = json.loads((ROOT / "data" / "demo" / "before-order.json").read_text(encoding="utf-8"))
