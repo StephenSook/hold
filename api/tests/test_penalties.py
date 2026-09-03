@@ -180,3 +180,11 @@ def test_penalty_records_never_reach_the_minor_checker() -> None:
     for rid in penalty_ids:
         assert rules[rid].params.get("kind") == "penalty"
         assert not rule_applies_to_minor(rules[rid], minor, "GA")
+
+
+def test_meal_penalty_refuses_an_unknown_rate_tier() -> None:
+    """Round six, finding 7: a tier the schema does not name is refused, never priced on the ladder."""
+    from api.hold.penalties import RatesError, meal_penalty_cents
+
+    with pytest.raises(RatesError, match="rate tier"):
+        meal_penalty_cents(35, date(2026, 10, 8), "not_a_tier")

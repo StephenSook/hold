@@ -80,6 +80,8 @@ def forced_call_penalty_cents(cast_member: CastMember, shooting_date: date, week
 def meal_penalty_cents(late_minutes: int, shooting_date: date, rate_tier: str, rules_dir: Path | None = None) -> int:
     """Task 2.11: meal penalty for a meal called `late_minutes` past its due time, per performer.
     Ladder $25, $35, then $50 per half-hour or fraction; Ultra Low Budget pays a flat $25 per half-hour or part."""
+    if rate_tier not in ("low_budget", "moderate_low", "ultra_low", "other"):
+        raise RatesError(f"unknown rate tier {rate_tier!r}; the registry prices the four tiers the schema names")
     if late_minutes <= 0:
         return 0
     blocks = -(-late_minutes // 30)  # ceiling: any fraction of a half-hour counts
