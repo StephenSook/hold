@@ -1,0 +1,150 @@
+{
+  "eval_set_id": "hold_extraction_v1",
+  "name": "HOLD extraction and rule lookup",
+  "description": "Task 3.4: extraction from a constructed call sheet, plain-English constraints into typed constraints, refusal on ambiguity, and a tool trajectory through lookup_rule. Scored with adk eval against Vertex AI; the score is written to docs/FACTS.json by scripts/facts.py only after a real run.",
+  "eval_cases": [
+    {
+      "eval_id": "extract_callsheet",
+      "conversation": [
+        {
+          "invocation_id": "extract_callsheet-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "HOLD DEMO - CALL SHEET - DAY 3\nProduction: HOLD Demo (constructed, not a real production)\nDate: Thursday, October 8, 2026  |  Shoot State: GA  |  School Day: YES\n\nGENERAL CALL: 07:00\nWRAP (est.): 21:30\nLOCATION: Farmhouse Kitchen / Peach Orchard, Dawson County GA (constructed)\n\nSCENES SCHEDULED\n----------------\nSc# | Set               | I/E | D/N | Pgs  | Cast\n  2 | Farmhouse Kitchen | INT | DAY | 12/8 | A, M\n  8 | Farmhouse Kitchen | INT | DAY | 16/8 | A, B, M\n  5 | Peach Orchard     | EXT | DAY | 14/8 | A, C, M\n\nCAST\n----\nLetter | Role              | Call    | Makeup  | Set     | Wrap    | Notes\nA      | Lead (adult)      | 07:00   | 07:00   | 08:00   | 21:30   |\nB      | Support (adult)   | 07:00   | 07:00   | 08:00   | 19:00   |\nC      | Support (adult)   | 07:00   | 07:00   | 08:00   | 19:00   |\nM      | Minor, 14, CA res.| 07:00   | 07:15   | 08:00   | 21:30   | studio teacher on set\n\nSTUDIO TEACHER: 1 minor on set; teacher call 07:00.\n\nADVANCE SCHEDULE\n----------------\nDay 4 (Fri Oct 9): County Road EXT scenes - no minor call.\nDay 5 (Mon Oct 12): Packing Shed scenes - adult cast only.\n\nThis document is constructed demo data. Times and pages are inputs for HOLD to judge; the call\nsheet itself makes no legality claim.\n"
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "{\n \"status\": \"ok\",\n \"schedule\": {\n  \"scenes\": [\n   {\n    \"id\": \"s2\",\n    \"number\": 2,\n    \"int_ext\": \"INT\",\n    \"day_night\": \"DAY\",\n    \"set\": \"Farmhouse Kitchen\",\n    \"pages_eighths\": 12,\n    \"cast_ids\": [\n     \"cA\",\n     \"cM\"\n    ],\n    \"location_id\": \"farmhouse\"\n   },\n   {\n    \"id\": \"s8\",\n    \"number\": 8,\n    \"int_ext\": \"INT\",\n    \"day_night\": \"DAY\",\n    \"set\": \"Farmhouse Kitchen\",\n    \"pages_eighths\": 16,\n    \"cast_ids\": [\n     \"cA\",\n     \"cB\",\n     \"cM\"\n    ],\n    \"location_id\": \"farmhouse\"\n   },\n   {\n    \"id\": \"s5\",\n    \"number\": 5,\n    \"int_ext\": \"EXT\",\n    \"day_night\": \"DAY\",\n    \"set\": \"Peach Orchard\",\n    \"pages_eighths\": 14,\n    \"cast_ids\": [\n     \"cA\",\n     \"cC\",\n     \"cM\"\n    ],\n    \"location_id\": \"orchard\"\n   }\n  ],\n  \"cast\": [\n   {\n    \"id\": \"cA\",\n    \"letter\": \"A\",\n    \"age\": null,\n    \"resident_state\": null,\n    \"day_rate_cents\": null,\n    \"rate_tier\": \"low_budget\"\n   },\n   {\n    \"id\": \"cB\",\n    \"letter\": \"B\",\n    \"age\": null,\n    \"resident_state\": null,\n    \"day_rate_cents\": null,\n    \"rate_tier\": \"low_budget\"\n   },\n   {\n    \"id\": \"cC\",\n    \"letter\": \"C\",\n    \"age\": null,\n    \"resident_state\": null,\n    \"day_rate_cents\": null,\n    \"rate_tier\": \"low_budget\"\n   },\n   {\n    \"id\": \"cM\",\n    \"letter\": \"M\",\n    \"age\": 14,\n    \"resident_state\": \"CA\",\n    \"day_rate_cents\": null,\n    \"rate_tier\": \"low_budget\"\n   }\n  ],\n  \"days\": [\n   {\n    \"date\": \"2026-10-08\",\n    \"call\": \"07:00:00\",\n    \"wrap\": \"21:30:00\",\n    \"school_day\": true,\n    \"school_night\": null\n   }\n  ],\n  \"constraints\": [],\n  \"jurisdiction\": {\n   \"shoot_state\": \"GA\"\n  },\n  \"constructed\": true,\n  \"overnight_location\": false\n },\n \"questions\": [\n  \"Day rates and rate tier for A, B, C and M are not on the call sheet; which tier and rates apply?\"\n ],\n \"notes\": \"Three scenes, four cast, one day read from the call sheet; the minor's age and residence are stated on the cast line.\"\n}"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [],
+            "tool_responses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "hold",
+        "user_id": "eval",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "nl_constraints",
+      "conversation": [
+        {
+          "invocation_id": "nl_constraints-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Constructed demo data. Georgia shoot, two days: Monday October 5 2026 07:00 to 19:00 (school day) and Tuesday October 6 2026 07:00 to 19:00 (school day). Scenes: 2 INT Kitchen DAY, 1 page, cast A and C, at the farmhouse; 7 EXT Orchard DAY, 2 pages, cast A, at the orchard. Cast: A adult, C adult, both low budget at $834 a day. Actor C is unavailable on day 1. Scene 7 must shoot before scene 2."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "{\n \"status\": \"ok\",\n \"schedule\": {\n  \"scenes\": [\n   {\n    \"id\": \"s2\",\n    \"number\": 2,\n    \"int_ext\": \"INT\",\n    \"day_night\": \"DAY\",\n    \"set\": \"Kitchen\",\n    \"pages_eighths\": 8,\n    \"cast_ids\": [\n     \"cA\",\n     \"cC\"\n    ],\n    \"location_id\": \"farmhouse\"\n   },\n   {\n    \"id\": \"s7\",\n    \"number\": 7,\n    \"int_ext\": \"EXT\",\n    \"day_night\": \"DAY\",\n    \"set\": \"Orchard\",\n    \"pages_eighths\": 16,\n    \"cast_ids\": [\n     \"cA\"\n    ],\n    \"location_id\": \"orchard\"\n   }\n  ],\n  \"cast\": [\n   {\n    \"id\": \"cA\",\n    \"letter\": \"A\",\n    \"age\": null,\n    \"resident_state\": null,\n    \"day_rate_cents\": 83400,\n    \"rate_tier\": \"low_budget\"\n   },\n   {\n    \"id\": \"cC\",\n    \"letter\": \"C\",\n    \"age\": null,\n    \"resident_state\": null,\n    \"day_rate_cents\": 83400,\n    \"rate_tier\": \"low_budget\"\n   }\n  ],\n  \"days\": [\n   {\n    \"date\": \"2026-10-05\",\n    \"call\": \"07:00:00\",\n    \"wrap\": \"19:00:00\",\n    \"school_day\": true,\n    \"school_night\": null\n   },\n   {\n    \"date\": \"2026-10-06\",\n    \"call\": \"07:00:00\",\n    \"wrap\": \"19:00:00\",\n    \"school_day\": true,\n    \"school_night\": null\n   }\n  ],\n  \"constraints\": [\n   {\n    \"type\": \"availability\",\n    \"cast_id\": \"cC\",\n    \"scene_id_a\": null,\n    \"scene_id_b\": null,\n    \"unavailable_day_indices\": [\n     0\n    ]\n   },\n   {\n    \"type\": \"precedence\",\n    \"cast_id\": null,\n    \"scene_id_a\": \"s7\",\n    \"scene_id_b\": \"s2\",\n    \"unavailable_day_indices\": null\n   }\n  ],\n  \"jurisdiction\": {\n   \"shoot_state\": \"GA\"\n  },\n  \"constructed\": true,\n  \"overnight_location\": false\n },\n \"questions\": [],\n \"notes\": \"Day 1 is index 0; scene 7 before scene 2 is a precedence constraint.\"\n}"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [],
+            "tool_responses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "hold",
+        "user_id": "eval",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "ambiguity_refusal",
+      "conversation": [
+        {
+          "invocation_id": "ambiguity_refusal-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Three scenes with the minor tomorrow, usual times."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "{\n \"status\": \"needs_clarification\",\n \"schedule\": null,\n \"questions\": [\n  \"Which scenes (numbers, sets, interior or exterior, day or night, page counts, cast)?\",\n  \"What is the date, the crew call and the wrap, and is it a school day?\",\n  \"Who is the minor (age, state of residence) and which state is the shoot in?\",\n  \"What rate tier and day rates apply?\"\n ],\n \"notes\": \"Nothing in the note states a scene, a time, a date, an age or a state, so no schedule is guessed.\"\n}"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [],
+            "tool_responses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "hold",
+        "user_id": "eval",
+        "state": {}
+      }
+    },
+    {
+      "eval_id": "rule_lookup_trajectory",
+      "conversation": [
+        {
+          "invocation_id": "rule_lookup_trajectory-1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Quote the Georgia earliest call rule, rule id GA_300_7_1_03_earliest_call, with its citation."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "{\n \"status\": \"needs_clarification\",\n \"schedule\": null,\n \"questions\": [],\n \"notes\": \"GA_300_7_1_03_earliest_call, Ga. Comp. R. & Regs. 300-7-1-.03: \\\"No work day shall start earlier than 5:00 A.M.\\\" (Georgia Department of Labor, rules.sos.ga.gov/gac/300-7-1). No document to extract, so no schedule.\"\n}"
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "lookup_rule",
+                "args": {
+                  "rule_id": "GA_300_7_1_03_earliest_call"
+                }
+              }
+            ],
+            "tool_responses": [],
+            "intermediate_responses": []
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "hold",
+        "user_id": "eval",
+        "state": {}
+      }
+    }
+  ]
+}

@@ -80,3 +80,18 @@ def test_extract_live_path_needs_a_project(monkeypatch: pytest.MonkeyPatch) -> N
     assert is_configured() is False
     response = TestClient(app).post("/api/extract", json={"text": "INT. KITCHEN - DAY"})
     assert response.status_code == 503 and "GOOGLE_CLOUD_PROJECT" in response.json()["detail"]
+
+
+def test_evalset_loads_and_names_the_tool_trajectory() -> None:
+    """Task 3.4 draft: four text cases in ADK eval format; the score itself needs credentials."""
+    from google.adk.evaluation.eval_set import EvalSet
+
+    folder = ROOT / "api" / "agents" / "hold_agent"
+    evalset = EvalSet.model_validate_json((folder / "evalset.json").read_text())
+    assert [c.eval_id for c in evalset.eval_cases] == ["extract_callsheet", "nl_constraints", "ambiguity_refusal", "rule_lookup_trajectory"]
+    lookup = evalset.eval_cases[-1]
+    assert lookup.conversation is not None
+    tool_uses = lookup.conversation[0].intermediate_data.tool_uses  # type: ignore[union-attr]
+    assert [(t.name, t.args) for t in tool_uses] == [("lookup_rule", {"rule_id": "GA_300_7_1_03_earliest_call"})]
+    config = json.loads((folder / "test_config.json").read_text())
+    assert set(config["criteria"]) == {"tool_trajectory_avg_score", "final_response_match_v2"}
