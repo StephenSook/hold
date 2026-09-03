@@ -1,0 +1,192 @@
+{
+  "_note": "Seven consecutive shoot dates (Oct 5 to Oct 11), each 07:00 to 11:00, non-school, M in one 1-hour scene per day. On day 7 the GA six-consecutive-days rule alone makes the day impossible; turnaround is 20 hours every night.",
+  "_check_day_index": 6,
+  "_day_scene_ids": {
+    "0": [
+      "s1"
+    ],
+    "1": [
+      "s2"
+    ],
+    "2": [
+      "s3"
+    ],
+    "3": [
+      "s4"
+    ],
+    "4": [
+      "s5"
+    ],
+    "5": [
+      "s6"
+    ],
+    "6": [
+      "s7"
+    ]
+  },
+  "_expected_status": "ILLEGAL",
+  "_expected_core": [
+    "GA_300_7_1_03_consecutive_days"
+  ],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s4",
+      "number": 4,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s5",
+      "number": 5,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s6",
+      "number": 6,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s7",
+      "number": 7,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-05",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-06",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-07",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-08",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-09",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-10",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-11",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": false
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

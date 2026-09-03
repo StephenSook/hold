@@ -1,0 +1,113 @@
+{
+  "_note": "Minor M (14, CA resident) opens and closes a 12-hour GA day with three adult scenes between: 1h + 4h + 4h + 1h + 1h in fixed order, so M cannot be dismissed less than 11 hours after call. Only the GA 10-hour location cap makes the day impossible on its own; work is 2h. All days non-school.",
+  "_check_day_index": 0,
+  "_day_scene_ids": {
+    "0": [
+      "s1",
+      "s2",
+      "s3",
+      "s4",
+      "s5"
+    ]
+  },
+  "_expected_status": "ILLEGAL",
+  "_expected_core": [
+    "GA_300_7_1_03_ages_9_15_location_hours"
+  ],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 32,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 32,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s4",
+      "number": 4,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s5",
+      "number": 5,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-05",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

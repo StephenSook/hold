@@ -1,0 +1,84 @@
+{
+  "_note": "Day 0 (Oct 7, non-school) wraps at 22:00. Day 1 (Oct 8, a school day) runs 07:00 to 11:00 with M's 2-hour scene. Twelve hours of rest means M cannot be called before 10:00 and cannot finish by 11:00. GA turnaround (working during school hours), SAG-AFTRA P22 (school day) and 8 CCR 11760(i) each make the day impossible on their own.",
+  "_check_day_index": 1,
+  "_day_scene_ids": {
+    "0": [
+      "s1"
+    ],
+    "1": [
+      "s2"
+    ]
+  },
+  "_expected_status": "ILLEGAL",
+  "_expected_core": [
+    "GA_300_7_1_03_turnaround_school_hours",
+    "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY",
+    "CA_11760_i_turnaround_12_hours"
+  ],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 16,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-07",
+      "call": "07:00:00",
+      "wrap": "22:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-08",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": true
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

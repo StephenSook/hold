@@ -1,0 +1,85 @@
+{
+  "_note": "Non-school GA day 07:00 to 16:00: M 2h, A 2h, M 1h in order. A legal timing exists (M on set about five hours, three of them work); pass 1 returns LEGAL with a witness call sheet that the checker passes. The crew-window proxy alone would over-flag this day.",
+  "_check_day_index": 0,
+  "_day_scene_ids": {
+    "0": [
+      "s1",
+      "s2",
+      "s3"
+    ]
+  },
+  "_expected_status": "LEGAL",
+  "_expected_core": [],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 16,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 16,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-05",
+      "call": "07:00:00",
+      "wrap": "16:00:00",
+      "school_day": false
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

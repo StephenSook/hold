@@ -1,0 +1,93 @@
+{
+  "_note": "Night before a school day, GA shoot, window 14:00 to 23:00 with two 3-hour adult scenes before M's 3-hour scene in fixed order: M cannot be dismissed before 23:00. GA 10 p.m. school-night curfew (ages 9 to 15) and Cal. Lab. Code 1308.7(a) each make the day impossible on their own. Day 0 itself is not a school day; day 1 is.",
+  "_check_day_index": 0,
+  "_day_scene_ids": {
+    "0": [
+      "s1",
+      "s2",
+      "s3"
+    ]
+  },
+  "_expected_status": "ILLEGAL",
+  "_expected_core": [
+    "GA_300_7_1_03_school_night_curfew",
+    "CA_1308_7_curfew_school_night"
+  ],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 24,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 24,
+      "cast_ids": [
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "EXT",
+      "day_night": "NIGHT",
+      "set": "Orchard",
+      "pages_eighths": 24,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-07",
+      "call": "14:00:00",
+      "wrap": "23:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-08",
+      "call": "07:00:00",
+      "wrap": "11:00:00",
+      "school_day": true
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}

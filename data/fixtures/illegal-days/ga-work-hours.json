@@ -1,0 +1,74 @@
+{
+  "_note": "Minor M has two 3-hour scenes (6h of work) inside a 7-hour non-school GA day. Work minutes are fixed by the scene list, so no timing helps: GA 5-hour work cap for ages 9 to 15 alone makes the day impossible. CA non-school 8h cap and GA 10h location cap are satisfied.",
+  "_check_day_index": 0,
+  "_day_scene_ids": {
+    "0": [
+      "s1",
+      "s2"
+    ]
+  },
+  "_expected_status": "ILLEGAL",
+  "_expected_core": [
+    "GA_300_7_1_03_ages_9_15_work_hours"
+  ],
+  "_heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16)",
+  "scenes": [
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 24,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Orchard",
+      "pages_eighths": 24,
+      "cast_ids": [
+        "cM",
+        "cA"
+      ],
+      "location_id": "loc1"
+    }
+  ],
+  "cast": [
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 81000,
+      "rate_tier": "low_budget"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-10-05",
+      "call": "07:00:00",
+      "wrap": "14:00:00",
+      "school_day": false
+    }
+  ],
+  "constraints": [],
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true
+}
