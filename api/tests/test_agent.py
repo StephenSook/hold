@@ -44,20 +44,20 @@ def test_agent_shape() -> None:
 
 
 def test_guard_refuses_a_tool_outside_the_allowlist() -> None:
-    refusal = guard_tool_call(_Rogue(), {}, None)  # type: ignore[arg-type]
+    refusal = guard_tool_call(_Rogue(), {}, _Ctx())  # type: ignore[arg-type]
     assert refusal is not None and "not allowed" in refusal["error"]
     assert refusal["allowed"] == sorted(ALLOWED_TOOLS)
 
 
 def test_guard_refuses_an_invalid_argument_with_a_named_field() -> None:
     tool = FunctionTool(check_legality)
-    refusal = guard_tool_call(tool, {"schedule": _demo(), "day_index": -1}, None)  # type: ignore[arg-type]
+    refusal = guard_tool_call(tool, {"schedule": _demo(), "day_index": -1}, _Ctx())  # type: ignore[arg-type]
     assert refusal is not None and refusal["field"] == "day_index", refusal
-    missing = guard_tool_call(FunctionTool(lookup_rule), {}, None)  # type: ignore[arg-type]
+    missing = guard_tool_call(FunctionTool(lookup_rule), {}, _Ctx())  # type: ignore[arg-type]
     assert missing is not None and missing["field"] == "rule_id"
-    bad_schedule = guard_tool_call(tool, {"schedule": {"scenes": []}, "day_index": 0}, None)  # type: ignore[arg-type]
+    bad_schedule = guard_tool_call(tool, {"schedule": {"scenes": []}, "day_index": 0}, _Ctx())  # type: ignore[arg-type]
     assert bad_schedule is not None and bad_schedule["field"].startswith("schedule")
-    assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, None) is None  # type: ignore[arg-type]
+    assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, _Ctx()) is None  # type: ignore[arg-type]
 
 
 def test_tools_answer_with_plain_dicts() -> None:
@@ -143,16 +143,24 @@ def test_guard_ends_a_refusal_loop_with_a_terminal_answer() -> None:
     refusals = [guard_tool_call(tool, bad, ctx) for _ in range(MAX_TOOL_CALLS_PER_REQUEST)]  # type: ignore[arg-type]
     assert all(r is not None and r.get("field") for r in refusals)
     terminal = guard_tool_call(tool, bad, ctx)  # type: ignore[arg-type]
-    assert terminal is not None and terminal["stop"] is True
+    assert terminal is not None and "instruction" in terminal
     assert "no more tool calls" in terminal["error"] and "needs_clarification" in terminal["instruction"]
     assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, ctx) is not None  # type: ignore[arg-type]  # budget spent: even a valid call is refused now
     assert guard_tool_call(tool, {"schedule": _demo(), "day_index": 0}, _Ctx()) is None  # type: ignore[arg-type]  # a new request starts fresh
 
 
-def test_guard_tolerates_a_context_without_state() -> None:
+def test_guard_refuses_a_tool_call_it_cannot_count() -> None:
+    """Round five, finding 6: without state the budget could not be counted and every call went through
+    (ten valid calls, ten allowances). A call the guard cannot count is refused, fail closed."""
+    from types import SimpleNamespace
+
     from api.agents.hold_agent.callbacks import guard_tool_call
 
-    assert guard_tool_call(FunctionTool(lookup_rule), {"rule_id": "GA_300_7_1_03_earliest_call"}, None) is None  # type: ignore[arg-type]
+    tool = SimpleNamespace(name="lookup_rule")
+    answer = guard_tool_call(tool, {"rule_id": "GA_300_7_1_03_earliest_call"}, None)  # type: ignore[arg-type]
+    assert answer is not None and "count" in answer["error"]
+    answer = guard_tool_call(tool, {"rule_id": "GA_300_7_1_03_earliest_call"}, SimpleNamespace())  # type: ignore[arg-type]
+    assert answer is not None and "count" in answer["error"]
 
 
 def test_malformed_base64_is_a_client_error_not_a_500(monkeypatch: pytest.MonkeyPatch) -> None:
