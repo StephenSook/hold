@@ -24,6 +24,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -101,7 +102,7 @@ def pdf_text(raw: bytes) -> str | None:
     return text or None
 
 
-def classify(fetched: Fetched, quotes: list[str]) -> str:
+def classify(fetched: Fetched, quotes: list[str], extract: Callable[[bytes], str | None] = pdf_text) -> str:
     """What the fetched body says about the snapshot, judged by content: unchanged, drifted, refused,
     blocked (the site turns scripts away), unreadable (a PDF whose text cannot be extracted) or error.
     A PDF is read the same way an HTML page is: its text must contain every quote (round nine, finding 1)."""
@@ -110,8 +111,8 @@ def classify(fetched: Fetched, quotes: list[str]) -> str:
     if fetched.status != 200:
         return "error"
     if fetched.is_pdf:
-        text = pdf_text(fetched.raw or fetched.body.encode("utf-8", "ignore"))
-        if text is None:
+        text = extract(fetched.raw or fetched.body.encode("utf-8", "ignore"))
+        if not text:  # no text at all is an unreadable document, never evidence that the quote is gone
             return "unreadable" if (fetched.raw or fetched.body.encode()).startswith(b"%PDF-") else "refused"
         variants = (normalize(text), normalize(text))
         return "unchanged" if all(quote_matches(q, variants) for q in quotes) else "drifted"

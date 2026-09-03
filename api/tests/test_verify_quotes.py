@@ -2,6 +2,8 @@
 content, never by status code."""
 from __future__ import annotations
 
+import shutil
+import pytest
 from pathlib import Path
 
 from scripts.verify_quotes import Fetched, classify, plan
@@ -73,8 +75,20 @@ def _pdf(text: str) -> bytes:
 
 def test_a_pdf_is_judged_by_its_extracted_text_not_its_magic_bytes() -> None:
     """Round nine, finding 1: any body starting with %PDF was called unchanged without reading it, so
-    five sources carrying 23 verified records were reported as checked when nothing was compared."""
+    five sources carrying 23 verified records were reported as checked when nothing was compared. The
+    extractor is injected here, so this asserts the decision and not whether poppler is installed."""
+    quote = "No work day shall start earlier than 5:00 A.M."
+    pdf = Fetched(status=200, body="", is_pdf=True, raw=b"%PDF-1.4 whatever bytes")
+    assert classify(pdf, [quote], extract=lambda raw: f"preamble {quote} tail") == "unchanged"
+    assert classify(pdf, [quote], extract=lambda raw: "an unrelated sentence") == "drifted"
+    assert classify(pdf, [quote], extract=lambda raw: None) == "unreadable"
+    assert classify(pdf, [quote], extract=lambda raw: "") == "unreadable"
+
+
+@pytest.mark.skipif(shutil.which("pdftotext") is None, reason="poppler is not installed on this machine; the injected-extractor test above covers the decision")
+def test_the_default_extractor_reads_a_real_pdf() -> None:
+    """Where poppler exists, prove the shipped default actually reads a document rather than only the
+    injected stub. CI has no poppler, so this runs on a developer machine and the operator script."""
     quote = "No work day shall start earlier than 5:00 A.M."
     assert classify(Fetched(status=200, body="", is_pdf=True, raw=_pdf(quote)), [quote]) == "unchanged"
     assert classify(Fetched(status=200, body="", is_pdf=True, raw=_pdf("an unrelated sentence")), [quote]) == "drifted"
-    assert classify(Fetched(status=200, body="", is_pdf=True, raw=b"%PDF-1.4 not really a pdf"), [quote]) == "unreadable"
