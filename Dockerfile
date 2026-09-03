@@ -48,4 +48,6 @@ RUN uv sync --frozen --no-dev
 ENV PYTHONUNBUFFERED=1
 EXPOSE 8080
 
-CMD ["uv", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# The venv is built above; running its uvicorn directly skips the environment re-sync that
+# `uv run` performs at every start (measured: about 15 s before the first request answered).
+CMD ["/app/.venv/bin/uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
