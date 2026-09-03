@@ -104,12 +104,12 @@ class JobStore:
             job.result = to_solve_result(outcome)
             job.day_scene_ids = dict(outcome.day_scene_ids)
             job.solve_ms = round(outcome.solve_ms, 1)
-            job.status = "done"
             for p in outcome.pass1:
                 if outcome.day_scene_ids.get(p.verdict.day):
                     verdict_event = VerdictEvent(job_id=job.id, verdict=p.verdict).model_dump(mode="json")
                     BUS.publish(verdict_event)
                     BRIDGE.publish(TOPIC_VERDICTS, job.id, verdict_event)
+            job.status = "done"  # the last write: a client that sees done finds every verdict already published (round six, finding 8)
         except Exception as exc:  # the failure must reach the client, never a silent queued job
             job.error = f"{type(exc).__name__}: {exc}"
             job.status = "failed"

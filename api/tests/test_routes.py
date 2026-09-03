@@ -146,3 +146,33 @@ def test_a_second_set_event_builds_on_the_first_even_before_it_solves(client: Te
     assert chained is not None
     assert "s3" not in {s.id for s in chained.schedule.scenes}  # the drop survived the second event
     assert any(c.type == "availability" and c.cast_id == "cM" for c in chained.schedule.constraints)
+
+
+def test_verdicts_are_on_the_bus_before_the_job_reads_done(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Round six, finding 8: done was written before the verdict events were published; a client that
+    waited for done and then read the events could miss every verdict. Publishing is slowed so the race
+    is deterministic: the first sighting of done must already carry every verdict."""
+    from api.hold.jobs import JOBS
+
+    real_publish = BUS.publish  # the job store publishes on this same bus object
+
+    def slow_publish(event: dict[str, Any]) -> None:
+        if event.get("event") == "verdict":
+            time.sleep(0.05)
+        real_publish(event)
+
+    monkeypatch.setattr(BUS, "publish", slow_publish)
+    job_id = client.post("/api/solve", json=_demo()).json()["job_id"]
+    deadline = time.monotonic() + 90
+    seen_at_done = -1
+    job = JOBS.get(job_id)
+    assert job is not None
+    while time.monotonic() < deadline:
+        if job.status == "failed":
+            raise AssertionError(job.error)
+        if job.status == "done":
+            seen_at_done = sum(1 for e in BUS.replay(job_id) if e.get("event") == "verdict")
+            break
+        time.sleep(0.001)
+    used = {d for d, ids in job.day_scene_ids.items() if ids}
+    assert seen_at_done == len(used), (seen_at_done, len(used))
