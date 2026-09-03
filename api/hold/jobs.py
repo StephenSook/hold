@@ -77,6 +77,17 @@ class JobStore:
                     return job
         return None
 
+    def latest_base(self) -> Job | None:
+        """The schedule a new set event edits: the most recent job that has not failed, solved or not.
+        A queued or running re-solve already carries its edited schedule, so events chain instead of
+        each editing the last solved plan and the last finish winning (round five, finding 1)."""
+        with self._lock:
+            for job_id in reversed(self._order):
+                job = self._jobs[job_id]
+                if job.status != "failed":
+                    return job
+        return None
+
     def clear(self) -> None:
         with self._lock:
             self._jobs.clear()

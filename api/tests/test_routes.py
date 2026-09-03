@@ -128,3 +128,21 @@ def test_rules_and_bench_routes(client: TestClient) -> None:
     assert all(r["quote"] for r in rules["records"])
     bench = client.get("/api/bench").json()
     assert bench["benchmark_matched"] == json.loads((ROOT / "bench" / "results.json").read_text())["benchmark_matched"]
+
+
+def test_a_second_set_event_builds_on_the_first_even_before_it_solves(client: TestClient) -> None:
+    """Round five, finding 1: two events before the first re-solve finishes must chain, or the second
+    one silently reverts the first (both edited the same solved base and the last finish won)."""
+    from api.hold.jobs import JOBS
+
+    posted = client.post("/api/solve", json=_demo())
+    _wait(client, posted.json()["job_id"])
+    first = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
+    second = client.post("/api/set-events", json={"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "ui"})
+    assert first.status_code == 202, first.text
+    assert second.status_code == 202, second.text
+    assert second.json()["base_job_id"] == first.json()["job_id"]
+    chained = JOBS.get(second.json()["job_id"])
+    assert chained is not None
+    assert "s3" not in {s.id for s in chained.schedule.scenes}  # the drop survived the second event
+    assert any(c.type == "availability" and c.cast_id == "cM" for c in chained.schedule.constraints)

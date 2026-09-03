@@ -74,9 +74,9 @@ async def events(
 
 @router.post("/api/set-events", status_code=202)
 async def set_event(event: SetEvent) -> dict[str, Any]:
-    base = JOBS.latest_done()
+    base = JOBS.latest_base()
     if base is None:
-        raise HTTPException(status_code=409, detail="no solved schedule to apply the event to; POST /api/solve first")
+        raise HTTPException(status_code=409, detail="no schedule to apply the event to; POST /api/solve first")
     try:
         edited, change = apply_set_event(base.schedule, event)
     except SetEventError as exc:
@@ -90,9 +90,9 @@ async def set_event(event: SetEvent) -> dict[str, Any]:
 
 
 def handle_external_set_event(payload: dict[str, Any]) -> str | None:
-    """A set event published on hold.set-events by another producer: edit the latest solved schedule
-    and queue a re-solve, exactly like the route does for a POST."""
-    base = JOBS.latest_done()
+    """A set event published on hold.set-events by another producer: edit the latest schedule (solved
+    or still solving, so consecutive events chain) and queue a re-solve, exactly like the route does."""
+    base = JOBS.latest_base()
     if base is None:
         return None
     event = SetEvent.model_validate(payload)
