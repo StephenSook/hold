@@ -21,7 +21,7 @@ task and is not described here; every step is the API and the repository.
    has one illegal day and four hold days.
 5. **The set changes.** `POST /api/set-events` with
    `{"kind": "scene_dropped", "payload": {"scene_id": "s6"}, "source": "ui"}`. The response names
-   the new job, the plan it edited and the transport that carried the event; `GET /api/events?job_id=...&limit=5&timeout_s=10`
+   the new job, the plan it edited and the transport that carried the event; `GET /api/events?job_id=...&replay=true&limit=5&timeout_s=10`
    streams the objective and the verdicts as they land. Once the broker is connected (see `runtime.confluent` on the status page) the same event goes on
    `hold.set-events` and the verdicts come back on `hold.verdicts`.
 6. **The residual, on your machine.** `git clone https://github.com/StephenSook/hold && cd hold && uv sync && uv run pytest api/tests/test_residual.py -v`
