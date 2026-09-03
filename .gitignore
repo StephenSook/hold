@@ -9,10 +9,9 @@
 /research/
 /private/
 
-# Assistant config stays local (strategy-laden, never committed)
-/CLAUDE.md
-# /AGENTS.md  -- committed as Bob evidence per PLAN.md
-.claude/
+# Editor and assistant local config (AGENTS.md is committed as Bob evidence per PLAN.md)
+*.local.json
+
 .playwright-mcp/
 
 # Env + secrets
@@ -61,7 +60,6 @@ blob-report/
 /scratch/
 
 # Added 2026-09-02 (HOLD Phase 0)
-.mcp.json
 .cursor/
 .cursorrules
 .github/copilot-instructions.md

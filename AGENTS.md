@@ -87,5 +87,5 @@ The server is not mounted in production; it runs over stdio for Bob only.
 
 ## What never gets committed
 
-`private/`, `*.pdf`, `CLAUDE.md`, `.env`, anything under `docs/video/raw/`, `*.jks`,
+`private/`, `*.pdf`, `.env`, anything under `docs/video/raw/`, `*.jks`,
 `*.keystore`, `rules/sources-cache/`, assistant config files.
