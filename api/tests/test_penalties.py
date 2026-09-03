@@ -5,7 +5,8 @@ D7: no inline numeric assertions - values derived from the rules YAML via the ca
 """
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
+from pathlib import Path
 
 import pytest
 
@@ -128,3 +129,54 @@ def test_a_date_no_rate_record_covers_is_refused_not_defaulted() -> None:
     member = CastMember(id="cA", letter="A", age=None, resident_state=None, day_rate_cents=10000, rate_tier="low_budget")
     with pytest.raises(RatesError, match="2019-01-01"):
         hold_day_cost_cents(member, date(2019, 1, 1))
+
+
+# ---- Task 2.11: rest periods, forced calls and meal penalties (SAG-AFTRA), integer cents ----
+
+
+def _lba(day_rate_cents: int) -> CastMember:
+    return CastMember(id="cA", letter="A", age=None, resident_state=None, day_rate_cents=day_rate_cents, rate_tier="low_budget")
+
+
+def test_forced_call_is_the_lesser_of_the_day_rate_and_900_dollars() -> None:
+    from api.hold.penalties import forced_call_penalty_cents
+
+    assert forced_call_penalty_cents(_lba(83400), date(2026, 10, 8)) == 83400  # $834 LBA day rate
+    assert forced_call_penalty_cents(_lba(100000), date(2026, 10, 8)) == 90000  # $1,000 rate capped at $900
+    assert forced_call_penalty_cents(_lba(100000), date(2026, 10, 8), weekly=True) == 95000  # weekly cap $950
+    assert forced_call_penalty_cents(_lba(83400), date(2026, 10, 8), weekly=True) == 83400
+
+
+def test_meal_penalty_ladder_by_half_hour_or_fraction() -> None:
+    from api.hold.penalties import meal_penalty_cents
+
+    d = date(2026, 10, 8)
+    assert meal_penalty_cents(0, d, "low_budget") == 0
+    assert meal_penalty_cents(1, d, "low_budget") == 2500  # first half-hour or fraction: $25
+    assert meal_penalty_cents(30, d, "low_budget") == 2500
+    assert meal_penalty_cents(35, d, "low_budget") == 6000  # $25 + $35
+    assert meal_penalty_cents(95, d, "low_budget") == 16000  # $25 + $35 + $50 + $50
+    assert meal_penalty_cents(95, d, "ultra_low") == 10000  # flat $25 per half-hour or part
+
+
+def test_rest_period_violations_use_the_12_and_56_hour_rules() -> None:
+    from api.hold.penalties import daily_rest_violated, weekly_rest_violated
+
+    d = date(2026, 10, 8)
+    assert daily_rest_violated(datetime(2026, 10, 7, 22, 0), datetime(2026, 10, 8, 9, 0), d)  # 11 h
+    assert not daily_rest_violated(datetime(2026, 10, 7, 22, 0), datetime(2026, 10, 8, 10, 0), d)  # 12 h exactly
+    assert weekly_rest_violated(datetime(2026, 10, 9, 20, 0), datetime(2026, 10, 12, 3, 0), d)  # 55 h
+    assert not weekly_rest_violated(datetime(2026, 10, 9, 20, 0), datetime(2026, 10, 12, 4, 0), d)  # 56 h
+
+
+def test_penalty_records_never_reach_the_minor_checker() -> None:
+    from api.hold.legality_checker import rule_applies_to_minor
+    from api.hold.registry import load_rules
+
+    penalty_ids = {"SAG_RATES_REST_PERIOD_12_HOURS", "SAG_RATES_MEAL_PENALTY_LADDER", "SAG_RATES_FORCED_CALL_DAY_PERFORMER"}
+    rules = {r.id: r for r in load_rules(Path("rules"))}
+    assert penalty_ids <= set(rules)
+    minor = CastMember(id="cM", letter="M", age=14, resident_state="CA", day_rate_cents=83400, rate_tier="low_budget")
+    for rid in penalty_ids:
+        assert rules[rid].params.get("kind") == "penalty"
+        assert not rule_applies_to_minor(rules[rid], minor, "GA")

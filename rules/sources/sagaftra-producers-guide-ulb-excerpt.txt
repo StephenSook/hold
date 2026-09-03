@@ -1,0 +1,15 @@
+# Excerpt of https://www.sagaftra.org/sites/default/files/producers_guide_ultra_low_budget_9_34.pdf
+# captured 2026-09-03T16:18:00+00:00 through a server-side rendering fetch of the PDF (sagaftra.org answers HTTP 403 to scripted fetches, so there are no original bytes and no sha256(original)); excerpt of the Meal Periods and Rest Periods sections of Producers Guide Ultra Low Budget 9.34, page 6 of 8; sha256(text) is over the body below this header f7fd285a611f428c28a7175938c0d5a9d30a3736e2d5ffcccb5c57b235559c72
+# Plain text for substring verification of rules/*.yaml quotes.
+
+Meal Periods
+Meal periods are due every six hours. The minimum is 30 minutes and the 
+maximum is one hour in length. The penalty is $25 for each half-hour or part of 
+an hour (for instance if the meal period is 35 minutes late, the penalty will be $50 
+for each performer affected).
+
+Rest Periods
+Performers are due a 12-hour rest period once they are dismissed from the set. 
+If it’s an overnight location then the 12 hours begin when the performer arrives 
+back at the hotel (set to set for locations within the studio zone, hotel to hotel for 
+overnight locations).

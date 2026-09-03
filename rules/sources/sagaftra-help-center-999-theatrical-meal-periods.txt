@@ -1,0 +1,15 @@
+# Excerpt of https://servicesagaftra.custhelp.com/app/answers/detail/a_id/999
+# fetched_at 2026-09-03T16:19:00+00:00 sha256(original) 8b691bf90307ed827d842cb64a1939bd478d6389af7640931ae3b7d5cb612030 bytes 26653
+# Plain text derived from the original for substring verification of rules/*.yaml quotes. Excerpt only; the full document is copyrighted and its sha256 is recorded above.
+# SAG-AFTRA Help Center answer 999, How do Theatrical meal periods work?
+
+If you have a specific question about meal periods or need further information, please contact a Business Representative at your SAG-AFTRA local office.
+The performer must be given the first meal break within six hours from the time of first call. The second meal break must be called within six hours from the time of call back from the first meal break. Each meal break must be no less than thirty minutes, but the Producer can deduct actual time up to one hour spent at meals.
+The provisions for meal periods are the same for all principal performers.
+Please note that for the purpose of synchronizing performer and crew meal-time, the performer may be given a non-deductible meal of 15 minutes free from all activity within two hours of the performer’s call time. A notation indicating the start and finish time of the non-deductible meal must be on the production time report.
+The first meal break would then be due six hours from the end of the non-deductible meal.
+Meal penalty payments for violations of either meal period are:
+• For the first half-hour, or fraction thereof: $25
+• For the second half-hour, or fraction thereof: $35
+• For each half-hour thereafter, or fraction thereof: $50
+Note: For productions under the Student Film Agreement and Short Project Agreement, the meal penalty amount is reduced to $25/half-hour or fraction thereof.

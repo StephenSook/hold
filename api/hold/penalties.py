@@ -9,7 +9,7 @@ This module computes the raw values; facts.py writes the headline.
 """
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -59,6 +59,49 @@ def hold_day_cost_cents(
     ph_cents = int(ph_exact.quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
     return day_rate + ph_cents
+
+
+def _record(rule_id: str, shooting_date: date, rules_dir: Path | None) -> RuleRecord:
+    rules = load_rules(rules_dir or _RULES_DIR, shooting_date=shooting_date, jurisdictions={"SAG-AFTRA"})
+    for rule in rules:
+        if rule.id == rule_id:
+            return rule
+    raise RatesError(f"no {rule_id} record covers {shooting_date.isoformat()}")
+
+
+def forced_call_penalty_cents(cast_member: CastMember, shooting_date: date, weekly: bool = False, rules_dir: Path | None = None) -> int:
+    """Task 2.11: a forced call (a daily or weekly rest period invaded) costs the lesser of the day
+    rate and the record's cap ($900 day performer, $950 weekly performer), per violation."""
+    rule_id = "SAG_RATES_FORCED_CALL_WEEKLY_PERFORMER" if weekly else "SAG_RATES_FORCED_CALL_DAY_PERFORMER"
+    cap = int(_record(rule_id, shooting_date, rules_dir).params["forced_call_cap_cents"])
+    return min(cast_member.day_rate_cents, cap)
+
+
+def meal_penalty_cents(late_minutes: int, shooting_date: date, rate_tier: str, rules_dir: Path | None = None) -> int:
+    """Task 2.11: meal penalty for a meal called `late_minutes` past its due time, per performer.
+    Ladder $25, $35, then $50 per half-hour or fraction; Ultra Low Budget pays a flat $25 per half-hour or part."""
+    if late_minutes <= 0:
+        return 0
+    blocks = -(-late_minutes // 30)  # ceiling: any fraction of a half-hour counts
+    if rate_tier == "ultra_low":
+        flat = int(_record("SAG_RATES_MEAL_PENALTY_ULTRA_LOW_FLAT", shooting_date, rules_dir).params["meal_penalty_per_half_hour_cents"])
+        return blocks * flat
+    params = _record("SAG_RATES_MEAL_PENALTY_LADDER", shooting_date, rules_dir).params
+    first, second, further = (int(params[k]) for k in ("meal_penalty_first_half_hour_cents", "meal_penalty_second_half_hour_cents", "meal_penalty_each_further_half_hour_cents"))
+    return sum(first if i == 0 else second if i == 1 else further for i in range(blocks))
+
+
+def daily_rest_violated(dismissal: datetime, next_call: datetime, shooting_date: date, rules_dir: Path | None = None) -> bool:
+    """True when the gap from dismissal to the next call is shorter than the daily rest period (12 hours).
+    The record's reduced-rest exceptions are not modeled; the strict figure is used."""
+    hours = int(_record("SAG_RATES_REST_PERIOD_12_HOURS", shooting_date, rules_dir).params["rest_hours"])
+    return next_call - dismissal < timedelta(hours=hours)
+
+
+def weekly_rest_violated(last_dismissal: datetime, first_call: datetime, shooting_date: date, rules_dir: Path | None = None) -> bool:
+    """True when the gap between workweeks is shorter than the weekly rest period (56 hours); exceptions not modeled."""
+    hours = int(_record("SAG_RATES_WEEKLY_REST_56_HOURS", shooting_date, rules_dir).params["weekly_rest_hours"])
+    return first_call - last_dismissal < timedelta(hours=hours)
 
 
 def hold_days_total_cents(

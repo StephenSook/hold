@@ -214,6 +214,11 @@ def is_trust_record(rule: RuleRecord) -> bool:
     return str(rule.params.get("kind", "")) == "trust"
 
 
+def is_penalty_record(rule: RuleRecord) -> bool:
+    """A SAG-AFTRA penalty or rest record (task 2.11): read by api/hold/penalties.py, never a minor's rule."""
+    return str(rule.params.get("kind", "")) == "penalty"
+
+
 def load_rules(
     rules_dir: Path | str,
     shooting_date: date | None = None,

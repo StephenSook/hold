@@ -125,6 +125,33 @@
       "fetched_at": "2026-09-03T02:38:28+00:00",
       "sha256_original": "52b2cc3de6d93c5c1eae0c78686ad8a781865cddea85526e4a3cc3177f55e64e",
       "kind": "full text"
+    },
+    "sagaftra-help-center-999-theatrical-meal-periods.txt": {
+      "url": "https://servicesagaftra.custhelp.com/app/answers/detail/a_id/999",
+      "fetched_at": "2026-09-03T16:19:00+00:00",
+      "sha256_original": "8b691bf90307ed827d842cb64a1939bd478d6389af7640931ae3b7d5cb612030",
+      "kind": "excerpt"
+    },
+    "sagaftra-rest-periods-forced-calls.txt": {
+      "url": "https://www.sagaftra.org/rest-periods-forced-calls-5",
+      "fetched_at": "2026-09-03T16:20:00+00:00",
+      "sha256_original": null,
+      "sha256_text": "20d92726783970ec80683969551e929586cce0fa17ae937f77cd1d54d5236f2c",
+      "kind": "browser capture (site answers 403 to scripts)"
+    },
+    "sagaftra-consecutive-employment-excerpt.txt": {
+      "url": "https://www.sagaftra.org/consecutive-employment",
+      "fetched_at": "2026-09-03T16:24:00+00:00",
+      "sha256_original": null,
+      "sha256_text": "ddcf56b0b32b8713a437642b896ea1719922e6331f7b04434acb7e3e0a5c164f",
+      "kind": "browser capture (site answers 403 to scripts)"
+    },
+    "sagaftra-producers-guide-ulb-excerpt.txt": {
+      "url": "https://www.sagaftra.org/sites/default/files/producers_guide_ultra_low_budget_9_34.pdf",
+      "fetched_at": "2026-09-03T16:18:00+00:00",
+      "sha256_original": null,
+      "sha256_text": "f7fd285a611f428c28a7175938c0d5a9d30a3736e2d5ffcccb5c57b235559c72",
+      "kind": "rendered fetch excerpt (site answers 403 to scripts)"
     }
   },
   "records": {
@@ -394,9 +421,9 @@
       "reason": null
     },
     "SAG_RATES_BASIC_CONSECUTIVE_EMPLOYMENT": {
-      "status": "UNVERIFIABLE",
-      "snapshot": null,
-      "reason": "sagaftra.org returns HTTP 403 to scripted fetches; the sentence was read through a rendering service and is not snapshotted."
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-consecutive-employment-excerpt.txt",
+      "reason": null
     },
     "CA_FAM_6752_c_1_coogan_set_aside": {
       "status": "VERIFIED",
@@ -441,6 +468,41 @@
     "NM_11_1_4_13_e_fifteen_percent_deposit": {
       "status": "VERIFIED",
       "snapshot": "nm-11-1-4-nmac.txt",
+      "reason": null
+    },
+    "SAG_RATES_REST_PERIOD_12_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-rest-periods-forced-calls.txt",
+      "reason": null
+    },
+    "SAG_RATES_WEEKLY_REST_56_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-rest-periods-forced-calls.txt",
+      "reason": null
+    },
+    "SAG_RATES_FORCED_CALL_DAY_PERFORMER": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-rest-periods-forced-calls.txt",
+      "reason": null
+    },
+    "SAG_RATES_FORCED_CALL_WEEKLY_PERFORMER": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-rest-periods-forced-calls.txt",
+      "reason": null
+    },
+    "SAG_RATES_MEAL_PERIOD_6_HOURS": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-help-center-999-theatrical-meal-periods.txt",
+      "reason": null
+    },
+    "SAG_RATES_MEAL_PENALTY_LADDER": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-help-center-999-theatrical-meal-periods.txt",
+      "reason": null
+    },
+    "SAG_RATES_MEAL_PENALTY_ULTRA_LOW_FLAT": {
+      "status": "VERIFIED",
+      "snapshot": "sagaftra-producers-guide-ulb-excerpt.txt",
       "reason": null
     }
   }

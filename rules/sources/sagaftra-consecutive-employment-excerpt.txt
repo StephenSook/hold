@@ -1,0 +1,13 @@
+# Excerpt of https://www.sagaftra.org/consecutive-employment
+# captured 2026-09-03T16:20:00+00:00 from the page's main element as rendered in Chrome: sagaftra.org answers HTTP 403 to scripted fetches, so there are no original bytes and no sha256(original); sha256(text) is over the body below this header ddcf56b0b32b8713a437642b896ea1719922e6331f7b04434acb7e3e0a5c164f
+# Plain text for substring verification of rules/*.yaml quotes.
+
+If you have a specific question about consecutive employment or need further information, please contact a business representative at your SAG-AFTRA local office. Please note there are exceptions to consecutive employment rules under the SAG-AFTRA Low Budget theatrical agreements. Contact a business representative for further information on the Low Budget terms.
+
+Performers shall be paid on a consecutive basis from the first day they are instructed to report for work, subject to the following:
+
+Day Performers:
+
+If, at the time of original engagement, the day performer is given a firm pick-up date which is more than 10 calendar days (for films shooting entirely in the USA) or 14 calendar days (for all other films) after the close of his initial employment, compensation need not be paid for the intervening time.
+
+Performers employed on a daily basis may be called back on a daily or a weekly basis with an "on or after" pick up date, thus allowing Producer a 24 hour leeway.

@@ -1,0 +1,33 @@
+# Snapshot of https://www.sagaftra.org/rest-periods-forced-calls-5
+# captured 2026-09-03T16:20:00+00:00 from the page's main element as rendered in Chrome: sagaftra.org answers HTTP 403 to scripted fetches, so there are no original bytes and no sha256(original); sha256(text) is over the body below this header 20d92726783970ec80683969551e929586cce0fa17ae937f77cd1d54d5236f2c
+# Plain text for substring verification of rules/*.yaml quotes.
+
+If you have a specific question about rest periods or need further information, please contact a business representative at your SAG-AFTRA local office.
+
+Daily Rest Periods for Day, 3-Day (TV only) and Weekly Performers:
+
+• Studio Zone (Theatrical and Television): The performer is entitled to a 12 hour rest period from the time he is dismissed until the first call for the next day. This applies for makeup, wardrobe, hairdress, or any other purpose.
+
+• Location Outside Studio Zone* (Theatrical and Television): The rest period may be reduced from 12 to 10 hours where exterior photography is required on such location on the day before and the day after such reduced rest period. This is applicable once every fourth consecutive day.
+
+• Overnight Location (Theatrical): The rest period may be reduced from 12 hours to 11 hours on any two non-consecutive days in a workweek.
+
+• Overnight Location (Television): There is no reduction of the 12 hour rest period.
+
+*other than an overnight location
+
+Weekly Rest Period:
+
+All performers are entitled to one weekly rest period of 56 hours. The following are exceptions:
+
+• A 56 hour rest period may be reduced to 54 hours provided the call time for the first day of the new workweek is no earlier than 6 am.
+
+• A 36 hour rest period is allowable on a six day location workweek.
+
+Forced Call:
+
+A violation of either daily or weekly rest periods is a forced call. The penalties are:
+
+• Day Performers: Daily rate or $900, whichever is less per violation
+
+• 3-Day/Weekly Performers: one day’s pay or $950, whichever is less per violation

@@ -178,6 +178,132 @@
   valid_to: null
   params:
     hold_days_paid: "always"
-  verified: UNVERIFIABLE
-  note: Read on sagaftra.org on 2026-09-02 through a browser-rendering fetch; the page refuses scripted fetches (HTTP 403), so no snapshot could be committed and the record is UNVERIFIABLE until one is.
+  verified: VERIFIED
+  note: The page answers HTTP 403 to scripted fetches; the snapshot is the page's main text as rendered in Chrome on 2026-09-03 (header states the capture and a sha256 of the text).
 
+- id: SAG_RATES_REST_PERIOD_12_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Rest Periods (Forced Calls), Daily Rest Periods, Studio Zone
+  title: 12-hour rest period from dismissal to the next day's first call
+  quote: |
+    The performer is entitled to a 12 hour rest period from the time he is dismissed until the
+    first call for the next day. This applies for makeup, wardrobe, hairdress, or any other
+    purpose.
+  source_url: https://www.sagaftra.org/rest-periods-forced-calls-5
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    rest_hours: 12
+  verified: VERIFIED
+  note: The page's reductions (10 hours on a location day outside the studio zone, 11 hours on two non-consecutive overnight-location days) are not modeled; the strict figure is used.
+
+- id: SAG_RATES_WEEKLY_REST_56_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Rest Periods (Forced Calls), Weekly Rest Period
+  title: One weekly rest period of 56 hours
+  quote: |
+    All performers are entitled to one weekly rest period of 56 hours.
+  source_url: https://www.sagaftra.org/rest-periods-forced-calls-5
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    weekly_rest_hours: 56
+  verified: VERIFIED
+  note: The page's exceptions (54 hours with a first call no earlier than 6 am, 36 hours on a six-day location week) are not modeled; the strict figure is used.
+
+- id: SAG_RATES_FORCED_CALL_DAY_PERFORMER
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Rest Periods (Forced Calls), Forced Call, Day Performers
+  title: Forced call penalty for a day performer is the lesser of the daily rate and $900
+  quote: |
+    A violation of either daily or weekly rest periods is a forced call. The penalties are:
+
+    • Day Performers: Daily rate or $900, whichever is less per violation
+  source_url: https://www.sagaftra.org/rest-periods-forced-calls-5
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    forced_call_cap_cents: 90000
+  verified: VERIFIED
+  note: null
+
+- id: SAG_RATES_FORCED_CALL_WEEKLY_PERFORMER
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Rest Periods (Forced Calls), Forced Call, 3-Day/Weekly Performers
+  title: Forced call penalty for a weekly performer is the lesser of one day's pay and $950
+  quote: |
+    3-Day/Weekly Performers: one day’s pay or $950, whichever is less per violation
+  source_url: https://www.sagaftra.org/rest-periods-forced-calls-5
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    forced_call_cap_cents: 95000
+  verified: VERIFIED
+  note: null
+
+- id: SAG_RATES_MEAL_PERIOD_6_HOURS
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Help Center, How do Theatrical meal periods work? (answer 999)
+  title: First meal within six hours of first call, each meal at least thirty minutes
+  quote: |
+    The performer must be given the first meal break within six hours from the time of first
+    call. The second meal break must be called within six hours from the time of call back from
+    the first meal break. Each meal break must be no less than thirty minutes, but the Producer
+    can deduct actual time up to one hour spent at meals.
+  source_url: https://servicesagaftra.custhelp.com/app/answers/detail/a_id/999
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    meal_within_minutes: 360
+    min_meal_minutes: 30
+  verified: VERIFIED
+  note: null
+
+- id: SAG_RATES_MEAL_PENALTY_LADDER
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA Help Center, How do Theatrical meal periods work? (answer 999), meal penalty payments
+  title: Meal penalty $25, then $35, then $50 per half-hour or fraction
+  quote: |
+    Meal penalty payments for violations of either meal period are:
+    • For the first half-hour, or fraction thereof: $25
+    • For the second half-hour, or fraction thereof: $35
+    • For each half-hour thereafter, or fraction thereof: $50
+  source_url: https://servicesagaftra.custhelp.com/app/answers/detail/a_id/999
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    meal_penalty_first_half_hour_cents: 2500
+    meal_penalty_second_half_hour_cents: 3500
+    meal_penalty_each_further_half_hour_cents: 5000
+  verified: VERIFIED
+  note: null
+
+- id: SAG_RATES_MEAL_PENALTY_ULTRA_LOW_FLAT
+  jurisdiction: SAG-AFTRA
+  authority: SAG-AFTRA
+  citation: SAG-AFTRA, Producers Guide Ultra Low Budget 9.34, Meal Periods
+  title: Ultra Low Budget meal penalty is a flat $25 per half-hour or part
+  quote: |
+    The penalty is $25 for each half-hour or part of
+    an hour (for instance if the meal period is 35 minutes late, the penalty will be $50
+    for each performer affected).
+  source_url: https://www.sagaftra.org/sites/default/files/producers_guide_ultra_low_budget_9_34.pdf
+  valid_from: "2026-07-01"
+  valid_to: null
+  params:
+    kind: penalty
+    meal_penalty_per_half_hour_cents: 2500
+  verified: VERIFIED
+  note: null
