@@ -9,6 +9,7 @@ import json
 import os
 import urllib.request
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -21,9 +22,15 @@ URL = os.environ.get("HOLD_URL", "https://hold-fwmdq7fc3q-uc.a.run.app")
 
 
 def _extract(text: str) -> ExtractResult:
+    return ExtractResult.model_validate(_extract_raw(text))
+
+
+def _extract_raw(text: str) -> dict[str, Any]:
+    """The live answer as it arrives. A test that has to tell an absent field from a defaulted one
+    must read the body before pydantic fills the schema defaults in."""
     request = urllib.request.Request(f"{URL}/api/extract", data=json.dumps({"text": text}).encode(), headers={"Content-Type": "application/json"}, method="POST")
     with urllib.request.urlopen(request, timeout=120) as response:
-        return ExtractResult.model_validate_json(response.read())
+        return dict(json.loads(response.read()))
 
 
 def _golden(name: str) -> ExtractResult:
@@ -34,7 +41,9 @@ def _golden(name: str) -> ExtractResult:
 @pytest.mark.network
 @pytest.mark.parametrize("name", ["callsheet-day3", "constraints-note"])
 def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
-    got = _extract((SAMPLES / f"{name}.txt").read_text())
+    live_raw = _extract_raw((SAMPLES / f"{name}.txt").read_text())
+    golden_raw = json.loads((GOLDEN / f"{name}.expected.json").read_text())
+    got = ExtractResult.model_validate(live_raw)
     want = _golden(name)
     assert got.status == want.status == "ok", (got.status, got.questions)
     assert got.schedule is not None and want.schedule is not None
@@ -54,7 +63,11 @@ def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
     assert [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in g.cast] == [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in w.cast]
     assert [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in g.days] == [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in w.days]
     assert g.jurisdiction == w.jurisdiction and g.constructed is True
-    assert g.overnight_location == w.overnight_location  # pass 2 prices hold days from this
+    # Pass 2 prices hold days from overnight_location and the schema default is false on both sides,
+    # so comparing the parsed values alone passes when an answer omits the key (round ten, finding 4).
+    for raw, side in ((live_raw, "live"), (golden_raw, "golden")):
+        assert "overnight_location" in (raw.get("schedule") or {}), f"the {side} answer omitted overnight_location"
+    assert g.overnight_location == w.overnight_location
     scene_number = {s.id: s.number for s in g.scenes}
     got_constraints = sorted((c.type, got_letter[c.cast_id] if c.cast_id else None, scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
     want_number = {s.id: s.number for s in w.scenes}
