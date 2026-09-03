@@ -16,6 +16,7 @@ from api.hold.pass2 import (
     recount_hold_days,
     to_solve_result,
 )
+from api.hold.penalties import hold_day_cost_cents
 from api.hold.schemas import CastMember, Constraint, Jurisdiction, Scene, ScheduleInput, ShootDay
 
 ROOT = Path(__file__).parents[2]
@@ -203,3 +204,27 @@ def test_re_judge_uses_each_minors_own_dismissal_for_turnaround() -> None:
     assert [p.verdict.status for p in used] == ["LEGAL", "LEGAL"], [(p.verdict.day, p.verdict.status, p.verdict.core_rule_ids, p.verdict.reason) for p in used]
     assert outcome.checker.agrees, outcome.checker.note
     assert outcome.prev_dismissals[1]["cM"] == time(9, 0)
+
+
+def test_unlisted_calendar_days_between_work_days_are_hold_days() -> None:
+    """Round three, finding 4: the FAQ pays Tuesday for Monday and Wednesday work even when
+    Tuesday is not a shoot day; the recount and the solver both count the calendar gap."""
+    days = [_day(date(2026, 10, 5), "07:00", "19:00"), _day(date(2026, 10, 7), "07:00", "19:00")]
+    schedule = _schedule(
+        [_scene(1, 8, ["cA"]), _scene(2, 8, ["cA"])], days, [_A],
+        constraints=[Constraint(type="availability", scene_id_a="s1", unavailable_day_indices=[1]), Constraint(type="availability", scene_id_a="s2", unavailable_day_indices=[0])],
+    )
+    held = recount_hold_days(schedule, {0: ["s1"], 1: ["s2"]})
+    assert held["cA"] == [date(2026, 10, 6)]
+    outcome = _run(schedule, workers=1)
+    assert outcome.result.status == "OPTIMAL", (outcome.result.status, outcome.note)
+    assert outcome.result.hold_days == 1
+    assert outcome.result.holding_cents == hold_day_cost_cents(_A, date(2026, 10, 6))
+    assert outcome.checker.agrees, outcome.checker.note
+
+
+def test_a_weekend_between_work_days_counts_two_hold_days() -> None:
+    days = [_day(date(2026, 10, 9), "07:00", "19:00"), _day(date(2026, 10, 12), "07:00", "19:00")]
+    schedule = _schedule([_scene(1, 8, ["cA"]), _scene(2, 8, ["cA"])], days, [_A])
+    held = recount_hold_days(schedule, {0: ["s1"], 1: ["s2"]})
+    assert held["cA"] == [date(2026, 10, 10), date(2026, 10, 11)]

@@ -58,7 +58,9 @@ Live instance: https://hold-fwmdq7fc3q-uc.a.run.app (Cloud Run, one instance; th
 - Louisiana hour caps are unverified; the registry refuses them rather than guessing.
 - Hold days: under the SAG-AFTRA low-budget agreements a day between work days is paid only on an overnight
   location (SAGindie FAQ, quoted in `rules/sag_rates.yaml`); the demo declares one. The Basic Agreement pays
-  consecutive employment everywhere.
+  consecutive employment everywhere. HOLD counts every calendar day between a performer's first and last
+  working day that they do not work, listed as a shoot day or not; the FAQ states the unlisted-weekday case
+  and a weekend inside the span is counted the same way, which is HOLD's reading.
 - Every rule quote is verbatim from a committed snapshot under `rules/sources/` and checked in CI, and every
   number in a record's params is stated by that quote, by a second verified fragment, or by a stated
   derivation (one value is a labeled assumption: a paid hold day at the tier day rate); the one record

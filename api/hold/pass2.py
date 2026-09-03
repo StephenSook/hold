@@ -25,7 +25,7 @@ import os
 import time as _time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import date, time
+from datetime import date, time, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -107,8 +107,16 @@ def recount_hold_days(schedule: ScheduleInput, day_scene_ids: dict[int, list[str
             continue
         first, last = worked[0], worked[-1]
         worked_set = set(worked)
-        out[c.id] = [day.date for day in schedule.days if first < day.date < last and day.date not in worked_set]
+        # Every calendar day between the first and last working date, listed as a shoot day or not
+        # (the SAGindie FAQ pays Tuesday for Monday and Wednesday work; a weekend inside the span is
+        # counted the same way, which is HOLD's reading and is labeled on the record).
+        out[c.id] = [first + timedelta(days=k) for k in range(1, (last - first).days) if first + timedelta(days=k) not in worked_set]
     return out
+
+
+def _gap_dates(earlier: date, later: date) -> list[date]:
+    """The calendar dates strictly between two listed shoot days."""
+    return [earlier + timedelta(days=k) for k in range(1, (later - earlier).days)]
 
 
 def _day_cost_table(schedule: ScheduleInput, rules_dir: Path) -> dict[str, list[int]]:
@@ -133,6 +141,7 @@ class _Model:
     literals: dict[str, Any]
     cost: dict[str, list[int]]
     paid: dict[str, bool]
+    gap_holds: dict[str, list[tuple[Any, list[date]]]]  # per member, (gap literal, calendar dates) between listed days
     calls: dict[str, list[Any]]      # per minor, call minutes per day
     dismisses: dict[str, list[Any]]  # per minor, dismissal minutes per day
 
@@ -306,6 +315,7 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
     paid = hold_days_paid(schedule)
     cost = _day_cost_table(schedule, rules_dir)
     hold: dict[str, list[Any]] = {}
+    gap_holds: dict[str, list[tuple[Any, list[date]]]] = {}
     obj_terms: list[Any] = []
     for member in schedule.cast:
         present: list[Any] = pres[member.id]
@@ -322,9 +332,24 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
             holds.append(h)
             if paid[member.id] and cost[member.id][d] > 0:
                 obj_terms.append(cost[member.id][d] * h)
+        # Calendar days between two listed days are hold days when the member works on or before
+        # the earlier day and on or after the later one (the recount walks the same dates).
+        gaps: list[Any] = []
+        for d in range(1, D):
+            gap_dates = _gap_dates(days[d - 1].date, days[d].date)
+            if not gap_dates:
+                continue
+            g = m.new_bool_var(f"gap_{member.id}_{d}")
+            m.add_bool_and([first_seen[d - 1], last_seen[d]]).only_enforce_if(g)
+            m.add_bool_or([first_seen[d - 1].negated(), last_seen[d].negated()]).only_enforce_if(g.negated())
+            gaps.append((g, gap_dates))
+            gap_cost = sum(hold_day_cost_cents(member, gd, rules_dir) for gd in gap_dates) if paid[member.id] else 0
+            if gap_cost > 0:
+                obj_terms.append(gap_cost * g)
+        gap_holds[member.id] = gaps
         hold[member.id] = holds
     m.minimize(cp_model.LinearExpr.sum(obj_terms) if obj_terms else 0)
-    return _Model(model=m, pos=pos, scene_at=scene_at, x=x, start=start, pres=pres, hold=hold, literals=literals, cost=cost, paid=paid, calls=calls, dismisses=dismisses)
+    return _Model(model=m, pos=pos, scene_at=scene_at, x=x, start=start, pres=pres, hold=hold, literals=literals, cost=cost, paid=paid, calls=calls, dismisses=dismisses, gap_holds=gap_holds)
 
 
 OnSolution = Callable[[int, int, float], None]
@@ -432,6 +457,11 @@ def pass2(
                     holding += mm.cost[member.id][d]
             if int(solver.value(mm.pres[member.id][d])) == 1:
                 fixed += mm.cost[member.id][d]
+        for g, gap_dates in mm.gap_holds.get(member.id, []):
+            if int(solver.value(g)) == 1:
+                hold_days += len(gap_dates)
+                if mm.paid[member.id]:
+                    holding += sum(hold_day_cost_cents(member, gd, rules_dir) for gd in gap_dates)
     result = Pass2Result(
         order=order,
         status="OPTIMAL" if status == "OPTIMAL" else "FEASIBLE",
@@ -463,10 +493,10 @@ def pass2(
     recount = recount_hold_days(schedule, day_scene_ids)
     recount_days = sum(len(v) for v in recount.values())
     recount_cents = 0
-    for cid, dates in recount.items():
-        if mm.paid[cid]:
-            by_date = {schedule.days[d].date: mm.cost[cid][d] for d in range(D)}
-            recount_cents += sum(by_date[dt] for dt in dates)
+    for member in schedule.cast:
+        if mm.paid[member.id]:
+            recount_cents += sum(hold_day_cost_cents(member, dt, rules_dir) for dt in recount[member.id])
+
     agrees = all_legal and recount_days == hold_days and recount_cents == holding
     notes = []
     if not all_legal:

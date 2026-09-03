@@ -163,7 +163,7 @@
   params:
     hold_day_rate_multiplier: 1.0
   verified: VERIFIED
-  note: The economic fact the solver minimizes, on an overnight location under the low-budget tiers; the day's pay is the tier's daily minimum plus P&H. assumption: 1.0 (the FAQ says the consecutive day is paid and names no multiplier, so the tier day rate is taken at face value).
+  note: The economic fact the solver minimizes, on an overnight location under the low-budget tiers; the day's pay is the tier's daily minimum plus P&H. assumption: 1.0 (the FAQ says the consecutive day is paid and names no multiplier, so the tier day rate is taken at face value). HOLD counts every calendar day between a performer's first and last working day that they do not work, listed as a shoot day or not; the FAQ states the unlisted-weekday case (Monday and Wednesday pays Tuesday) and a weekend inside the span is counted the same way, which is HOLD's reading.
 
 - id: SAG_RATES_BASIC_CONSECUTIVE_EMPLOYMENT
   jurisdiction: SAG-AFTRA
