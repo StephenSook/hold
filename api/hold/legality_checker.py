@@ -53,6 +53,19 @@ _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
 # The pass-1 solver may name them in a core; the proxy checker never lists them.
 TIMING_ONLY_RULE_IDS = frozenset({"CA_11761_meal_period_6_hours"})
 
+# Rules that are display-only (ratios, chaperones) - never flagged as violations
+DISPLAY_ONLY_RULE_IDS = frozenset({
+    "GA_300_7_1_09_studio_teacher_ratio",
+    "GA_300_7_1_04_coordinator_ratio",
+    "CA_11755_1_studio_teacher_in_session",
+    "CA_11755_2_studio_teacher_not_in_session",
+    "SAG_MINORS_2026_CHAPERONE_UNDER_16",
+    "SAG_MINORS_P23_INFANT_RESTRICTION",
+    "SAG_MINORS_P17_CUMULATIVE_JURISDICTION",
+    "CA_11760_e_weekly_cap_48_hours",
+    "CA_DLSE_SUBTRACT_6_POLICY",
+})
+
 
 @dataclass(frozen=True)
 class MinorTimeline:
@@ -120,7 +133,7 @@ def _minor_on_set_day(cast_member: CastMember, day_index: int, schedule: Schedul
     return any(cast_member.id in scene.cast_ids for scene in schedule.scenes)
 
 
-class _DayContext(NamedTuple):
+class DayContext(NamedTuple):
     """Preprocessed context for one shoot day check."""
     day_index: int
     shoot_day: ShootDay
@@ -130,7 +143,7 @@ class _DayContext(NamedTuple):
     consecutive_run: int  # how many consecutive shoot days ending on this day
 
 
-def _build_day_context(schedule: ScheduleInput, day_index: int) -> _DayContext:
+def build_day_context(schedule: ScheduleInput, day_index: int) -> DayContext:
     days = schedule.days
     sd = days[day_index]
     loc_hours = _duration_hours(sd.call, sd.wrap)
@@ -161,7 +174,7 @@ def _build_day_context(schedule: ScheduleInput, day_index: int) -> _DayContext:
         else:
             break
 
-    return _DayContext(
+    return DayContext(
         day_index=day_index,
         shoot_day=sd,
         location_hours=loc_hours,
@@ -169,6 +182,76 @@ def _build_day_context(schedule: ScheduleInput, day_index: int) -> _DayContext:
         prev_wrap=prev_wrap,
         consecutive_run=run,
     )
+
+
+# ---------------------------------------------------------------------------
+# Applicability predicates shared with the pass-1 solver (api/hold/legality.py).
+# One definition each, so the solver and the checker cannot drift apart (D13).
+# ---------------------------------------------------------------------------
+
+
+def rule_applies_to_minor(rule: RuleRecord, minor: CastMember, shoot_state: str) -> bool:
+    """Cumulative jurisdiction (D5): GA on a GA shoot, CA for a CA-resident minor, SAG always."""
+    if rule.id in DISPLAY_ONLY_RULE_IDS:
+        return False
+    jur = rule.jurisdiction
+    if jur == "SAG-AFTRA":
+        return True
+    if jur == "GA":
+        return shoot_state == "GA"
+    if jur == "CA":
+        return minor.resident_state == "CA"
+    return False
+
+
+def age_applies(rule: RuleRecord, age: int) -> bool:
+    params = rule.params
+    return int(params.get("age_min", 0)) <= age <= int(params.get("age_max", 99))
+
+
+def earliest_call_applies(rule: RuleRecord, is_school_night: bool) -> bool:
+    """A record that also carries a curfew applies its 5 a.m. floor only on its own night type."""
+    if "earliest_call" not in rule.params:
+        return False
+    has_school = "curfew_school_night" in rule.params
+    has_non_school = "curfew_non_school_night" in rule.params
+    if not has_school and not has_non_school:
+        return True
+    return (has_school and is_school_night) or (has_non_school and not is_school_night)
+
+
+def curfew_limit_minutes(rule: RuleRecord, is_school_night: bool) -> int | None:
+    """Evening curfew in minutes since midnight, or None when the record has no curfew for this
+    night type or the curfew is past midnight (a same-day wrap cannot breach it)."""
+    key = "curfew_school_night" if is_school_night else "curfew_non_school_night"
+    if key not in rule.params:
+        return None
+    hh, mm = map(int, str(rule.params[key]).split(":"))
+    minutes = hh * 60 + mm
+    return minutes if minutes >= 4 * 60 else None
+
+
+def work_cap_hours(rule: RuleRecord, school_day: bool) -> float | None:
+    """The work-hour cap this record imposes on this day type, or None if it has none."""
+    params = rule.params
+    if school_day and "max_work_hours_school_day" in params:
+        return float(params["max_work_hours_school_day"])
+    if not school_day and "max_work_hours_non_school_day" in params:
+        return float(params["max_work_hours_non_school_day"])
+    if "max_work_hours" in params:
+        return float(params["max_work_hours"])
+    if "max_work_hours_day" in params:
+        return float(params["max_work_hours_day"])
+    return None
+
+
+def turnaround_applies(rule_id: str, school_day: bool) -> bool:
+    """GA and SAG-AFTRA turnaround apply when the checked day is a school day; CA always."""
+    if rule_id == "CA_11760_i_turnaround_12_hours":
+        return True
+    if rule_id in ("GA_300_7_1_03_turnaround_school_hours", "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY"):
+        return school_day
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -447,20 +530,6 @@ def _check_consecutive_days(
 # Public API
 # ---------------------------------------------------------------------------
 
-# Rules that are display-only (ratios, chaperones) - never flagged as violations
-_DISPLAY_ONLY_IDS = frozenset({
-    "GA_300_7_1_09_studio_teacher_ratio",
-    "GA_300_7_1_04_coordinator_ratio",
-    "CA_11755_1_studio_teacher_in_session",
-    "CA_11755_2_studio_teacher_not_in_session",
-    "SAG_MINORS_2026_CHAPERONE_UNDER_16",
-    "SAG_MINORS_P23_INFANT_RESTRICTION",
-    "SAG_MINORS_P17_CUMULATIVE_JURISDICTION",
-    "CA_11760_e_weekly_cap_48_hours",
-    "CA_DLSE_SUBTRACT_6_POLICY",
-})
-
-
 def check_day_legality(
     schedule: ScheduleInput,
     day_index: int,
@@ -486,7 +555,7 @@ def check_day_legality(
         rules_dir = _RULES_DIR
 
     shoot_day = schedule.days[day_index]
-    ctx = _build_day_context(schedule, day_index)
+    ctx = build_day_context(schedule, day_index)
 
     # Load all rules valid on this shooting date
     all_rules = load_rules(rules_dir, shooting_date=shoot_day.date)
@@ -509,9 +578,6 @@ def check_day_legality(
     for minor in minors:
         age = minor.age
         assert age is not None  # narrowed above
-        is_ca_resident = minor.resident_state == "CA"
-        is_ga_shoot = shoot_state == "GA"
-
         # Which times to judge: the minor's own (timeline) or the crew window (proxy).
         mt: MinorTimeline | None = None
         if timeline is not None:
@@ -529,37 +595,16 @@ def check_day_legality(
             proxy = True
 
         for rule in all_rules:
-            if rule.id in _DISPLAY_ONLY_IDS:
+            if not rule_applies_to_minor(rule, minor, shoot_state):
                 continue
-
-            jur = rule.jurisdiction
-
-            # Determine if this rule applies to this minor
-            applies = False
-            if jur == "SAG-AFTRA":
-                applies = True  # SAG minors rules apply to all minors
-            elif jur == "GA" and is_ga_shoot or jur == "CA" and is_ca_resident:
-                applies = True
-
-            if not applies:
-                continue
-
-            has_school_curfew = "curfew_school_night" in rule.params
-            has_non_school_curfew = "curfew_non_school_night" in rule.params
 
             # Curfew checks
-            if has_school_curfew or has_non_school_curfew:
+            if "curfew_school_night" in rule.params or "curfew_non_school_night" in rule.params:
                 _add(_check_curfew(rule, dismiss_t, ctx.is_school_night, age))
 
             # Earliest call: a record that also carries a curfew applies only on its night type
-            if "earliest_call" in rule.params:
-                night_matches = (
-                    (not has_school_curfew and not has_non_school_curfew)
-                    or (has_school_curfew and ctx.is_school_night)
-                    or (has_non_school_curfew and not ctx.is_school_night)
-                )
-                if night_matches:
-                    _add(_check_earliest_call(rule, call_t, age))
+            if earliest_call_applies(rule, ctx.is_school_night):
+                _add(_check_earliest_call(rule, call_t, age))
 
             # Location hours
             if "max_location_hours" in rule.params:
@@ -569,16 +614,9 @@ def check_day_legality(
             if any(k in rule.params for k in ("max_work_hours", "max_work_hours_school_day", "max_work_hours_day")):
                 _add(_check_work_hours(rule, work_hours, age, shoot_day.school_day, proxy))
 
-            # Turnaround: GA turnaround applies when school_day=True (working during school hours)
-            if "min_turnaround_hours" in rule.params:
-                if rule.id == "GA_300_7_1_03_turnaround_school_hours":
-                    if shoot_day.school_day:
-                        _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
-                elif rule.id == "CA_11760_i_turnaround_12_hours":
-                    _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
-                elif rule.id == "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY" and shoot_day.school_day:
-                    # Applies when this day is a school day (minor was working day before school)
-                    _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
+            # Turnaround: GA and SAG apply when the checked day is a school day, CA always
+            if "min_turnaround_hours" in rule.params and turnaround_applies(rule.id, shoot_day.school_day):
+                _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
 
             # Meal within N hours: only judgeable on a concrete timeline
             if "max_work_before_meal_hours" in rule.params and mt is not None:
