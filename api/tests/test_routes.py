@@ -176,3 +176,23 @@ def test_verdicts_are_on_the_bus_before_the_job_reads_done(client: TestClient, m
         time.sleep(0.001)
     used = {d for d, ids in job.day_scene_ids.items() if ids}
     assert seen_at_done == len(used), (seen_at_done, len(used))
+
+
+def test_an_event_chains_on_a_failed_re_solve_instead_of_reverting_it(client: TestClient) -> None:
+    """Round six, finding 4: the edit is the input; a solve that failed must not drop the edit from the chain."""
+    from api.hold.jobs import JOBS
+
+    posted = client.post("/api/solve", json=_demo())
+    _wait(client, posted.json()["job_id"])
+    dropped = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
+    assert dropped.status_code == 202
+    failed = JOBS.get(dropped.json()["job_id"])
+    assert failed is not None
+    _wait(client, failed.id)
+    failed.status = "failed"  # the solve raised after the edit was accepted
+    failed.error = "RuntimeError: injected"
+    late = client.post("/api/set-events", json={"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "ui"})
+    assert late.status_code == 202
+    assert late.json()["base_job_id"] == failed.id
+    chained = JOBS.get(late.json()["job_id"])
+    assert chained is not None and "s3" not in {s.id for s in chained.schedule.scenes}
