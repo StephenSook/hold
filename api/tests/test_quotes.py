@@ -182,3 +182,14 @@ def test_word_numbers_match_whole_words_only() -> None:
     assert any(pattern.search("no later than 10:00 p.m.") for pattern in number_candidates("curfew_school_night", "22:00"))
     assert any(pattern.search("and 12:00 midnight on") for pattern in number_candidates("curfew_non_school_night", "00:00"))
     assert not any(pattern.search("no later than 10:00 p.m.") for pattern in number_candidates("curfew_school_night", "23:00"))
+
+
+def test_a_number_prefix_of_a_different_value_is_not_evidence() -> None:
+    """Round four, finding 1: $257 is not $257.50, 1 is not 1.5, $2,896 is not $2,896.99."""
+    assert not any(p.search("Rate: $257.50") for p in number_candidates("day_rate_cents", 25700))
+    assert not any(p.search("Rate: $2,896.99") for p in number_candidates("week_rate_cents", 289600))
+    assert not any(p.search("May work 1.5 hours") for p in number_candidates("age_min", 1))
+    assert not any(p.search("ten (10.5) hours") for p in number_candidates("max_location_hours", 10))
+    assert any(p.search("Rate: $257") for p in number_candidates("day_rate_cents", 25700))
+    assert any(p.search("Rate: $2,896") for p in number_candidates("week_rate_cents", 289600))
+    assert any(p.search("age of nine (9) years") for p in number_candidates("age_min", 9))

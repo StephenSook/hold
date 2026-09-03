@@ -75,13 +75,15 @@ _DERIVED = re.compile(r"derived: ([0-9.]+) = ([0-9.]+) \+ ([0-9.]+)")  # additio
 _ASSUMPTION = re.compile(r"assumption: ([0-9.]+)")
 _CLOCK = re.compile(r"^\d{1,2}:\d{2}$")
 _LEAD = r"(?<![\w.$])"  # a number starts at a word edge, never inside another number or a price
+_END = r"(?![\d.,]?\d)"  # and ends there too: 257 is not 257.50, 1 is not 1.5, 2,896 is not 2,896.99
 
 
 def _num(value: float) -> str:
-    """A regex alternation for one number: digits, or the word with an optional "(N)" after it."""
+    """A regex alternation for one number: digits, or the word with an optional "(N)" after it.
+    Every digit form ends where the number ends (no decimal or thousands continuation)."""
     if float(value).is_integer():
         digits = str(int(value))
-        alts = [re.escape(digits)]
+        alts = [re.escape(digits) + _END]
         if int(value) in _WORDS:
             alts.append(rf"{re.escape(_WORDS[int(value)])}(?: \({digits}\))?")
         return "(?:" + "|".join(alts) + ")"
@@ -96,8 +98,8 @@ def _num(value: float) -> str:
 
 def _money(dollars: float) -> str:
     if float(dollars).is_integer():
-        return rf"(?:{re.escape(f'{int(dollars):,}')}|{int(dollars)})(?:\.00)?"
-    return re.escape(f"{dollars:,.2f}")
+        return rf"(?:{re.escape(f'{int(dollars):,}')}|{int(dollars)})(?:\.00)?{_END}"
+    return re.escape(f"{dollars:,.2f}") + _END
 
 
 def _clock(value: str) -> list[str]:
