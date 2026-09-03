@@ -32,6 +32,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from api.hold.quotes import normalize, quote_matches  # noqa: E402
 from api.hold.registry import load_rules  # noqa: E402
 
+try:  # this machine's Python roots cannot complete the chain for some state legislature hosts
+    import truststore
+
+    truststore.inject_into_ssl()
+except Exception:  # without it those hosts report a certificate error, which the run prints as the reason
+    pass
+
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "rules" / "sources-cache"
 PACE_S = 8.0  # government and enterprise sites block a faster loop
