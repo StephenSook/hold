@@ -29,7 +29,7 @@ def test_every_record_is_verified_or_labeled() -> None:
     assert problems == [], "\n".join(f"{p.record_id}: {p.what}" for p in problems)
     assert counts["records"] > 0
     assert counts["verified"] + counts["unverifiable"] == counts["records"]
-    assert counts["unverifiable"] <= 1, counts  # the one sagaftra.org page that refuses scripted fetches
+    assert counts["unverifiable"] == 0  # every sagaftra.org page is captured from a browser now; the README says none is UNVERIFIABLE
 
 
 def test_no_record_is_pending() -> None:
