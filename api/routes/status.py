@@ -66,12 +66,15 @@ def build_status() -> dict[str, Any]:
 
 
 def cached_status() -> dict[str, Any]:
+    """The headline and versions are cached; the streaming transport and its counters are live."""
     global _cached, _cached_at
     with _lock:
         now = time.monotonic()
         if _cached is None or now - _cached_at >= CACHE_TTL_S:
             _cached, _cached_at = build_status(), now
-        return _cached
+        payload = dict(_cached)
+    payload["runtime"] = {**payload["runtime"], "confluent": BRIDGE.status()}
+    return payload
 
 
 def reset_cache() -> None:

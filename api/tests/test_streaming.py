@@ -176,3 +176,21 @@ def test_events_schema_is_generated_from_the_models() -> None:
     committed = json.loads((ROOT / "rules" / "events.schema.json").read_text())
     assert committed == json.loads(render())
     assert set(committed["definitions"]) == {"SetEvent", "VerdictEvent"}
+
+
+def test_status_reports_the_bridge_live_even_when_the_headline_is_cached(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The headline may be cached for ten minutes; the transport and its counters are read on every call."""
+    import api.routes.status as status_route
+    from api.routes.status import reset_cache
+
+    reset_cache()
+    first = client.get("/api/status").json()
+    assert first["runtime"]["confluent"]["transport"] == "in-process"
+    bridge = ConfluentBridge(CONFIG, producer_factory=FakeProducer)
+    bridge.start()
+    bridge.publish(TOPIC_VERDICTS, "j", {"event": "verdict"})
+    monkeypatch.setattr(status_route, "BRIDGE", bridge)
+    second = client.get("/api/status").json()
+    assert second["computed_at"] == first["computed_at"]  # headline still cached
+    assert second["runtime"]["confluent"]["transport"] == "confluent" and second["runtime"]["confluent"]["published"] == 1
+    bridge.stop()
