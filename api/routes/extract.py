@@ -1,7 +1,7 @@
 """
 POST /api/extract (task 3.5). Under HOLD_FAKE_EXTERNALS=1 the golden fixture is returned and says
 so in its notes. The live path runs the ADK agent (task 3.1) through a Runner with a hard timeout
-and one model call per request (task 3.3), and only when Vertex AI is configured; otherwise the
+and at most three model calls per request (task 3.3), and only when Vertex AI is configured; otherwise the
 route refuses with 503 rather than pretending (wired-or-cut).
 """
 from __future__ import annotations

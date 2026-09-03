@@ -40,7 +40,7 @@ def test_agent_shape() -> None:
     names = {str(getattr(t, "name", None) or getattr(t, "__name__", "")) for t in root_agent.tools}
     assert names == set(ALLOWED_TOOLS) == {"check_legality", "optimize_schedule", "lookup_rule"}
     assert root_agent.before_tool_callback is guard_tool_call
-    assert MAX_LLM_CALLS == 1
+    assert MAX_LLM_CALLS == 3  # thought turn, optional tool turn, structured final answer
 
 
 def test_guard_refuses_a_tool_outside_the_allowlist() -> None:

@@ -1,6 +1,6 @@
 """
 Running the agent behind our own route (task 3.1, guardrails task 3.3): a Runner with an in-memory
-session per request, a hard timeout, and at most one model call per request. The live path exists
+session per request, a hard timeout, and at most three model calls per request. The live path exists
 only when Vertex AI is configured (GOOGLE_CLOUD_PROJECT); HOLD_FAKE_EXTERNALS=1 never reaches here.
 """
 from __future__ import annotations
@@ -18,7 +18,10 @@ from api.agents.hold_agent.agent import root_agent
 from api.hold.schemas import ExtractResult
 
 APP_NAME = "hold"
-MAX_LLM_CALLS = 1
+# With tools and an output schema the ADK loop needs more than one model call per request (a
+# thought turn, an optional tool turn, the structured final answer); one call raised
+# LlmCallsLimitExceededError on the first live extraction. Three is the hard cap.
+MAX_LLM_CALLS = 3
 EXTRACT_TIMEOUT_S = 30.0
 
 
@@ -36,7 +39,7 @@ def build_runner() -> Runner:
 
 
 async def extract(text: str, image: bytes | None = None, mime_type: str = "image/png", timeout_s: float = EXTRACT_TIMEOUT_S) -> ExtractResult:
-    """One request, one session, one model call, one ExtractResult; TimeoutError after timeout_s."""
+    """One request, one session, at most MAX_LLM_CALLS model calls, one ExtractResult; TimeoutError after timeout_s."""
     runner = build_runner()
     session = await runner.session_service.create_session(app_name=APP_NAME, user_id="api", session_id=uuid.uuid4().hex)
     parts = [types.Part.from_text(text=text)]
