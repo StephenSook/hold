@@ -37,8 +37,11 @@ _CONDITIONAL = re.compile(r"submission time|not connected|until|once|task 4\.1|P
 
 
 def judge_facing_surfaces(root: Path) -> list[Path]:
-    """README plus docs, minus the generated evidence logs under docs/bob-evidence."""
-    return [root / "README.md", *sorted(p for p in (root / "docs").rglob("*.md") if "bob-evidence" not in p.parts)]
+    """README and JUDGE.md plus docs, minus the generated evidence logs under docs/bob-evidence and the
+    generated license inventory (docs/THIRD_PARTY_NOTICES.md names every dependency's copyright holder;
+    that is a legal notice, not a claim about the running system)."""
+    docs = sorted(p for p in (root / "docs").rglob("*.md") if "bob-evidence" not in p.parts and p.name != "THIRD_PARTY_NOTICES.md")
+    return [root / "README.md", root / "JUDGE.md", *docs]
 
 
 def claim_problems(text: str, runtime: Runtime) -> list[str]:
