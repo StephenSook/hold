@@ -1,8 +1,9 @@
-HOLD DEMO - CALL SHEET - DAY 3 (ILLEGAL DAY EXAMPLE)
+HOLD DEMO - CALL SHEET - DAY 3
 Production: HOLD Demo (constructed, not a real production)
 Date: Thursday, October 8, 2026  |  Shoot State: GA  |  School Day: YES
 
 GENERAL CALL: 07:00
+WRAP (est.): 21:30
 LOCATION: Farmhouse Kitchen / Peach Orchard, Dawson County GA (constructed)
 
 SCENES SCHEDULED
@@ -14,24 +15,18 @@ Sc# | Set               | I/E | D/N | Pgs  | Cast
 
 CAST
 ----
-Letter | Role       | Call    | Makeup  | Set     | Wrap    | Notes
-A      | Lead (Adlt)| 07:00   | 07:00   | 08:00   | 21:30   |
-B      | Support    | 07:00   | 07:00   | 08:00   | 19:00   |
-C      | Support    | 07:00   | 07:00   | 08:00   | 19:00   |
-M      | Minor 14CA | 07:00   | 07:15   | 08:00   | 21:30   | *** VIOLATION ***
+Letter | Role              | Call    | Makeup  | Set     | Wrap    | Notes
+A      | Lead (adult)      | 07:00   | 07:00   | 08:00   | 21:30   |
+B      | Support (adult)   | 07:00   | 07:00   | 08:00   | 19:00   |
+C      | Support (adult)   | 07:00   | 07:00   | 08:00   | 19:00   |
+M      | Minor, 14, CA res.| 07:00   | 07:15   | 08:00   | 21:30   | studio teacher on set
 
-MINOR M LEGALITY FLAGS (DAY 3)
--------------------------------
-ILLEGAL - Rule GA 300-7-1-.03: minor age 9-16 on a school night, wrap must be
-by 10:00 PM. Scheduled wrap 21:30 (9:30 PM) - LEGAL on time.
+STUDIO TEACHER: 1 minor on set; teacher call 07:00.
 
-*** NOTE FOR DEMO: this day is flagged ILLEGAL in before-order.json because
-wrap is 21:30 which exceeds the 10 PM school-night limit. In the demo the
-solver moves scene 8 to a non-school day, eliminating the violation. ***
-
-STUDIO TEACHER: Required per GA Rule 300-7-1-.09 (1:10 ratio), 1 minor on set.
-
-Advance Schedule
+ADVANCE SCHEDULE
 ----------------
 Day 4 (Fri Oct 9): County Road EXT scenes - no minor call.
-Day 5 (Mon Oct 12): Packing Shed scenes - adult cast only nights.
+Day 5 (Mon Oct 12): Packing Shed scenes - adult cast only.
+
+This document is constructed demo data. Times and pages are inputs for HOLD to judge; the call
+sheet itself makes no legality claim.
