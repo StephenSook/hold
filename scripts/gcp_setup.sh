@@ -90,7 +90,7 @@ default_for() {
   case "$1" in
     GEMINI_MODEL) printf '%s' "gemini-3.1-flash-lite" ;;
     GOOGLE_CLOUD_PROJECT) printf '%s' "$PROJECT_ID" ;;
-    GOOGLE_CLOUD_LOCATION) printf '%s' "$REGION" ;;
+    GOOGLE_CLOUD_LOCATION) printf '%s' "global" ;;  # Vertex location for Gemini 3.x on this project; Cloud Run stays in $REGION
     GOOGLE_GENAI_USE_ENTERPRISE) printf '%s' "true" ;;
     *) printf '%s' "unset" ;;  # Secret Manager refuses an empty payload; the API reads "unset" as absent
   esac
