@@ -1,0 +1,108 @@
+{
+  "_note": "Golden extraction of data/demo/samples/callsheet-day3.txt, recorded from a real run of POST /api/extract on the deployed service (constructed demo data). Times carry the Z the model appended; ScheduleInput accepts them.",
+  "_live_run": {
+    "url": "https://hold-fwmdq7fc3q-uc.a.run.app/api/extract",
+    "recorded_at": "2026-09-03T05:52:00+00:00",
+    "model": "gemini-3.1-flash-lite",
+    "location": "global",
+    "latency_s": 3.3,
+    "revision_sha": "529f8cc"
+  },
+  "status": "ok",
+  "schedule": {
+    "scenes": [
+      {
+        "id": "2",
+        "number": 2,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Farmhouse Kitchen",
+        "pages_eighths": 12,
+        "cast_ids": [
+          "A",
+          "M"
+        ],
+        "location_id": "Farmhouse Kitchen / Peach Orchard"
+      },
+      {
+        "id": "8",
+        "number": 8,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Farmhouse Kitchen",
+        "pages_eighths": 16,
+        "cast_ids": [
+          "A",
+          "B",
+          "M"
+        ],
+        "location_id": "Farmhouse Kitchen / Peach Orchard"
+      },
+      {
+        "id": "5",
+        "number": 5,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "Peach Orchard",
+        "pages_eighths": 14,
+        "cast_ids": [
+          "A",
+          "C",
+          "M"
+        ],
+        "location_id": "Farmhouse Kitchen / Peach Orchard"
+      }
+    ],
+    "cast": [
+      {
+        "id": "A",
+        "letter": "A",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "B",
+        "letter": "B",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "C",
+        "letter": "C",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "M",
+        "letter": "M",
+        "age": 14,
+        "resident_state": "CA",
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-08",
+        "call": "07:00:00Z",
+        "wrap": "21:30:00Z",
+        "school_day": true,
+        "school_night": null
+      }
+    ],
+    "constraints": [],
+    "jurisdiction": {
+      "shoot_state": "GA"
+    },
+    "constructed": true,
+    "overnight_location": false
+  },
+  "questions": [],
+  "notes": ""
+}
