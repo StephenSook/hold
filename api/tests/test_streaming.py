@@ -297,3 +297,30 @@ def test_the_app_wires_the_echo_filter_to_its_job_store() -> None:
         assert BRIDGE_LIVE.is_own_job("not-a-job") is False
         job = JOBS.submit(ScheduleInput.model_validate({k: v for k, v in json.loads((ROOT / "data" / "demo" / "hold-demo.json").read_text()).items() if not k.startswith("_")}))
         assert BRIDGE_LIVE.is_own_job(job.id) is True
+
+
+class RefusingProducer(FakeProducer):
+    def produce(self, topic: str, key: bytes, value: bytes) -> None:
+        raise RuntimeError("broker refused produce")
+
+
+def test_a_failed_mirror_publish_answers_in_process_transport(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Round five, finding 5: the route copied the bridge's transport before publishing and ignored
+    publish's False, so a broker that refused the produce still answered "transport": "confluent"
+    while no external consumer ever saw the event."""
+    import api.routes.events as events_route
+
+    bridge = ConfluentBridge(CONFIG, producer_factory=RefusingProducer)
+    assert bridge.start() is True
+    monkeypatch.setattr(events_route, "BRIDGE", bridge)
+    demo = json.loads((ROOT / "data" / "demo" / "hold-demo.json").read_text())
+    job_id = client.post("/api/solve", json={k: v for k, v in demo.items() if not k.startswith("_")}).json()["job_id"]
+    deadline = time.monotonic() + 90
+    while time.monotonic() < deadline and client.get(f"/api/jobs/{job_id}").json()["status"] not in ("done", "failed"):
+        time.sleep(0.1)
+    response = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s6"}, "source": "ui"})
+    assert response.status_code == 202 and response.json()["transport"] == "in-process"
+    assert bridge.status()["published"] == 0 and "broker refused produce" in str(bridge.status()["last_error"])
+    echo = next(e for e in BUS.replay(None) if e.get("job_id") == response.json()["job_id"] and e.get("kind") == "scene_dropped")
+    assert echo["transport"] == "in-process"
+    bridge.stop()

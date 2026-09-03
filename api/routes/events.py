@@ -82,10 +82,11 @@ async def set_event(event: SetEvent) -> dict[str, Any]:
     except SetEventError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     job = JOBS.submit(edited, source=f"set-event:{event.kind}:{event.source}")
-    transport = BRIDGE.status()["transport"]
-    echo = {**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change, "transport": transport}
-    BUS.publish(echo)
-    BRIDGE.publish(TOPIC_SET_EVENTS, job.id, echo)  # mirrored with job_id; the consumer ignores its own echo
+    echo = {**event.model_dump(mode="json"), "job_id": job.id, "base_job_id": base.id, "change": change}
+    # Mirrored with job_id (the consumer skips its own echo). The transport the response names is the
+    # one that carried the event: a refused produce is the in-process bus (round five, finding 5).
+    transport = "confluent" if BRIDGE.publish(TOPIC_SET_EVENTS, job.id, {**echo, "transport": "confluent"}) else "in-process"
+    BUS.publish({**echo, "transport": transport})
     return {"job_id": job.id, "base_job_id": base.id, "change": change, "poll": f"/api/jobs/{job.id}", "transport": transport}
 
 
