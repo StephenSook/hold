@@ -101,7 +101,7 @@ if _DIST.is_dir():
     app.mount("/assets", StaticFiles(directory=str(_DIST / "assets")), name="assets")
 
 
-@app.get("/{full_path:path}")
+@app.get("/{full_path:path}", response_model=None)  # a Response union is not a response model
 async def spa_fallback(full_path: str) -> FileResponse | JSONResponse:
     """Serve index.html for all non-/api paths (HashRouter SPA)."""
     return _spa_response()
