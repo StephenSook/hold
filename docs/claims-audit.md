@@ -26,7 +26,7 @@ description and its Built With tags.
 | GitHub Actions | README, Devpost | `.github/workflows/ci.yml`, `deploy.yml`, `uptime.yml` | the badge job is the residual |
 | Model Context Protocol (mcp) | README, AGENTS | `api/hold/mcp_server.py`, `.bob/mcp.json` | `from mcp.server import MCPServer`; `api/tests/test_mcp_server.py` drives it over stdio |
 | IBM Bob | README, AGENTS, Devpost | `.bob/custom_modes.yaml`, `docs/bob-evidence/**` | `Tool: IBM-Bob` trailer on 25 commits; `/api/status.bob_usage` |
-| Python 3.13, uv | README quick start | `pyproject.toml`, `uv.lock` | the quick start runs |
+| Python 3.12 or newer, uv | README quick start (`uv sync` resolves it; the README names no version) | `pyproject.toml` requires-python, `Dockerfile`, `.github/workflows/ci.yml` | the quick start runs; the image and CI both pin 3.12 |
 
 ## In the code, claimed nowhere
 
