@@ -70,10 +70,17 @@ def test_the_deployed_url_walks_the_judge_path() -> None:
     # the case a "latest solved job" base silently reverts (round five, finding 1; round ten, finding 3).
     event = _post("/api/set-events", {"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
     assert event["base_job_id"] == job_id and event["transport"] in ("confluent", "in-process")
-    late = _post("/api/set-events", {"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "ui"})
+    # A day the minor actually works, so the post-condition cannot hold by accident (round eleven).
+    scene_cast = {s["id"]: s["cast_ids"] for s in _demo()["scenes"]}
+    worked = sorted(int(d) for d, ids in solved["day_scene_ids"].items() if any("cM" in scene_cast[s] for s in ids))
+    assert worked, "the minor works no day in the deployed plan, so actor_late would prove nothing"
+    late_day = worked[0]
+    late = _post("/api/set-events", {"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": late_day}, "source": "ui"})
     assert late["base_job_id"] == event["job_id"], "the deployed service did not chain the second event"
     resolved = _wait(late["job_id"])
     assert "s3" not in {s for ids in resolved["day_scene_ids"].values() for s in ids}
+    still_on = [s for s in resolved["day_scene_ids"].get(str(late_day), []) if "cM" in scene_cast[s]]
+    assert not still_on, f"the deployed plan still works the minor on day {late_day}: {still_on}"
 
     _, stream = _get(f"/api/events?job_id={job_id}&replay=true&limit=40&timeout_s=8", timeout_s=60)
     events = [json.loads(line[len("data: ") :]) for line in stream.splitlines() if line.startswith("data: ")]

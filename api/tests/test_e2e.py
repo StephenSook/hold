@@ -104,7 +104,17 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
     dropped = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
     assert dropped.status_code == 202, dropped.text
     assert dropped.json()["base_job_id"] == job_id
-    late = client.post("/api/set-events", json={"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "ui"})
+    # Fire the event for a day the minor is actually on, rather than the hardcoded day 0 the drop
+    # already cleared. This step still cannot prove the solver ENFORCES availability: the demo has
+    # slack, so deleting pass 2's availability clauses leaves both walks green (measured). The
+    # binding case is test_pass2.py::test_precedence_and_availability_are_honored, which that same
+    # mutation does fail. What this asserts is the wiring: the event reached the schedule, and the
+    # replanned days are consistent with it.
+    scene_cast = {s["id"]: s["cast_ids"] for s in _demo()["scenes"]}
+    worked = sorted(int(d) for d, ids in solved["day_scene_ids"].items() if any("cM" in scene_cast[s] for s in ids))
+    assert worked, "the minor works no day in the solved plan, so actor_late would prove nothing"
+    late_day = worked[0]
+    late = client.post("/api/set-events", json={"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": late_day}, "source": "ui"})
     assert late.status_code == 202, late.text
     assert late.json()["base_job_id"] == dropped.json()["job_id"], "the second event did not chain onto the first"
     resolved = _wait(client, late.json()["job_id"])
@@ -116,8 +126,9 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
 
     job = JOBS.get(late.json()["job_id"])
     assert job is not None
-    assert any(c.type == "availability" and c.cast_id == "cM" and 0 in (c.unavailable_day_indices or []) for c in job.schedule.constraints), "actor_late left no availability constraint"
-    assert "cM" not in {c for sid in resolved["day_scene_ids"].get("0", []) for c in next(s.cast_ids for s in job.schedule.scenes if s.id == sid)}, "the late minor is still on day 0"
+    assert any(c.type == "availability" and c.cast_id == "cM" and late_day in (c.unavailable_day_indices or []) for c in job.schedule.constraints), "actor_late left no availability constraint"
+    still_on = [s for s in resolved["day_scene_ids"].get(str(late_day), []) if "cM" in scene_cast[s]]
+    assert not still_on, f"the minor still works day {late_day} after actor_late: {still_on}"
 
     # Step 6: the replayed stream carries the objective and one verdict per shot day, never twice.
     stream = client.get(f"/api/events?job_id={job_id}&replay=true&limit=50&timeout_s=5")
