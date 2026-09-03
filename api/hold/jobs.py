@@ -125,8 +125,8 @@ class JobStore:
             job.status = "done"  # the last write: every verdict is already in the bus history and handed to the broker (round six, finding 8; round seven, finding 3)
         except Exception as exc:  # the failure must reach the client, never a silent queued job
             job.error = f"{type(exc).__name__}: {exc}"
-            job.status = "failed"
             BUS.publish({"event": "job", "job_id": job.id, "status": "failed", "error": job.error})
+            job.status = "failed"  # the status is the last write on this path too (round eight, finding 2)
 
 
 JOBS = JobStore()
