@@ -107,7 +107,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync
-      - run: uv run pip-licenses --from=mixed --order=license --fail-on="GPL;AGPL;LGPL;SSPL;Commons Clause" 2>/dev/null || uv run python scripts/check_licenses.py
+      - run: uv run python scripts/check_licenses.py
 
   gitleaks:
     name: Secret scan (gitleaks)
