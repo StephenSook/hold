@@ -110,4 +110,6 @@ def test_extract_reports_an_unexpected_failure_as_502_with_the_cause(monkeypatch
     monkeypatch.setattr(extract_route, "run_extract", boom)
     response = TestClient(app).post("/api/extract", json={"text": "INT. KITCHEN - DAY"})
     assert response.status_code == 502
-    assert "RuntimeError" in response.json()["detail"] and "model endpoint said no" in response.json()["detail"]
+    detail = response.json()["detail"]
+    assert "RuntimeError" in detail
+    assert "model endpoint said no" not in detail  # the message may carry internal paths; it goes to the log only

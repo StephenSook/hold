@@ -47,6 +47,8 @@ async def extract(request: ExtractRequest) -> ExtractResult:
         raise HTTPException(status_code=504, detail=f"extraction exceeded {EXTRACT_TIMEOUT_S:.0f} s") from exc
     except ExtractionError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
-    except Exception as exc:  # the caller must see why the live path failed, never a blank 500
+    except Exception as exc:  # the caller sees the failure class, never a blank 500; the message stays in the log
         log.exception("extraction failed")
-        raise HTTPException(status_code=502, detail=f"extraction failed: {type(exc).__name__}: {exc}") from exc
+        code = getattr(exc, "code", None)
+        where = f" (upstream status {code})" if isinstance(code, int) else ""
+        raise HTTPException(status_code=502, detail=f"extraction failed: {type(exc).__name__}{where}; details are in the service log") from exc
