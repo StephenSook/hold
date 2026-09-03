@@ -1,21 +1,22 @@
 # Bob Attribution
 
-Generated: 2026-09-03 16:14 UTC
+Generated: 2026-09-03 16:57 UTC
 
 ## Summary
 
 | Metric | Value |
 |---|---|
-| Total commits | 148 |
+| Total commits | 161 |
 | Bob-authored commits (Tool: IBM-Bob trailer) | 25 |
-| feat commits | 24 |
-| fix commits | 37 |
+| Last Bob-authored commit | f00aa11 |
+| feat commits | 25 |
+| fix commits | 43 |
 | chore commits | 10 |
-| docs commits | 22 |
+| docs commits | 24 |
 | ci commits | 4 |
-| test commits | 4 |
+| test commits | 5 |
 | CONTRACT commits | 5 |
-| status commits | 39 |
+| status commits | 42 |
 
 ## Modes used
 
@@ -177,4 +178,17 @@ Five write-scoped custom modes configured in `.bob/custom_modes.yaml`:
 12:03 5732e5c0b448d7a1047e1330a7e2f81455d1e96e fix(agent): the tool-bearing agent answers free-form; the schema stays on the extraction twin
 12:10 b1de22ee78f7bf157623793d65130b35f3c89e7c feat(eval): 3.4 recorded from a real run, 4 of 4 cases passed, score in FACTS, 295 tests
 12:10 d535aae8ae1f8a73b433ce61a6cabfb8a5c0c74c status: 3.4 DONE b1de22e 2026-09-03 12:12 Stephen
+12:14 35db32b3ac76f04fbf34f7dde89adb86b47a22cd docs(claims): README and AGENTS name only files that exist; lane record written; guard added, 296 tests
+12:14 a77cc750f7681e9f1a80a2df43501cf794915fc2 status: 5.1 README and AGENTS half at 35db32b 2026-09-03 12:30 Stephen
+12:28 f98db45bbf79bc43ef3750d4e1454a943f2f9644 feat(rules): 2.11 SAG-AFTRA rest periods, forced calls and meal penalties, integer cents, 300 tests
+12:28 67995095db7a00407339f0de29ca39124bba1000 status: 2.11 DONE f98db45 2026-09-03 12:50 Stephen
+12:30 09392dacb4b95caf65c7516727f5bd1b1dd2f224 fix(events): consecutive set events chain on the latest schedule, solved or still solving
+12:33 60bf7b8f04267efaa469bf327b031026c2f1ecaf fix(streaming): a dead or unstarted consumer turns connected off instead of reading as live
+12:33 07c9d024c21166e6949b79f08a9b3d7784938c68 fix(streaming): an event the handler cannot apply is counted as skipped with its reason
+12:37 91ca9899e6539e8157641a00b9fe9abdd9f2b435 fix(streaming): only a job this API minted counts as its own echo; mirrored events are counted
+12:37 67047a796407c9536ad17b1845e3ed032c46993b fix(events): the set-event response names the transport that carried the event
+12:41 2e6ff6a905a35a771276e02864f8d9b44760e991 fix(agent): the tool guard fails closed without invocation state and stops claiming to end the loop
+12:41 2cd5069eebce92bc9dbb2f40cf18f81bdba13994 test(streaming): the consumer group id is asserted by value
+12:41 5a31ebe1ec06aa3a3c982aec91c543faaedda2ee docs(readme): the quote-verification line describes browser-captured snapshots; no record is unverifiable now
+12:42 4063a7ac1702d4db04ef77e94f096a36f0700b6f status: 5.3 round five folded (seven findings, 09392da to 2cd5069) 2026-09-03 13:20 Stephen
 ```

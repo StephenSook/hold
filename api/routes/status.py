@@ -9,6 +9,7 @@ from __future__ import annotations
 import importlib.metadata
 import json
 import os
+import re
 import threading
 import time
 from datetime import UTC, datetime
@@ -49,6 +50,7 @@ def build_status() -> dict[str, Any]:
         "cache_ttl_s": int(CACHE_TTL_S),
         "headline": {k: facts.get(k) for k in HEADLINE_FIELDS},
         "headline_source": "docs/FACTS.json",
+        "bob_usage": bob_usage(),
         "facts_generated_at": facts.get("generated_at"),
         "facts_run_sha": facts.get("run_sha"),
         "constructed": bool(facts.get("constructed", True)),
@@ -69,6 +71,30 @@ def build_status() -> dict[str, Any]:
             "note": "This endpoint reads committed files and invokes no model and no broker; Gemini is invoked by "
             "/api/extract and Confluent by /api/set-events.",
         },
+    }
+
+
+def bob_usage() -> dict[str, Any]:
+    """The committed Bob evidence aggregate (tasks 3.13 and 5.12): the session-store export's totals and
+    the trailer counts ATTRIBUTION.md records from git history. Never a live count."""
+    export = json.loads((ROOT / "docs" / "bob-evidence" / "bob-usage-evidence.json").read_text(encoding="utf-8"))
+    attribution = (ROOT / "docs" / "bob-evidence" / "ATTRIBUTION.md").read_text(encoding="utf-8")
+
+    def row(label: str) -> str | None:
+        found = re.search(rf"^\| {re.escape(label)} \| ([^|]+) \|", attribution, re.M)
+        return found.group(1).strip() if found else None
+
+    total, bob = row("Total commits"), row("Bob-authored commits (Tool: IBM-Bob trailer)")
+    return {
+        "source": "docs/bob-evidence/bob-usage-evidence.json",
+        "generated_at": export.get("generated_at"),
+        "task_count": export.get("task_count"),
+        "total_cost_usd": export.get("total_cost_usd"),
+        "note": export.get("note"),
+        "commits_total": int(total) if total else None,
+        "commits_with_bob_trailer": int(bob) if bob else None,
+        "last_bob_commit": row("Last Bob-authored commit"),
+        "attribution_source": "docs/bob-evidence/ATTRIBUTION.md",
     }
 
 

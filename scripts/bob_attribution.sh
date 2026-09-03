@@ -11,6 +11,7 @@ mkdir -p "$(dirname "$OUT")"
 # Count commits with the IBM-Bob trailer
 TOTAL_COMMITS=$(git log --oneline | wc -l | tr -d ' ')
 BOB_COMMITS=$(git log --format='%B' | grep -c "^Tool: IBM-Bob$" || true)
+LAST_BOB_COMMIT=$(git log --format='%h' --grep='^Tool: IBM-Bob$' -1)
 
 # Build trace: all commits in order
 BUILD_TRACE=$(git log --reverse --format='%ad %H %s' --date=format:'%H:%M')
@@ -36,6 +37,7 @@ Generated: $(date -u '+%Y-%m-%d %H:%M UTC')
 |---|---|
 | Total commits | $TOTAL_COMMITS |
 | Bob-authored commits (Tool: IBM-Bob trailer) | $BOB_COMMITS |
+| Last Bob-authored commit | $LAST_BOB_COMMIT |
 | feat commits | $FEAT_COUNT |
 | fix commits | $FIX_COUNT |
 | chore commits | $CHORE_COUNT |
