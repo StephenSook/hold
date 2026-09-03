@@ -17,19 +17,39 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Until PLAN.md task 0.1 creates the GCP project and its secrets, the job passes with a
+      # notice instead of failing every push. Nothing is deployed when the secrets are absent.
+      - name: Check deploy credentials
+        id: creds
+        env:
+          WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        run: |
+          if [ -z "$WIF_PROVIDER" ] || [ -z "$GCP_PROJECT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Deploy skipped: WIF_PROVIDER or GCP_PROJECT is not set (PLAN.md task 0.1). Nothing was deployed."
+            echo "Deploy skipped: GCP secrets not set (PLAN.md task 0.1). Nothing was deployed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       # Workload Identity Federation - no JSON key in the repo (task 0.1)
-      - uses: google-github-actions/auth@v2
+      - if: steps.creds.outputs.configured == 'true'
+        uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
-      - uses: google-github-actions/setup-gcloud@v2
+      - if: steps.creds.outputs.configured == 'true'
+        uses: google-github-actions/setup-gcloud@v2
 
       # Configure Docker for Artifact Registry
-      - run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+      - if: steps.creds.outputs.configured == 'true'
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       # Build and push image
       - name: Build and push
+        if: steps.creds.outputs.configured == 'true'
         run: |
           IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/hold/hold:${{ github.sha }}"
           docker build -t "$IMAGE" .
@@ -37,6 +57,7 @@ jobs:
 
       # Deploy to Cloud Run - exact flags from PLAN.md task 1.10 / D11
       - name: Deploy to Cloud Run
+        if: steps.creds.outputs.configured == 'true'
         run: |
           IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/hold/hold:${{ github.sha }}"
           gcloud run deploy hold \
