@@ -154,7 +154,7 @@ def pass1_day(
     schedule: ScheduleInput,
     day_index: int,
     day_scene_ids: list[str] | None = None,
-    prev_dismissal: time | None = None,
+    prev_dismissal: time | Mapping[str, time] | None = None,
     time_limit_s: float = 10.0,
     rules_dir: Path | None = None,
     worked_dates: Mapping[str, Collection[date]] | None = None,
@@ -172,7 +172,13 @@ def pass1_day(
     """
     if day_scene_ids is None:
         day_scene_ids = [s.id for s in schedule.scenes]
-    prev_m = minutes_of(prev_dismissal) if prev_dismissal is not None else _prev_dismissal_minutes(schedule, day_index)
+    prev_m: int | Mapping[str, int] | None
+    if isinstance(prev_dismissal, Mapping):
+        prev_m = {cid: minutes_of(t) for cid, t in prev_dismissal.items()}
+    elif prev_dismissal is not None:
+        prev_m = minutes_of(prev_dismissal)
+    else:
+        prev_m = _prev_dismissal_minutes(schedule, day_index)
 
     def undetermined(note: str, status: str, **extra: Any) -> Pass1Result:
         return Pass1Result(
@@ -304,6 +310,7 @@ def pass1_schedule(
     day_scene_ids: dict[int, list[str]] | None = None,
     time_limit_s: float = 10.0,
     rules_dir: Path | None = None,
+    prev_dismissals: Mapping[int, Mapping[str, time]] | None = None,
 ) -> list[Pass1Result]:
     """Pass 1 over every day. Days are independent for timing (turnaround uses the previous day's
     crew wrap); the day map gives each minor's worked dates for the consecutive-days rule."""
@@ -325,6 +332,9 @@ def pass1_schedule(
         else:
             raise KeyError(f"pass1_schedule: no scene list for day {i}; an empty list must be explicit")
         results.append(
-            pass1_day(schedule, i, day_scene_ids=ids, time_limit_s=time_limit_s, rules_dir=rules_dir, worked_dates=worked)
+            pass1_day(
+                schedule, i, day_scene_ids=ids, time_limit_s=time_limit_s, rules_dir=rules_dir, worked_dates=worked,
+                prev_dismissal=prev_dismissals.get(i) if prev_dismissals is not None else None,
+            )
         )
     return results

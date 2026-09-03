@@ -618,3 +618,16 @@ def test_trust_records_are_display_facts_that_never_apply() -> None:
     )
     assert not rule_applies_to_minor(trust, _MINOR_M, "GA")
     assert not rule_applies_to_minor(trust, _MINOR_M, "CA")
+
+
+def test_per_minor_previous_dismissal_overrides_the_crew_wrap() -> None:
+    """A minor dismissed at 09:00 the day before has 22 h of rest before a 07:00 call even when
+    the crew wrapped at 19:30; the checker must accept a per-minor previous dismissal."""
+    days = [_day(date(2026, 10, 5), "07:00", "19:30"), _day(date(2026, 10, 6), "07:00", "19:00")]
+    schedule = _make_schedule(days)
+    crew = {v.rule_id for v in check_day_legality(schedule, 1)}
+    assert "CA_11760_i_turnaround_12_hours" in crew
+    own = {v.rule_id for v in check_day_legality(schedule, 1, prev_dismissal={"cM": time(9, 0)})}
+    assert "CA_11760_i_turnaround_12_hours" not in own, own
+    absent = {v.rule_id for v in check_day_legality(schedule, 1, prev_dismissal={})}
+    assert "CA_11760_i_turnaround_12_hours" not in absent  # the minor did not work the day before

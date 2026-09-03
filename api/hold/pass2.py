@@ -24,8 +24,8 @@ from __future__ import annotations
 import os
 import time as _time
 from collections.abc import Callable
-from dataclasses import dataclass
-from datetime import date
+from dataclasses import dataclass, field
+from datetime import date, time
 from pathlib import Path
 from typing import Any
 
@@ -60,6 +60,7 @@ class Pass2Outcome:
     paid_hold_days: bool
     solve_ms: float
     note: str
+    prev_dismissals: dict[int, dict[str, time]] = field(default_factory=dict)  # per day, each minor's dismissal the day before
 
 
 # ---------------------------------------------------------------------------
@@ -132,6 +133,8 @@ class _Model:
     literals: dict[str, Any]
     cost: dict[str, list[int]]
     paid: dict[str, bool]
+    calls: dict[str, list[Any]]      # per minor, call minutes per day
+    dismisses: dict[str, list[Any]]  # per minor, dismissal minutes per day
 
 
 def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, explain: bool) -> _Model:
@@ -238,6 +241,8 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
         else:
             runs.append([d])
 
+    calls: dict[str, list[Any]] = {}
+    dismisses: dict[str, list[Any]] = {}
     for member in schedule.cast:
         if not is_minor(member):
             continue
@@ -247,6 +252,7 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
         assert member.age is not None
         call = [m.new_int_var(0, 2 * _BIG, f"call_{member.id}_{d}") for d in range(D)]
         dismiss = [m.new_int_var(-_BIG, _BIG, f"dismiss_{member.id}_{d}") for d in range(D)]
+        calls[member.id], dismisses[member.id] = call, dismiss
         work = [sum(dur[i] * x[i][d] for i in own) for d in range(D)]
         for d in range(D):
             m.add_min_equality(call[d], [start[i] + _BIG - _BIG * x[i][d] for i in own])
@@ -318,7 +324,7 @@ def _build(schedule: ScheduleInput, rules: list[RuleRecord], rules_dir: Path, ex
                 obj_terms.append(cost[member.id][d] * h)
         hold[member.id] = holds
     m.minimize(cp_model.LinearExpr.sum(obj_terms) if obj_terms else 0)
-    return _Model(model=m, pos=pos, scene_at=scene_at, x=x, start=start, pres=pres, hold=hold, literals=literals, cost=cost, paid=paid)
+    return _Model(model=m, pos=pos, scene_at=scene_at, x=x, start=start, pres=pres, hold=hold, literals=literals, cost=cost, paid=paid, calls=calls, dismisses=dismisses)
 
 
 OnSolution = Callable[[int, int, float], None]
@@ -438,7 +444,20 @@ def pass2(
     )
 
     full_map = {d: day_scene_ids.get(d, []) for d in range(D)}
-    verdicts = pass1_schedule(schedule, day_scene_ids=full_map, time_limit_s=max(10.0, time_limit_s / 4), rules_dir=rules_dir)
+    # Each minor's own dismissal on the previous consecutive day, so the re-judge measures
+    # turnaround on the timeline pass 2 kept legal, not on the crew wrap.
+    prev_dismissals: dict[int, dict[str, time]] = {}
+    for d in range(1, D):
+        if (schedule.days[d].date - schedule.days[d - 1].date).days != 1:
+            continue
+        prev_dismissals[d] = {
+            cid: time(int(solver.value(dis[d - 1])) // 60 % 24, int(solver.value(dis[d - 1])) % 60)
+            for cid, dis in mm.dismisses.items()
+            if int(solver.value(mm.pres[cid][d - 1])) == 1
+        }
+    verdicts = pass1_schedule(
+        schedule, day_scene_ids=full_map, time_limit_s=max(10.0, time_limit_s / 4), rules_dir=rules_dir, prev_dismissals=prev_dismissals
+    )
     used = [v for v in verdicts if day_scene_ids.get(v.verdict.day)]
     all_legal = all(v.verdict.status == "LEGAL" for v in used)
     recount = recount_hold_days(schedule, day_scene_ids)
@@ -465,6 +484,7 @@ def pass2(
         paid_hold_days=paid_any,
         solve_ms=(_time.perf_counter() - t0) * 1000.0,
         note=note,
+        prev_dismissals=prev_dismissals,
     )
 
 

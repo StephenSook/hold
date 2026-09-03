@@ -571,7 +571,7 @@ def check_day_legality(
     rules_dir: Path | None = None,
     timeline: DayTimeline | None = None,
     on_set: set[str] | None = None,
-    prev_dismissal: time | None = None,
+    prev_dismissal: time | Mapping[str, time] | None = None,
     worked_dates: Mapping[str, Collection[date]] | None = None,
 ) -> list[ViolationRecord]:
     """
@@ -600,7 +600,7 @@ def check_day_legality(
         rules_dir = _RULES_DIR
 
     shoot_day = schedule.days[day_index]
-    ctx = build_day_context(schedule, day_index, prev_dismissal=prev_dismissal)
+    ctx = build_day_context(schedule, day_index, prev_dismissal if isinstance(prev_dismissal, time) else None)
 
     # Load all rules valid on this shooting date
     all_rules = load_rules(rules_dir, shooting_date=shoot_day.date)
@@ -639,6 +639,10 @@ def check_day_legality(
             work_hours = ctx.location_hours
             proxy = True
 
+        # Turnaround: a per-minor previous dismissal (from a solved timeline) wins over the crew wrap;
+        # a mapping without this minor means the minor did not work the day before.
+        prev_wrap = ctx.prev_wrap if not isinstance(prev_dismissal, Mapping) else prev_dismissal.get(minor.id)
+
         if worked_dates is not None:
             run = consecutive_run(set(worked_dates.get(minor.id, ())) | {shoot_day.date}, shoot_day.date)
             run_assumed = False
@@ -672,7 +676,7 @@ def check_day_legality(
 
             # Turnaround: GA and SAG apply when the checked day is a school day, CA always
             if "min_turnaround_hours" in rule.params and turnaround_applies(rule.id, shoot_day.school_day):
-                _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
+                _add(_check_turnaround(rule, prev_wrap, call_t))
 
             # Meal within N hours: only judgeable on a concrete timeline
             if "max_work_before_meal_hours" in rule.params and mt is not None:

@@ -183,3 +183,23 @@ def test_shoot_dates_outside_every_rate_record_are_undetermined_with_a_rates_rea
     assert outcome.result.status == "UNDETERMINED"
     assert outcome.result.reasons == ["rates"], outcome.result.reasons
     assert "2019" in outcome.note
+
+
+def test_re_judge_uses_each_minors_own_dismissal_for_turnaround() -> None:
+    """Round three, finding 1: pass 2 keeps the minor's rest legal on its own timeline; the pass-1
+    re-judge must be told that timeline instead of measuring from the crew wrap."""
+    days = [_day(date(2026, 10, 5), "07:00", "19:30"), _day(date(2026, 10, 6), "07:00", "19:00")]
+    scenes = [_scene(1, 8, ["cA"]), _scene(2, 8, ["cA", "cM"]), _scene(3, 84, ["cA"]), _scene(4, 8, ["cA", "cM"]), _scene(5, 88, ["cA"])]
+    constraints = [
+        Constraint(type="precedence", scene_id_a="s1", scene_id_b="s2"),
+        Constraint(type="precedence", scene_id_a="s2", scene_id_b="s3"),
+        Constraint(type="precedence", scene_id_a="s4", scene_id_b="s5"),
+        *(Constraint(type="availability", scene_id_a=sid, unavailable_day_indices=[1]) for sid in ("s1", "s2", "s3")),
+        *(Constraint(type="availability", scene_id_a=sid, unavailable_day_indices=[0]) for sid in ("s4", "s5")),
+    ]
+    outcome = _run(_schedule(scenes, days, [_A, _M], constraints=constraints), workers=1)
+    assert outcome.result.status == "OPTIMAL", (outcome.result.status, outcome.result.reasons, outcome.note)
+    used = [p for p in outcome.pass1 if outcome.day_scene_ids.get(p.verdict.day)]
+    assert [p.verdict.status for p in used] == ["LEGAL", "LEGAL"], [(p.verdict.day, p.verdict.status, p.verdict.core_rule_ids, p.verdict.reason) for p in used]
+    assert outcome.checker.agrees, outcome.checker.note
+    assert outcome.prev_dismissals[1]["cM"] == time(9, 0)

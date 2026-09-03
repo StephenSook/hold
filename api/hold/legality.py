@@ -124,7 +124,7 @@ def build_day_model(
     schedule: ScheduleInput,
     day_index: int,
     day_scene_ids: list[str],
-    prev_dismissal_minutes: int | None,
+    prev_dismissal_minutes: int | Mapping[str, int] | None,
     rules_dir: Path | None = None,
     tidy_objective: bool = False,
     worked_dates: Mapping[str, Collection[date]] | None = None,
@@ -251,7 +251,9 @@ def build_day_model(
                     is_school_night=ctx.is_school_night,
                     school_day=day.school_day,
                     consecutive_run=run,
-                    prev_dismissal_minutes=prev_dismissal_minutes,
+                    prev_dismissal_minutes=(
+                        prev_dismissal_minutes.get(mv.cast_id) if isinstance(prev_dismissal_minutes, Mapping) else prev_dismissal_minutes
+                    ),
                 )
 
     if tidy_objective:
