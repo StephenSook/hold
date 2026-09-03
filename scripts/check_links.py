@@ -49,6 +49,9 @@ def main() -> int:
     print("| Surface | Target | Status | Title or note |\n|---|---|---|---|")
     bad = 0
     for u, name in sorted(urls.items()):
+        if re.match(r"https?://(localhost|127\.0\.0\.1)", u):
+            print(f"| {name} | {u} | skipped | local address from the quick start |")
+            continue
         status, title = fetch(u)
         ok = status.startswith("2") or status == "403"
         bad += not ok
