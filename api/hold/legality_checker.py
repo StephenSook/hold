@@ -657,7 +657,9 @@ def check_day_legality(
                 _add(_check_location_hours(rule, location_hours, age))
 
             # Work hours (exact on the timeline path, proxy otherwise)
-            if any(k in rule.params for k in ("max_work_hours", "max_work_hours_school_day", "max_work_hours_day")):
+            if any(k in rule.params for k in (
+                "max_work_hours", "max_work_hours_school_day", "max_work_hours_non_school_day", "max_work_hours_day",
+            )):
                 _add(_check_work_hours(rule, work_hours, age, shoot_day.school_day, proxy))
 
             # Turnaround: GA and SAG apply when the checked day is a school day, CA always

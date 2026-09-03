@@ -659,3 +659,14 @@ def test_tidy_resolve_fallback_is_recorded(monkeypatch: pytest.MonkeyPatch) -> N
     result, _ = _run(LEGAL)
     assert result.verdict.status == "LEGAL"
     assert "tidy" in result.note
+
+
+def test_non_school_work_cap_core_is_flagged_by_the_checker() -> None:
+    """D13 on a non-school day: an 8 h scene breaks the SAG-AFTRA 7 h non-school cap in the solver
+    and the crew-window checker must name the same record."""
+    sched = _schedule([_scene(1, 64, ["cM"])], [_day(date(2026, 10, 3), "05:00", "14:00")], [_cast("cM", 14)], state="other")
+    result = pass1_day(sched, 0, time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in result.verdict.core_rule_ids
+    checker_ids = {v.rule_id for v in check_day_legality(sched, 0, on_set={"cM"})}
+    assert set(result.verdict.core_rule_ids) <= checker_ids, (result.verdict.core_rule_ids, checker_ids)

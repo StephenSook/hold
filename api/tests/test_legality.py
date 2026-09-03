@@ -582,3 +582,11 @@ def test_consecutive_days_use_worked_dates_when_given() -> None:
     all_days = {"cM": {d.date for d in days}}
     ids = {v.rule_id for v in check_day_legality(schedule, 6, worked_dates=all_days)}
     assert "GA_300_7_1_03_consecutive_days" in ids
+
+
+def test_non_school_day_work_cap_records_are_checked() -> None:
+    """A record that carries only max_work_hours_non_school_day must reach the checker (D13)."""
+    day = _day(date(2026, 10, 3), "05:00", "14:00", school_day=False)  # 9 h proxy work
+    ids = {v.rule_id for v in check_day_legality(_make_schedule([day]), 0)}
+    assert "CA_11760_e_work_hours_9_15_non_school_day" in ids, ids
+    assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in ids, ids
