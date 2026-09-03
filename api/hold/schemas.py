@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import date, time
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 # ---------------------------------------------------------------------------
 # Scene and cast types
@@ -75,6 +75,14 @@ class ScheduleInput(BaseModel):
     # Under the SAG-AFTRA low-budget agreements consecutive employment (paid hold days) applies
     # only on overnight locations; the Basic Agreement pays it everywhere.
     overnight_location: bool = False
+
+    @model_validator(mode="after")
+    def _days_chronological(self) -> ScheduleInput:
+        """Consumers read days by list position (turnaround, worked-date fallback, pass-2 hold days)."""
+        for prev, nxt in zip(self.days, self.days[1:], strict=False):
+            if nxt.date <= prev.date:
+                raise ValueError(f"days must be in chronological order with unique dates: {prev.date} is followed by {nxt.date}")
+        return self
 
 
 # ---------------------------------------------------------------------------

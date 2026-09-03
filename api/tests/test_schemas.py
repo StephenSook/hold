@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
 
 from api.hold.schemas import (
     ExtractResult,
@@ -92,3 +93,14 @@ def test_all_fixtures_parse(filename: str, model_cls: type[Any]) -> None:
     data = _load(filename)
     obj = model_cls.model_validate(data)
     assert obj is not None
+
+
+def test_days_must_be_chronological_and_unique() -> None:
+    """Checker fallbacks, turnaround and pass-2 hold days read days by list position."""
+    raw = _load("schedule-input.json")
+    days = raw["days"]
+    assert len(days) >= 2
+    with pytest.raises(ValidationError, match="chronological"):
+        ScheduleInput.model_validate(dict(raw, days=[days[1], days[0], *days[2:]]))
+    with pytest.raises(ValidationError, match="chronological"):
+        ScheduleInput.model_validate(dict(raw, days=[days[0], days[0], *days[1:]]))
