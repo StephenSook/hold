@@ -112,12 +112,13 @@ def test_set_event_re_solves_in_process(client: TestClient) -> None:
 
 
 def test_extract_is_fixture_in_fake_mode_and_refused_live(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GOOGLE_CLOUD_PROJECT", raising=False)
     fake = client.post("/api/extract", json={"text": "INT. POLICE STATION - DAY"})
     assert fake.status_code == 200 and fake.json()["status"] == "ok"
     assert fake.json()["notes"].startswith("fixture")
     monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "0")
     live = client.post("/api/extract", json={"text": "INT. POLICE STATION - DAY"})
-    assert live.status_code == 503 and "3.1" in live.json()["detail"]
+    assert live.status_code == 503 and "GOOGLE_CLOUD_PROJECT" in live.json()["detail"]
 
 
 def test_rules_and_bench_routes(client: TestClient) -> None:

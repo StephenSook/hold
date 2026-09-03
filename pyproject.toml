@@ -38,6 +38,8 @@ markers = [
 filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
+    # google-adk 2.6.3 deprecates its own config classes at import time; third party, last so it wins
+    "ignore:.*BaseAgentConfig.*:DeprecationWarning",
 ]
 
 [tool.ruff]
