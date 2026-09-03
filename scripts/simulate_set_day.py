@@ -76,6 +76,15 @@ def simulate(client: httpx.Client, events: list[dict[str, Any]] = DEFAULT_EVENTS
     return report
 
 
+def report_ok(report: dict[str, Any]) -> bool:
+    """Success means every solve finished with a decided plan and no illegal or undetermined day."""
+    runs = [report["baseline"], *report["steps"]]
+    return all(
+        r.get("status") == "done" and r.get("pass2_status") in ("OPTIMAL", "FEASIBLE") and not r.get("illegal_days") and not r.get("undetermined_days")
+        for r in runs
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--api", default="http://localhost:8000", help="base URL of a running HOLD API")
@@ -84,7 +93,7 @@ def main() -> int:
     with httpx.Client(base_url=args.api, timeout=30.0) as client:
         report = simulate(client, delay_s=args.delay)
     print(json.dumps(report, indent=2))
-    return 0 if all(step["status"] == "done" for step in report["steps"]) else 1
+    return 0 if report_ok(report) else 1
 
 
 if __name__ == "__main__":
