@@ -31,14 +31,15 @@ legal, and if not, every rule you broke and where each one is written down.
 
 ## Quick start
 
-Prerequisites: `uv`, Node 22, `jq`.
+Prerequisites: `uv`, `jq` (Node 22 once the web app lands).
 
 ```bash
 git clone https://github.com/StephenSook/hold && cd hold
 uv sync
-uv run pytest api/tests -q
-cd web && npm ci && npm run build && npm run test
-curl -s https://hold-fwmdq7fc3q-uc.a.run.app/api/status | jq
+uv run pytest api/tests -q                       # 268 hermetic tests, no key, no account
+HOLD_FAKE_EXTERNALS=1 uv run uvicorn api.main:app --port 8000   # local API, fixtures instead of Gemini
+uv run python scripts/simulate_set_day.py --api http://localhost:8000   # solve, then three set events re-solved
+curl -s https://hold-fwmdq7fc3q-uc.a.run.app/api/status | jq            # the live headline
 ```
 
 Live instance: https://hold-fwmdq7fc3q-uc.a.run.app (Cloud Run, one instance; the web app lands with its own tasks, the API and `/api/status` are up now).
