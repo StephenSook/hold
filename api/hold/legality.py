@@ -38,8 +38,9 @@ params), and the display-only ids (ratios, chaperones, infants).
 from __future__ import annotations
 
 import math
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
-from datetime import time
+from datetime import date, time
 from pathlib import Path
 from typing import Any
 
@@ -48,6 +49,7 @@ from ortools.sat.python import cp_model
 from api.hold.legality_checker import (
     age_applies,
     build_day_context,
+    consecutive_run,
     curfew_limit_minutes,
     earliest_call_applies,
     is_minor,
@@ -123,12 +125,15 @@ def build_day_model(
     prev_dismissal_minutes: int | None,
     rules_dir: Path | None = None,
     tidy_objective: bool = False,
+    worked_dates: Mapping[str, Collection[date]] | None = None,
 ) -> DayModel:
     """
     Build the pass-1 model for one day.
 
     prev_dismissal_minutes: the previous consecutive calendar day's dismissal (crew wrap by
     default), or None when there is no previous consecutive shoot day.
+    worked_dates: per-minor dates worked, for the consecutive-days rule; None falls back to
+    the production's shoot dates (conservative), the same fallback the checker uses.
     tidy_objective: add a small objective (earliest starts, shortest minor spans, no
     unneeded meal) so a FEASIBLE witness reads like a call sheet. The verdict never
     depends on it.
@@ -222,6 +227,10 @@ def build_day_model(
         cast_by_id = {c.id: c for c in schedule.cast}
         for mv in minors.values():
             member = cast_by_id[mv.cast_id]
+            if worked_dates is not None:
+                run = consecutive_run(set(worked_dates.get(mv.cast_id, ())) | {day.date}, day.date)
+            else:
+                run = ctx.consecutive_run
             for rule in rules:
                 if not rule_applies_to_minor(rule, member, shoot_state):
                     continue
@@ -233,7 +242,7 @@ def build_day_model(
                     mv,
                     is_school_night=ctx.is_school_night,
                     school_day=day.school_day,
-                    consecutive_run=ctx.consecutive_run,
+                    consecutive_run=run,
                     prev_dismissal_minutes=prev_dismissal_minutes,
                 )
 

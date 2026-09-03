@@ -38,9 +38,9 @@ The CA 1308.7 5 a.m. floor is checked on the record whose curfew matches the nig
 """
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass
-from datetime import time
+from datetime import date, time
 from pathlib import Path
 from typing import NamedTuple
 
@@ -123,6 +123,19 @@ def _turnaround_hours(prev_wrap: time, next_call: time) -> float:
 def is_minor(member: CastMember) -> bool:
     """A cast member with a recorded age under 18. Adults may carry an age on file."""
     return member.age is not None and member.age < 18
+
+
+def consecutive_run(worked: Collection[date], today: date) -> int:
+    """How many consecutive calendar dates ending today the minor worked (today counts as 1)."""
+    run = 1
+    d = today
+    while True:
+        prev = date.fromordinal(d.toordinal() - 1)
+        if prev in worked:
+            run += 1
+            d = prev
+        else:
+            return run
 
 
 class DayContext(NamedTuple):
@@ -495,21 +508,22 @@ def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
 
 def _check_consecutive_days(
     rule: RuleRecord,
-    consecutive_run: int,
+    run: int,
+    assumed: bool,
 ) -> ViolationRecord | None:
-    """Check max consecutive work days."""
+    """Check max consecutive work days. `assumed` marks the production-dates fallback."""
     params = rule.params
     if "max_consecutive_days" not in params:
         return None
     limit = int(params["max_consecutive_days"])
-    if consecutive_run > limit:
+    if run > limit:
         return ViolationRecord(
             rule_id=rule.id,
             citation=rule.citation,
             title=rule.title,
             limit=f"{limit} consecutive days max",
-            computed=f"{consecutive_run} consecutive days",
-            over_by=f"{consecutive_run - limit} days",
+            computed=f"{run} consecutive days" + (" (production dates, minor assumed on every one)" if assumed else ""),
+            over_by=f"{run - limit} days",
             quote=rule.quote,
             source_url=rule.source_url,
             jurisdiction=rule.jurisdiction,
@@ -528,6 +542,7 @@ def check_day_legality(
     timeline: DayTimeline | None = None,
     on_set: set[str] | None = None,
     prev_dismissal: time | None = None,
+    worked_dates: Mapping[str, Collection[date]] | None = None,
 ) -> list[ViolationRecord]:
     """
     Enumerate every legality violation for one shoot day.
@@ -541,6 +556,9 @@ def check_day_legality(
             (a minor with no scene that day was not there). None means every minor.
         prev_dismissal: Yesterday's dismissal when the caller knows it; default is the
             previous consecutive calendar day's crew wrap.
+        worked_dates: Per-minor dates worked, for the consecutive-days rule. None falls back
+            to the production's shoot dates (conservative: the minor is assumed on every one)
+            and the violation record says so.
 
     Returns:
         List of ViolationRecord. Empty means LEGAL for that day.
@@ -591,6 +609,13 @@ def check_day_legality(
             work_hours = ctx.location_hours
             proxy = True
 
+        if worked_dates is not None:
+            run = consecutive_run(set(worked_dates.get(minor.id, ())) | {shoot_day.date}, shoot_day.date)
+            run_assumed = False
+        else:
+            run = ctx.consecutive_run
+            run_assumed = True
+
         for rule in all_rules:
             if not rule_applies_to_minor(rule, minor, shoot_state):
                 continue
@@ -619,9 +644,9 @@ def check_day_legality(
             if "max_work_before_meal_hours" in rule.params and mt is not None:
                 _add(_check_meal(rule, mt))
 
-            # Consecutive days
+            # Consecutive days: the minor's own worked dates when known
             if "max_consecutive_days" in rule.params:
-                _add(_check_consecutive_days(rule, ctx.consecutive_run))
+                _add(_check_consecutive_days(rule, run, run_assumed))
 
     return violations
 

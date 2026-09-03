@@ -470,3 +470,34 @@ def test_duplicate_scene_ids_are_undetermined() -> None:
     result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
     assert result.verdict.status == "UNDETERMINED"
     assert "duplicate" in result.note
+
+
+# ---------------------------------------------------------------------------
+# Consecutive days are the minor's own worked dates
+# ---------------------------------------------------------------------------
+
+def test_consecutive_days_count_the_minor_not_the_production() -> None:
+    """Second-model finding: seven production dates with the minor only on the seventh read ILLEGAL."""
+    schedule, meta = _load(FIXTURES / "consecutive-days.json")
+    only_last = {i: [] for i in range(6)}
+    only_last[6] = _day_scenes(meta, 6)
+    results = pass1_schedule(schedule, day_scene_ids=only_last, time_limit_s=TIME_LIMIT)
+    assert results[6].verdict.status == "LEGAL", (results[6].verdict.status, results[6].per_rule)
+    assert "GA_300_7_1_03_consecutive_days" in results[6].per_rule
+    assert results[6].per_rule["GA_300_7_1_03_consecutive_days"] == "FEASIBLE"
+
+
+def test_consecutive_days_with_full_history_still_fires() -> None:
+    schedule, meta = _load(FIXTURES / "consecutive-days.json")
+    full = {int(k): v for k, v in meta["_day_scene_ids"].items()}
+    results = pass1_schedule(schedule, day_scene_ids=full, time_limit_s=TIME_LIMIT)
+    assert results[6].verdict.core_rule_ids == ["GA_300_7_1_03_consecutive_days"]
+    assert results[5].verdict.status == "LEGAL"
+
+
+def test_standalone_day_without_history_is_conservative_and_says_so() -> None:
+    schedule, meta = _load(FIXTURES / "consecutive-days.json")
+    result = pass1_day(schedule, 6, day_scene_ids=_day_scenes(meta, 6), time_limit_s=TIME_LIMIT)
+    assert result.verdict.core_rule_ids == ["GA_300_7_1_03_consecutive_days"]
+    record = next(v for v in result.verdict.violations if v.rule_id == "GA_300_7_1_03_consecutive_days")
+    assert "assumed" in record.computed

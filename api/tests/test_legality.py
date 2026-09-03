@@ -554,3 +554,15 @@ def test_timeline_meal_too_early_leaves_a_long_stretch_after_it() -> None:
                                                   meal_start=time(6, 0), meal_end=time(6, 30))})
     ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=tl)}
     assert "CA_11761_meal_period_6_hours" in ids
+
+
+def test_consecutive_days_use_worked_dates_when_given() -> None:
+    start = date(2026, 10, 5)
+    days = [_day(date.fromordinal(start.toordinal() + i), "07:00", "16:00", school_day=False) for i in range(7)]
+    schedule = _make_schedule(days)
+    worked = {"cM": {date.fromordinal(start.toordinal() + 6)}}
+    ids = {v.rule_id for v in check_day_legality(schedule, 6, worked_dates=worked)}
+    assert "GA_300_7_1_03_consecutive_days" not in ids
+    all_days = {"cM": {d.date for d in days}}
+    ids = {v.rule_id for v in check_day_legality(schedule, 6, worked_dates=all_days)}
+    assert "GA_300_7_1_03_consecutive_days" in ids

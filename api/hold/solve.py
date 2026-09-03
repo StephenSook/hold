@@ -24,8 +24,9 @@ Times are "HH:MM" strings.
 """
 from __future__ import annotations
 
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
-from datetime import time
+from datetime import date, time
 from pathlib import Path
 from typing import Any
 
@@ -147,9 +148,13 @@ def pass1_day(
     prev_dismissal: time | None = None,
     time_limit_s: float = 10.0,
     rules_dir: Path | None = None,
+    worked_dates: Mapping[str, Collection[date]] | None = None,
 ) -> Pass1Result:
     """
     Pass-1 verdict for one day. See the module docstring for the three-step solve.
+
+    worked_dates: per-minor dates worked (pass1_schedule derives it from the day map). Without
+    it the consecutive-days rule counts production dates and labels the assumption.
 
     day_scene_ids: the scenes shot that day, in shooting order. None means every scene in
     the production, in listed order (only sensible for a one-day schedule); an explicit
@@ -172,7 +177,7 @@ def pass1_day(
         return undetermined("no scenes assigned to this day; nothing to judge", "NOT_RUN")
 
     try:
-        dm = build_day_model(schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir)
+        dm = build_day_model(schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir, worked_dates=worked_dates)
     except Pass1ScopeError as exc:
         # Only the two documented scope cases land here. Registry corruption and parse
         # errors propagate, exactly as they do from the checker.
@@ -200,7 +205,9 @@ def pass1_day(
         return undetermined("time limit reached before the legality model was decided", full_status)
 
     if full_status in ("OPTIMAL", "FEASIBLE"):
-        tidy = build_day_model(schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir, tidy_objective=True)
+        tidy = build_day_model(
+            schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir, tidy_objective=True, worked_dates=worked_dates
+        )
         tidy_status, tidy_solver = _solve_with(tidy, tidy.all_literals(), time_limit_s)
         if tidy_status in ("OPTIMAL", "FEASIBLE"):
             witness = _witness(tidy, tidy_solver, schedule)
@@ -208,7 +215,8 @@ def pass1_day(
             witness = _witness(dm, solver, schedule)
         feasible_table: dict[str, str] = dict.fromkeys(rule_ids, "FEASIBLE")
         leftovers = check_day_legality(
-            schedule, day_index, rules_dir=rules_dir, timeline=_timeline(witness), prev_dismissal=prev_dismissal
+            schedule, day_index, rules_dir=rules_dir, timeline=_timeline(witness), prev_dismissal=prev_dismissal,
+            worked_dates=worked_dates,
         )
         if leftovers:
             return Pass1Result(
@@ -265,7 +273,8 @@ def pass1_day(
         )
 
     violations = check_day_legality(
-        schedule, day_index, rules_dir=rules_dir, on_set=set(dm.minors), prev_dismissal=prev_dismissal
+        schedule, day_index, rules_dir=rules_dir, on_set=set(dm.minors), prev_dismissal=prev_dismissal,
+        worked_dates=worked_dates,
     )
     return Pass1Result(
         verdict=Verdict(status="ILLEGAL", day=day_index, violations=violations, core_rule_ids=list(core), witness=None),
@@ -283,7 +292,16 @@ def pass1_schedule(
     time_limit_s: float = 10.0,
     rules_dir: Path | None = None,
 ) -> list[Pass1Result]:
-    """Pass 1 over every day. Days are independent: turnaround uses the previous day's crew wrap."""
+    """Pass 1 over every day. Days are independent for timing (turnaround uses the previous day's
+    crew wrap); the day map gives each minor's worked dates for the consecutive-days rule."""
+    worked: dict[str, set[date]] | None = None
+    if day_scene_ids is not None:
+        scenes_by_id = {s.id: s for s in schedule.scenes}
+        worked = {}
+        for i, ids in day_scene_ids.items():
+            for sid in ids:
+                for cid in scenes_by_id[sid].cast_ids if sid in scenes_by_id else ():
+                    worked.setdefault(cid, set()).add(schedule.days[i].date)
     results: list[Pass1Result] = []
     for i in range(len(schedule.days)):
         if day_scene_ids is None:
@@ -292,5 +310,7 @@ def pass1_schedule(
             ids = day_scene_ids[i]
         else:
             raise KeyError(f"pass1_schedule: no scene list for day {i}; an empty list must be explicit")
-        results.append(pass1_day(schedule, i, day_scene_ids=ids, time_limit_s=time_limit_s, rules_dir=rules_dir))
+        results.append(
+            pass1_day(schedule, i, day_scene_ids=ids, time_limit_s=time_limit_s, rules_dir=rules_dir, worked_dates=worked)
+        )
     return results
