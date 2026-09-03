@@ -38,3 +38,84 @@ def test_report_ok_refuses_failed_undetermined_or_illegal_runs() -> None:
     assert not report_ok({**good, "steps": [{**good["steps"][0], "pass2_status": "UNDETERMINED"}]})
     assert not report_ok({**good, "steps": [{**good["steps"][0], "illegal_days": 2}]})
     assert not report_ok({**good, "steps": [{**good["steps"][0], "status": "failed"}]})
+
+
+class _Message:
+    def __init__(self, value: dict[str, Any]) -> None:
+        self._value = value
+
+    def error(self) -> None:
+        return None
+
+    def value(self) -> bytes:
+        import json
+
+        return json.dumps(self._value).encode("utf-8")
+
+
+class _FakeProducer:
+    """Stands in for the cluster: a produced set event reaches the API's consumer handler, as the bridge would."""
+
+    def __init__(self) -> None:
+        self.produced: list[tuple[str, bytes, bytes]] = []
+
+    def produce(self, topic: str, key: bytes, value: bytes) -> None:
+        import json
+
+        from api.routes.events import handle_external_set_event
+
+        self.produced.append((topic, key, value))
+        handle_external_set_event(json.loads(value))
+
+    def flush(self, timeout: float) -> int:
+        return 0
+
+
+class _FakeConsumer:
+    """Reads the verdicts the job store mirrored (they land on the bus in fake mode) as topic messages."""
+
+    def __init__(self) -> None:
+        self.topics: list[str] = []
+        self._served = 0
+
+    def subscribe(self, topics: list[str]) -> None:
+        self.topics = topics
+
+    def assignment(self) -> list[object]:
+        return [object()] if self.topics else []
+
+    def poll(self, timeout: float) -> _Message | None:
+        import time
+
+        verdicts = [e for e in BUS.replay(None) if e.get("event") == "verdict"]
+        if self._served < len(verdicts):
+            self._served += 1
+            return _Message(verdicts[self._served - 1])
+        time.sleep(min(timeout, 0.05))
+        return None
+
+    def close(self) -> None:
+        return None
+
+
+def test_confluent_transport_publishes_events_and_reads_verdicts_from_the_topic(client: TestClient) -> None:
+    """4.2 live leg: each event is produced on hold.set-events without a job_id, its re-solve's verdicts are
+    read from hold.verdicts, and the pass-2 numbers come from the job the topic named."""
+    import json
+
+    from api.hold.streaming import TOPIC_SET_EVENTS, TOPIC_VERDICTS
+    from scripts.simulate_set_day import simulate_confluent
+
+    producer, consumer = _FakeProducer(), _FakeConsumer()
+    report = simulate_confluent(client, producer, consumer, events=DEFAULT_EVENTS, delay_s=0.0, timeout_s=60.0)
+    assert report["transport"] == "confluent" and consumer.topics == [TOPIC_VERDICTS]
+    assert [t for t, _, _ in producer.produced] == [TOPIC_SET_EVENTS] * len(DEFAULT_EVENTS)
+    assert [k.decode() for _, k, _ in producer.produced] == [e["kind"] for e in DEFAULT_EVENTS]
+    for _, _, value in producer.produced:
+        payload = json.loads(value)
+        assert "job_id" not in payload and payload["source"] == "simulation"
+    for step in report["steps"]:
+        assert step["job_id"] and step["round_trip_ms"] >= 0 and step["verdicts_on_topic"] >= 1
+        assert step["status"] == "done"
+    assert len({step["job_id"] for step in report["steps"]}) == len(DEFAULT_EVENTS)
+    assert report_ok(report)
