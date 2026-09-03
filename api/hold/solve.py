@@ -271,7 +271,7 @@ def pass1_day(
     else:
         core = sufficient_core
         note = "joint: no single rule makes this day impossible, these rules do together"
-    if build_day_context(schedule, day_index).school_night_assumed and any("curfew" in r or "1308_7" in r for r in core):
+    if build_day_context(schedule, day_index).school_night_assumed and any(r in dm.night_dependent for r in core):
         note += "; the night was assumed to be a school night because the schedule does not say"
 
     if core and set(core) <= TIMING_ONLY_RULE_IDS:

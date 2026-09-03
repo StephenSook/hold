@@ -54,6 +54,7 @@ from api.hold.legality_checker import (
     earliest_call_applies,
     is_minor,
     rule_applies_to_minor,
+    school_night_dependent,
     turnaround_applies,
     work_cap_hours,
 )
@@ -106,6 +107,7 @@ class DayModel:
     meal_start: Any                        # IntVar
     meal_minutes: int
     notes: list[str] = field(default_factory=list)
+    night_dependent: set[str] = field(default_factory=set)  # rule ids whose constraint reads the school-night flag
 
     def all_literals(self) -> list[Any]:
         return [self.literals[k] for k in sorted(self.literals)]
@@ -240,6 +242,8 @@ def build_day_model(
                     continue
                 if not age_applies(rule, mv.age):
                     continue
+                if school_night_dependent(rule):
+                    dm.night_dependent.add(rule.id)
                 _add_rule_constraints(
                     dm,
                     rule,

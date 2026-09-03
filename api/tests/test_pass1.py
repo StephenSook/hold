@@ -670,3 +670,12 @@ def test_non_school_work_cap_core_is_flagged_by_the_checker() -> None:
     assert "SAG_MINORS_9_15_WORK_HOURS_NON_SCHOOL" in result.verdict.core_rule_ids
     checker_ids = {v.rule_id for v in check_day_legality(sched, 0, on_set={"cM"})}
     assert set(result.verdict.core_rule_ids) <= checker_ids, (result.verdict.core_rule_ids, checker_ids)
+
+
+def test_school_night_assumption_is_not_blamed_for_day_caps() -> None:
+    """A core of work caps on a day with an unknown school night must not say the night was assumed."""
+    sched = _schedule([_scene(1, 65, ["cM"])], [_day(date(2026, 10, 3), "05:00", "14:00")], [_cast("cM", 14, "CA")], state="other")
+    result = pass1_day(sched, 0, time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    assert "CA_1308_7_daily_cap_8_hours" in result.verdict.core_rule_ids, result.verdict.core_rule_ids
+    assert "assumed" not in result.note, result.note

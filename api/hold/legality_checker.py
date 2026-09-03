@@ -265,6 +265,12 @@ def work_cap_hours(rule: RuleRecord, school_day: bool) -> float | None:
     return None
 
 
+def school_night_dependent(rule: RuleRecord) -> bool:
+    """True when what this record demands changes with the school-night flag (a curfew keyed to a
+    night type, and the 5 a.m. floor that rides on such a curfew record)."""
+    return "curfew_school_night" in rule.params or "curfew_non_school_night" in rule.params
+
+
 def turnaround_applies(rule_id: str, school_day: bool) -> bool:
     """GA and SAG-AFTRA turnaround apply when the checked day is a school day; CA always."""
     if rule_id == "CA_11760_i_turnaround_12_hours":
