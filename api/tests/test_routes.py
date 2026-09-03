@@ -233,3 +233,46 @@ def test_concurrent_http_and_external_events_chain_under_one_lock(client: TestCl
     first, second = sorted((http_job, kafka_job), key=lambda j: JOBS.order().index(j.id))
     assert "s3" not in {s.id for s in second.schedule.scenes} and any(c.type == "availability" and c.cast_id == "cM" for c in second.schedule.constraints)
     assert first.id != second.id
+
+
+def test_history_holds_every_verdict_at_done_even_when_the_loop_is_blocked(client: TestClient) -> None:
+    """Round seven, finding 3: with the bus bound to a running loop, publish from the solver thread only
+    queued delivery, so done could be read before the last verdicts reached history. The loop here is
+    running but its thread is blocked, so queued callbacks cannot run during the check."""
+    import asyncio
+    import threading
+
+    from api.hold.jobs import JOBS
+
+    loop = asyncio.new_event_loop()
+    release = threading.Event()
+
+    async def block() -> None:
+        await asyncio.sleep(0)
+        release.wait(30)  # blocks the loop thread until the test is done looking
+
+    thread = threading.Thread(target=lambda: loop.run_until_complete(block()), daemon=True)
+    thread.start()
+    deadline = time.monotonic() + 5
+    while not loop.is_running() and time.monotonic() < deadline:
+        time.sleep(0.001)
+    BUS.bind(loop)
+    try:
+        job_id = client.post("/api/solve", json=_demo()).json()["job_id"]
+        job = JOBS.get(job_id)
+        assert job is not None
+        deadline = time.monotonic() + 90
+        seen_at_done = -1
+        while time.monotonic() < deadline:
+            if job.status == "failed":
+                raise AssertionError(job.error)
+            if job.status == "done":
+                seen_at_done = sum(1 for e in BUS.replay(job_id) if e.get("event") == "verdict")
+                break
+            time.sleep(0.001)
+        used = {d for d, ids in job.day_scene_ids.items() if ids}
+        assert seen_at_done == len(used), (seen_at_done, len(used))
+    finally:
+        release.set()
+        thread.join(5)
+        loop.close()

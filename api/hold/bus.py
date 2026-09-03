@@ -41,17 +41,22 @@ class EventBus:
             self._subscribers.discard(queue)
 
     def publish(self, event: Event) -> None:
-        with self._lock:
-            loop = self._loop
-        if loop is not None and loop.is_running() and not _on_loop(loop):
-            loop.call_soon_threadsafe(self._deliver, event)
-        else:
-            self._deliver(event)
-
-    def _deliver(self, event: Event) -> None:
+        """History is appended here, on the publishing thread, so a reader that sees the publisher's next
+        write (a job's done flag) finds the event in replay; only the fan-out to live subscriber queues
+        crosses to the serving loop (round seven, finding 3)."""
         with self._lock:
             self.history.append(event)
             targets = list(self._subscribers)
+            loop = self._loop
+        if not targets:
+            return
+        if loop is not None and loop.is_running() and not _on_loop(loop):
+            loop.call_soon_threadsafe(self._fan_out, event, targets)
+        else:
+            self._fan_out(event, targets)
+
+    @staticmethod
+    def _fan_out(event: Event, targets: list[asyncio.Queue[Event]]) -> None:
         for queue in targets:
             queue.put_nowait(event)
 

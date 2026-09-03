@@ -122,7 +122,7 @@ class JobStore:
                     verdict_event = VerdictEvent(job_id=job.id, verdict=p.verdict).model_dump(mode="json")
                     BUS.publish(verdict_event)
                     BRIDGE.publish(TOPIC_VERDICTS, job.id, verdict_event)
-            job.status = "done"  # the last write: a client that sees done finds every verdict already published (round six, finding 8)
+            job.status = "done"  # the last write: every verdict is already in the bus history and handed to the broker (round six, finding 8; round seven, finding 3)
         except Exception as exc:  # the failure must reach the client, never a silent queued job
             job.error = f"{type(exc).__name__}: {exc}"
             job.status = "failed"
