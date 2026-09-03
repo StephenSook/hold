@@ -39,14 +39,20 @@ def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
     assert got.status == want.status == "ok", (got.status, got.questions)
     assert got.schedule is not None and want.schedule is not None
     g, w = got.schedule, want.schedule
-    assert [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(s.cast_ids)) for s in g.scenes] == [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(s.cast_ids)) for s in w.scenes]
+    # Compare meaning, not naming: a cast member is its letter and a scene is its number, so a change
+    # of id convention is never read as an extraction error (round eight, finding 3).
+    got_letter = {c.id: c.letter for c in g.cast}
+    want_letter = {c.id: c.letter for c in w.cast}
+    assert [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(got_letter.get(i, i) for i in s.cast_ids)) for s in g.scenes] == [
+        (s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(want_letter.get(i, i) for i in s.cast_ids)) for s in w.scenes
+    ]
     assert [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in g.cast] == [(c.letter, c.age, c.resident_state, c.day_rate_cents, c.rate_tier) for c in w.cast]
     assert [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in g.days] == [(d.date, d.call.hour, d.call.minute, d.wrap.hour, d.wrap.minute, d.school_day) for d in w.days]
     assert g.jurisdiction == w.jurisdiction and g.constructed is True
     scene_number = {s.id: s.number for s in g.scenes}
-    got_constraints = sorted((c.type, c.cast_id, scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
+    got_constraints = sorted((c.type, got_letter.get(c.cast_id or "", c.cast_id), scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
     want_number = {s.id: s.number for s in w.scenes}
-    want_constraints = sorted((c.type, c.cast_id, want_number.get(c.scene_id_a or ""), want_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in w.constraints)
+    want_constraints = sorted((c.type, want_letter.get(c.cast_id or "", c.cast_id), want_number.get(c.scene_id_a or ""), want_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in w.constraints)
     assert got_constraints == want_constraints
 
 
