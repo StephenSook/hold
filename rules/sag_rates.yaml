@@ -188,7 +188,7 @@
     firm_pickup_gap_days_usa: 10
     firm_pickup_gap_days_other: 14
   verified: VERIFIED
-  note: The page answers HTTP 403 to scripted fetches; the snapshot is the page's main text as rendered in Chrome on 2026-09-03 (header states the capture and a sha256 of the text). The firm pick-up exception is not modeled; under the Basic Agreement tier the solver counts every calendar day between a performer's first and last working day as paid.
+  note: The page answers HTTP 403 to scripted fetches; the snapshot is the page's main text as rendered in Chrome on 2026-09-03 (header states the capture and a sha256 of the text). Neither the firm pick-up exception nor the page's 24-hour leeway for an "on or after" pick-up date is modeled; under the Basic Agreement tier the solver counts every calendar day between a performer's first and last working day as paid.
 
 - id: SAG_RATES_REST_PERIOD_12_HOURS
   jurisdiction: SAG-AFTRA
