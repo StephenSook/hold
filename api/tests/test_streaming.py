@@ -17,7 +17,13 @@ from api.hold.bus import BUS
 from api.hold.jobs import JOBS
 from api.hold.schemas import ScheduleInput
 from api.hold.streaming import BRIDGE as BRIDGE_LIVE
-from api.hold.streaming import TOPIC_SET_EVENTS, TOPIC_VERDICTS, ConfluentBridge, ConfluentConfig
+from api.hold.streaming import (
+    GROUP_ID,
+    TOPIC_SET_EVENTS,
+    TOPIC_VERDICTS,
+    ConfluentBridge,
+    ConfluentConfig,
+)
 from api.main import app
 
 ROOT = Path(__file__).parents[2]
@@ -130,7 +136,7 @@ def test_consumer_re_solves_external_events_and_skips_mirrored_and_bad_ones() ->
     assert status["received"] == 1 and status["skipped"] == 2  # bad JSON and the unknown kind; the mirrored one is ignored silently
     consumer = bridge.consumer
     assert isinstance(consumer, FakeConsumer) and consumer.subscribed == [TOPIC_SET_EVENTS] and consumer.closed
-    assert consumer.cfg["auto.offset.reset"] == "latest" and consumer.cfg["group.id"]
+    assert consumer.cfg["auto.offset.reset"] == "latest" and consumer.cfg["group.id"] == GROUP_ID  # by value: "wrong" passed a truthy check (round five, finding 7)
 
 
 @pytest.fixture
