@@ -73,8 +73,9 @@ def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
     assert g.jurisdiction == w.jurisdiction and g.constructed is True
     # Pass 2 prices hold days from overnight_location and the schema default is false on both sides,
     # so comparing the parsed values alone passes when an answer omits the key (round ten, finding 4).
-    for raw, side in ((live_raw, "live"), (golden_raw, "golden")):
-        assert "overnight_location" in (raw.get("schedule") or {}), f"the {side} answer omitted overnight_location"
+    # The golden half of this is asserted offline below, where CI actually runs it.
+    assert "overnight_location" in (live_raw.get("schedule") or {}), "the live answer omitted overnight_location"
+    assert golden_raw["schedule"]["overnight_location"] == w.overnight_location
     assert g.overnight_location == w.overnight_location
     scene_number = {s.id: s.number for s in g.scenes}
     got_constraints = sorted((c.type, got_letter[c.cast_id] if c.cast_id else None, scene_number.get(c.scene_id_a or ""), scene_number.get(c.scene_id_b or ""), tuple(c.unavailable_day_indices or [])) for c in g.constraints)
@@ -101,6 +102,9 @@ def test_golden_files_are_valid_extract_results() -> None:
         result = ExtractResult.model_validate({k: v for k, v in raw.items() if not k.startswith("_")})
         if result.status == "ok":
             assert result.schedule is not None and result.schedule.constructed is True
+            # Stated, not defaulted: pass 2 prices hold days from it, and pydantic would put the
+            # default back before anything downstream could notice the golden had dropped the key.
+            assert "overnight_location" in raw["schedule"], f"{path.name} does not state overnight_location"
         else:
             assert result.status == "needs_clarification" and result.schedule is None and result.questions
 
