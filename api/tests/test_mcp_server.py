@@ -50,3 +50,20 @@ def test_bob_registers_the_server() -> None:
     cfg = json.loads((ROOT / ".bob" / "mcp.json").read_text(encoding="utf-8"))
     hold = cfg["mcpServers"]["hold"]
     assert hold["args"][-1] == "api.hold.mcp_server" and "-m" in hold["args"]
+
+
+def test_run_residual_skips_documentation_keys_and_refuses_an_empty_list(monkeypatch: Any) -> None:
+    """Round seven, finding 1: bench/optima.json carries a "_note" key; the default call must not
+    try to solve _note.dzn, and an empty list is a refusal, not "all"."""
+    from types import SimpleNamespace
+
+    from api.hold import mcp_server
+
+    optima = json.loads((ROOT / "bench" / "optima.json").read_text(encoding="utf-8"))
+    real = {k: v for k, v in optima.items() if not k.startswith("_")}
+    monkeypatch.setattr(mcp_server, "parse_dzn", lambda path: path.stem)
+    monkeypatch.setattr(mcp_server, "solve_benchmark", lambda inst, time_limit_s=60.0: SimpleNamespace(status="OPTIMAL", holding=real[inst]["holding"], total=real[inst]["total"]))
+    out = mcp_server.run_residual()
+    assert [r["name"] for r in out["instances"]] == sorted(real) and out["matched"] == f"{len(real)}/{len(real)}"
+    assert "_note" not in {r["name"] for r in out["instances"]}
+    assert "error" in mcp_server.run_residual(names=[])

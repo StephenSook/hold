@@ -48,8 +48,10 @@ def lookup_rule(rule_id: str) -> dict[str, Any]:
 def run_residual(names: list[str] | None = None, time_limit_s: float = 60.0) -> dict[str, Any]:
     """Solve the benchmark instances under bench/instances/medium and compare each cost to the published
     optimum in bench/optima.json. Returns per-instance status, cost, published cost and whether they match."""
-    optima = json.loads((BENCH / "optima.json").read_text(encoding="utf-8"))
-    chosen = names or sorted(optima)
+    optima = {k: v for k, v in json.loads((BENCH / "optima.json").read_text(encoding="utf-8")).items() if not k.startswith("_")}  # "_note" is documentation
+    if names is not None and not names:
+        return {"error": "names is empty; pass null for every instance or a list of instance names", "instances": sorted(optima)}
+    chosen = names if names is not None else sorted(optima)
     rows: list[dict[str, Any]] = []
     for name in chosen:
         if name not in optima:
