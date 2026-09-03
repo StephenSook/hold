@@ -142,14 +142,24 @@ def _numeral(token: str) -> int | None:
     return _NUM_WORDS.get(token.lower())
 
 
+_EVAL_CASES = re.compile(r"passes (\w+) of (\w+) cases", re.IGNORECASE)
+
+
 def headline_mismatches(text: str, facts: dict[str, Any], allow_usd: Iterable[float]) -> list[str]:
-    """Every sentence that states a hold-day, illegal-day, benchmark or payroll figure must state
-    the FACTS figure. Dollar amounts in allow_usd (rules-sourced rates) are exempt."""
+    """Every sentence that states a hold-day, illegal-day, benchmark, payroll or eval-case figure must
+    state the FACTS figure. Dollar amounts in allow_usd (rules-sourced rates) are exempt."""
     allowed = {float(a) for a in allow_usd}
     hold_ok = {int(facts["hold_days_before"]), int(facts["hold_days_after"])}
     illegal_ok = {int(facts["illegal_days_before"]), int(facts["illegal_days_after"])}
+    eval_run = facts.get("adk_eval") or None
     out: list[str] = []
     for sentence in re.split(r"(?<=[.!?])\s+|\n", text):
+        for m in _EVAL_CASES.finditer(sentence):
+            passed, total = _numeral(m.group(1)), _numeral(m.group(2))
+            if eval_run is None:
+                out.append(f"eval cases claimed with no recorded run: {sentence.strip()[:120]}")
+            elif passed != int(eval_run["passed"]) or total != int(eval_run["passed"]) + int(eval_run["failed"]):
+                out.append(f"eval cases stated as {m.group(1)} of {m.group(2)}, FACTS says {eval_run['passed']} of {int(eval_run['passed']) + int(eval_run['failed'])}: {sentence.strip()[:120]}")
         for pattern, ok, label in ((_HOLD, hold_ok, "hold days"), (_ILLEGAL, illegal_ok, "illegal days")):
             for m in pattern.finditer(sentence):
                 n = _numeral(m.group(1))

@@ -52,3 +52,14 @@ def test_headline_guard_catches_a_wrong_numeral() -> None:
     assert headline_mismatches("$999 of payroll removed.", facts, set())
     assert headline_mismatches("$1,234.50 of payroll removed.", facts, set()) == []
     assert headline_mismatches("A paid hold day at the $834 day rate.", facts, {834.0}) == []
+
+
+def test_eval_case_counts_in_prose_are_held_to_facts() -> None:
+    """A hand-typed "passes 4 of 4 cases" survived a recorded 2 of 4 (3646ba0); the scan holds both numbers."""
+    from api.hold.facts import headline_mismatches
+
+    facts = {"hold_days_before": 4, "hold_days_after": 0, "illegal_days_before": 1, "illegal_days_after": 0, "benchmark_matched": "8/8", "payroll_removed_usd": 4069.92, "adk_eval": {"passed": 2, "failed": 2}}
+    assert headline_mismatches("The eval set passes 4 of 4 cases.", facts, []) != []
+    assert headline_mismatches("The eval set passes 2 of 4 cases.", facts, []) == []
+    assert headline_mismatches("The eval set passes two of four cases.", facts, []) == []
+    assert headline_mismatches("The eval set passes 4 of 4 cases.", {**facts, "adk_eval": None}, []) != []  # no run recorded: no claim allowed
