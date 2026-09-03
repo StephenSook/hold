@@ -1,9 +1,13 @@
 # Source refetch, 2026-09-03
 
-Committed run of `uv run python scripts/verify_quotes.py`: every distinct `source_url` in the registry
-refetched and judged by its body. Unchanged means the page still contains every quote the records
-citing it carry. Blocked means the site answers 403 to scripts, which those snapshots' headers
-already state (they were captured from a browser). Re-run before the freeze.
+Committed run of `uv run python scripts/verify_quotes.py`. Every distinct `source_url` in the
+registry is refetched and judged by its content: an HTML page is stripped of tags and unescaped,
+a PDF is read with pdftotext over the fetched bytes, and unchanged means the document still
+contains every quote the records citing it carry. Blocked means the site answers 403 to scripts,
+which those snapshots' headers record (they were captured from a browser). Re-run before the freeze.
+
+The run before this one reported the five PDF rows unchanged without reading them, because the
+check accepted a PDF on its magic bytes alone. That is fixed; the verdicts below are earned.
 
 | Source | Snapshot | Records | Verdict |
 |---|---|---|---|
