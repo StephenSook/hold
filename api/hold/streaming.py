@@ -135,16 +135,22 @@ class ConfluentBridge:
             self.consumer.subscribe([TOPIC_SET_EVENTS])
         except Exception as exc:
             self.last_error = f"{type(exc).__name__}: {exc}"
+            self.connected = False  # the loop is the transport; without a consumer the in-process bus is what runs
             log.warning("confluent: consumer did not start (%s)", self.last_error)
             return
-        while not self._stop.is_set():
-            message = self.consumer.poll(self._poll_timeout_s)
-            if message is None:
-                continue
-            if message.error():
-                self.last_error = str(message.error())  # librdkafka reconnects on its own; nothing to do but note it
-                continue
-            self._handle(message.value())
+        try:
+            while not self._stop.is_set():
+                message = self.consumer.poll(self._poll_timeout_s)
+                if message is None:
+                    continue
+                if message.error():
+                    self.last_error = str(message.error())  # librdkafka reconnects on its own; nothing to do but note it
+                    continue
+                self._handle(message.value())
+        except Exception as exc:  # a dead loop must show on /api/status, never as a healthy transport (round five, finding 2)
+            self.last_error = f"{type(exc).__name__}: {exc}"
+            self.connected = False
+            log.warning("confluent: consumer died (%s)", self.last_error)
         try:
             self.consumer.close()
         except Exception as exc:
@@ -189,6 +195,7 @@ class ConfluentBridge:
         if self._thread is not None:
             self._thread.join(timeout=5.0)
             self._thread = None
+        self.connected = False
         if self.producer is not None:
             try:
                 self.producer.flush(5.0)

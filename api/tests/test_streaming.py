@@ -194,3 +194,42 @@ def test_status_reports_the_bridge_live_even_when_the_headline_is_cached(client:
     assert second["computed_at"] == first["computed_at"]  # headline still cached
     assert second["runtime"]["confluent"]["transport"] == "confluent" and second["runtime"]["confluent"]["published"] == 1
     bridge.stop()
+
+
+class ExplodingConsumer(FakeConsumer):
+    def poll(self, timeout: float) -> FakeMessage | None:
+        raise RuntimeError("poll exploded")
+
+
+def test_a_dead_consumer_thread_turns_connected_off() -> None:
+    """Round five, finding 2: the poll loop had no exception guard, so a consumer that died left
+    connected True and transport confluent on /api/status while no external event was consumed."""
+    bridge = ConfluentBridge(CONFIG, producer_factory=FakeProducer, consumer_factory=lambda cfg: ExplodingConsumer(cfg, []), on_set_event=lambda p: "job", poll_timeout_s=0.01)
+    assert bridge.start() is True
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline and bridge.status()["connected"]:
+        time.sleep(0.02)
+    status = bridge.status()
+    assert status["connected"] is False and status["transport"] == "in-process"
+    assert status["last_error"] and "poll exploded" in status["last_error"]
+    bridge.stop()
+
+
+def test_a_consumer_that_cannot_start_turns_connected_off() -> None:
+    def broken_factory(cfg: dict[str, Any]) -> FakeConsumer:
+        raise RuntimeError("consumer factory failed")
+
+    bridge = ConfluentBridge(CONFIG, producer_factory=FakeProducer, consumer_factory=broken_factory, on_set_event=lambda p: "job", poll_timeout_s=0.01)
+    bridge.start()
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline and bridge.status()["connected"]:
+        time.sleep(0.02)
+    assert bridge.status()["connected"] is False and "consumer factory failed" in str(bridge.status()["last_error"])
+    bridge.stop()
+
+
+def test_stop_turns_connected_off() -> None:
+    bridge = ConfluentBridge(CONFIG, producer_factory=FakeProducer)
+    assert bridge.start() is True and bridge.status()["connected"] is True
+    bridge.stop()
+    assert bridge.status()["connected"] is False and bridge.status()["transport"] == "in-process"
