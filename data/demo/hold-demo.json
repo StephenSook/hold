@@ -1,33 +1,222 @@
 {
-  "_note": "Constructed demo schedule. cast=letters not real names. Rule side is always real. D8.",
+  "_note": "Constructed demo schedule. cast=letters not real names. Rule side is always real. D8. Day rates are the SAG-AFTRA Low Budget Theatrical day performer minimum effective 7/1/2026 ($834, rules/sag_rates.yaml SAG_RATES_LOW_BUDGET_DAY). overnight_location is true: a Georgia location shoot with the cast lodged, which is the case in which the low-budget agreements pay consecutive employment (hold days) per SAG_RATES_CONSECUTIVE_EMPLOYMENT_LOW_BUDGET.",
   "scenes": [
-    {"id":"s1","number":1,"int_ext":"EXT","day_night":"DAY","set":"Peach Orchard","pages_eighths":16,"cast_ids":["cA","cB","cM"],"location_id":"locGA1"},
-    {"id":"s2","number":2,"int_ext":"INT","day_night":"DAY","set":"Farmhouse Kitchen","pages_eighths":12,"cast_ids":["cA","cM"],"location_id":"locGA1"},
-    {"id":"s3","number":3,"int_ext":"EXT","day_night":"DAY","set":"County Road","pages_eighths":8,"cast_ids":["cB","cC"],"location_id":"locGA2"},
-    {"id":"s4","number":4,"int_ext":"INT","day_night":"NIGHT","set":"Farmhouse Kitchen","pages_eighths":10,"cast_ids":["cA","cB"],"location_id":"locGA1"},
-    {"id":"s5","number":5,"int_ext":"EXT","day_night":"DAY","set":"Peach Orchard","pages_eighths":14,"cast_ids":["cA","cC","cM"],"location_id":"locGA1"},
-    {"id":"s6","number":6,"int_ext":"INT","day_night":"DAY","set":"Packing Shed","pages_eighths":8,"cast_ids":["cB","cM"],"location_id":"locGA2"},
-    {"id":"s7","number":7,"int_ext":"EXT","day_night":"DAY","set":"County Road","pages_eighths":6,"cast_ids":["cA","cB","cC"],"location_id":"locGA2"},
-    {"id":"s8","number":8,"int_ext":"INT","day_night":"DAY","set":"Farmhouse Kitchen","pages_eighths":16,"cast_ids":["cA","cB","cM"],"location_id":"locGA1"},
-    {"id":"s9","number":9,"int_ext":"EXT","day_night":"DAY","set":"Peach Orchard","pages_eighths":10,"cast_ids":["cC"],"location_id":"locGA1"},
-    {"id":"s10","number":10,"int_ext":"INT","day_night":"NIGHT","set":"Packing Shed","pages_eighths":12,"cast_ids":["cA","cB"],"location_id":"locGA2"}
+    {
+      "id": "s1",
+      "number": 1,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Peach Orchard",
+      "pages_eighths": 16,
+      "cast_ids": [
+        "cA",
+        "cB",
+        "cM"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s2",
+      "number": 2,
+      "int_ext": "INT",
+      "day_night": "DAY",
+      "set": "Farmhouse Kitchen",
+      "pages_eighths": 12,
+      "cast_ids": [
+        "cA",
+        "cM"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s3",
+      "number": 3,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "County Road",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cB",
+        "cC"
+      ],
+      "location_id": "locGA2"
+    },
+    {
+      "id": "s4",
+      "number": 4,
+      "int_ext": "INT",
+      "day_night": "NIGHT",
+      "set": "Farmhouse Kitchen",
+      "pages_eighths": 10,
+      "cast_ids": [
+        "cA",
+        "cB"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s5",
+      "number": 5,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Peach Orchard",
+      "pages_eighths": 14,
+      "cast_ids": [
+        "cA",
+        "cC",
+        "cM"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s6",
+      "number": 6,
+      "int_ext": "INT",
+      "day_night": "DAY",
+      "set": "Packing Shed",
+      "pages_eighths": 8,
+      "cast_ids": [
+        "cB",
+        "cM"
+      ],
+      "location_id": "locGA2"
+    },
+    {
+      "id": "s7",
+      "number": 7,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "County Road",
+      "pages_eighths": 6,
+      "cast_ids": [
+        "cA",
+        "cB",
+        "cC"
+      ],
+      "location_id": "locGA2"
+    },
+    {
+      "id": "s8",
+      "number": 8,
+      "int_ext": "INT",
+      "day_night": "DAY",
+      "set": "Farmhouse Kitchen",
+      "pages_eighths": 16,
+      "cast_ids": [
+        "cA",
+        "cB",
+        "cM"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s9",
+      "number": 9,
+      "int_ext": "EXT",
+      "day_night": "DAY",
+      "set": "Peach Orchard",
+      "pages_eighths": 10,
+      "cast_ids": [
+        "cC"
+      ],
+      "location_id": "locGA1"
+    },
+    {
+      "id": "s10",
+      "number": 10,
+      "int_ext": "INT",
+      "day_night": "NIGHT",
+      "set": "Packing Shed",
+      "pages_eighths": 12,
+      "cast_ids": [
+        "cA",
+        "cB"
+      ],
+      "location_id": "locGA2"
+    }
   ],
   "cast": [
-    {"id":"cA","letter":"A","age":null,"resident_state":null,"day_rate_cents":81000,"rate_tier":"low_budget"},
-    {"id":"cB","letter":"B","age":null,"resident_state":null,"day_rate_cents":81000,"rate_tier":"low_budget"},
-    {"id":"cC","letter":"C","age":null,"resident_state":null,"day_rate_cents":81000,"rate_tier":"low_budget"},
-    {"id":"cM","letter":"M","age":14,"resident_state":"CA","day_rate_cents":81000,"rate_tier":"low_budget"}
+    {
+      "id": "cA",
+      "letter": "A",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 83400,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cB",
+      "letter": "B",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 83400,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cC",
+      "letter": "C",
+      "age": null,
+      "resident_state": null,
+      "day_rate_cents": 83400,
+      "rate_tier": "low_budget"
+    },
+    {
+      "id": "cM",
+      "letter": "M",
+      "age": 14,
+      "resident_state": "CA",
+      "day_rate_cents": 83400,
+      "rate_tier": "low_budget"
+    }
   ],
   "days": [
-    {"date":"2026-10-05","call":"07:00:00","wrap":"19:00:00","school_day":false},
-    {"date":"2026-10-06","call":"07:00:00","wrap":"19:00:00","school_day":false},
-    {"date":"2026-10-07","call":"07:00:00","wrap":"19:00:00","school_day":false},
-    {"date":"2026-10-08","call":"07:00:00","wrap":"21:30:00","school_day":true},
-    {"date":"2026-10-09","call":"07:00:00","wrap":"19:00:00","school_day":false},
-    {"date":"2026-10-12","call":"07:00:00","wrap":"19:00:00","school_day":false},
-    {"date":"2026-10-13","call":"07:00:00","wrap":"19:00:00","school_day":false}
+    {
+      "date": "2026-10-05",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-06",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-07",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-08",
+      "call": "07:00:00",
+      "wrap": "21:30:00",
+      "school_day": true
+    },
+    {
+      "date": "2026-10-09",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-12",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    },
+    {
+      "date": "2026-10-13",
+      "call": "07:00:00",
+      "wrap": "19:00:00",
+      "school_day": false
+    }
   ],
   "constraints": [],
-  "jurisdiction": {"shoot_state":"GA"},
-  "constructed": true
+  "jurisdiction": {
+    "shoot_state": "GA"
+  },
+  "constructed": true,
+  "overnight_location": true
 }

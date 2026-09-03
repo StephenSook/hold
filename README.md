@@ -55,6 +55,11 @@ Replace `HOLD_URL` with the hosted URL printed at the top of this README once de
 - No industry-wide savings figure is published.
 - The solver runs on the server. The phone displays and caches.
 - Louisiana hour caps are unverified; the registry refuses them rather than guessing.
+- Hold days: under the SAG-AFTRA low-budget agreements a day between work days is paid only on an overnight
+  location (SAGindie FAQ, quoted in `rules/sag_rates.yaml`); the demo declares one. The Basic Agreement pays
+  consecutive employment everywhere.
+- Every rule quote is verbatim from a committed snapshot under `rules/sources/` and checked in CI; the one
+  record whose page refuses scripted fetches is labeled UNVERIFIABLE and excluded from claims.
 - Streaming: connected at submission time; live state at `/api/status`.
 - Practitioner interview: _pending_
 
