@@ -15,6 +15,8 @@ from fastapi.testclient import TestClient
 
 from api.hold.bus import BUS
 from api.hold.jobs import JOBS
+from api.hold.schemas import ScheduleInput
+from api.hold.streaming import BRIDGE as BRIDGE_LIVE
 from api.hold.streaming import TOPIC_SET_EVENTS, TOPIC_VERDICTS, ConfluentBridge, ConfluentConfig
 from api.main import app
 
@@ -258,3 +260,40 @@ def test_an_event_the_handler_cannot_apply_counts_as_skipped_with_the_reason() -
     status = bridge.status()
     assert status["received"] == 0 and status["skipped"] == 2
     assert "not in the schedule" in str(status["last_error"])
+
+
+def test_echo_filter_skips_only_jobs_this_api_minted() -> None:
+    """Round five, finding 4: any truthy job_id was treated as our own echo, so a producer sending
+    a correlating or forged job_id was dropped silently; an empty job_id was re-solved. With the job
+    store consulted, only our own mirrors are skipped, and they are counted as mirrored."""
+    external = {"event": "set-event", "kind": "scene_dropped", "payload": {"scene_id": "s6"}, "source": "simulation"}
+    messages = [FakeMessage(json.dumps({**external, "job_id": "ours"}).encode()), FakeMessage(json.dumps({**external, "job_id": "forged-not-ours"}).encode()), FakeMessage(json.dumps({**external, "job_id": ""}).encode())]
+    handled: list[dict[str, Any]] = []
+
+    def handler(payload: dict[str, Any]) -> str:
+        handled.append(payload)
+        return "job"
+
+    bridge = ConfluentBridge(
+        CONFIG, producer_factory=FakeProducer, consumer_factory=lambda cfg: FakeConsumer(cfg, messages),
+        on_set_event=handler, is_own_job=lambda job_id: job_id == "ours", poll_timeout_s=0.01,
+    )
+    assert bridge.start() is True
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline and bridge.status()["received"] < 2:
+        time.sleep(0.02)
+    bridge.stop()
+    status = bridge.status()
+    assert status["received"] == 2 and status["mirrored"] == 1 and status["skipped"] == 0
+    assert [p.get("job_id") for p in handled] == ["forged-not-ours", ""]
+
+
+def test_the_app_wires_the_echo_filter_to_its_job_store() -> None:
+    import api.main  # noqa: F401  (the lifespan wires it at startup)
+    from api.hold.jobs import JOBS
+
+    with TestClient(app):
+        assert BRIDGE_LIVE.is_own_job is not None
+        assert BRIDGE_LIVE.is_own_job("not-a-job") is False
+        job = JOBS.submit(ScheduleInput.model_validate({k: v for k, v in json.loads((ROOT / "data" / "demo" / "hold-demo.json").read_text()).items() if not k.startswith("_")}))
+        assert BRIDGE_LIVE.is_own_job(job.id) is True

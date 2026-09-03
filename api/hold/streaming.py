@@ -76,12 +76,14 @@ class ConfluentBridge:
         producer_factory: ProducerFactory | None = None,
         consumer_factory: ConsumerFactory | None = None,
         on_set_event: SetEventHandler | None = None,
+        is_own_job: Callable[[str], bool] | None = None,
         poll_timeout_s: float = 1.0,
     ) -> None:
         self.config = config
         self._producer_factory = producer_factory or _real_producer
         self._consumer_factory = consumer_factory or _real_consumer
         self.on_set_event = on_set_event
+        self.is_own_job = is_own_job  # the app wires this to its job store; until then any job_id reads as an echo
         self._poll_timeout_s = poll_timeout_s
         self.producer: Any = None
         self.consumer: Any = None
@@ -90,6 +92,7 @@ class ConfluentBridge:
         self.published = 0
         self.received = 0
         self.skipped = 0
+        self.mirrored = 0
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         self._lock = threading.Lock()
@@ -161,8 +164,11 @@ class ConfluentBridge:
             payload = json.loads(raw)
             if not isinstance(payload, dict):
                 raise ValueError("message is not an object")
-            if payload.get("job_id"):
-                return  # the API mirrored its own event here; already solved
+            job_id = payload.get("job_id")
+            if job_id and (self.is_own_job is None or self.is_own_job(str(job_id))):
+                with self._lock:
+                    self.mirrored += 1
+                return  # the API mirrored its own event here; already solved (round five, finding 4: only our own)
             SetEvent.model_validate(payload)
         except Exception as exc:  # log and skip, never die on a bad message
             with self._lock:
@@ -194,6 +200,7 @@ class ConfluentBridge:
             "published": self.published,
             "received": self.received,
             "skipped": self.skipped,
+            "mirrored": self.mirrored,
             "last_error": self.last_error,
         }
 

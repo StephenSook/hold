@@ -22,6 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from api.hold.jobs import JOBS
 from api.hold.streaming import BRIDGE
 from api.routes.events import handle_external_set_event
 from api.routes.events import router as events_router
@@ -56,6 +57,7 @@ async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Start the Confluent bridge when it is configured (metadata call proves the broker); the
     in-process bus needs nothing. Stop it on shutdown."""
     BRIDGE.on_set_event = handle_external_set_event
+    BRIDGE.is_own_job = lambda job_id: JOBS.get(job_id) is not None
     BRIDGE.start()
     try:
         yield
