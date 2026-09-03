@@ -38,10 +38,10 @@ git clone https://github.com/StephenSook/hold && cd hold
 uv sync
 uv run pytest api/tests -q
 cd web && npm ci && npm run build && npm run test
-curl -s https://HOLD_URL/api/status | jq
+curl -s https://hold-fwmdq7fc3q-uc.a.run.app/api/status | jq
 ```
 
-Replace `HOLD_URL` with the hosted URL printed at the top of this README once deployed.
+Live instance: https://hold-fwmdq7fc3q-uc.a.run.app (Cloud Run, one instance; the web app lands with its own tasks, the API and `/api/status` are up now).
 
 ---
 
