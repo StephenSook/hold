@@ -9,7 +9,7 @@ import json
 import shutil
 from pathlib import Path
 
-from api.hold.quotes import normalize, verify_rules
+from api.hold.quotes import normalize, quote_matches, snapshot_variants, verify_rules
 
 ROOT = Path(__file__).parents[2]
 RULES = ROOT / "rules"
@@ -31,9 +31,25 @@ def test_no_record_is_pending() -> None:
 
 
 def test_normalize_absorbs_extraction_artifacts_only() -> None:
-    assert normalize("half-hour  meal\nbreak") == "halfhour meal break"
+    assert normalize("half-hour  meal\nbreak") == "half-hour meal break"
     assert normalize("minors’ work") == "minors' work"
     assert normalize("five hours") != normalize("six hours")
+    assert normalize("12 hours") != normalize("1-2 hours")
+    assert normalize("seven (7)") != normalize("se-ven (7)")
+
+
+def test_line_end_hyphen_reads_both_ways() -> None:
+    """A hyphen at a line end is either a real hyphen or an extraction artifact; a quote may match either."""
+    kept, dropped = snapshot_variants("employ-\nment and non-\nschool")
+    assert normalize("employment") in dropped and normalize("employment") not in kept
+    assert normalize("non-school") in kept and normalize("non-school") not in dropped
+
+
+def test_letter_hyphens_are_optional_but_digit_hyphens_are_not() -> None:
+    assert quote_matches("one half-hour meal break", snapshot_variants("and one halfhour meal break."))
+    assert quote_matches("one halfhour meal break", snapshot_variants("and one half-hour meal break."))
+    assert not quote_matches("12 hours", snapshot_variants("at least 1-2 hours"))
+    assert not quote_matches("1-2 hours", snapshot_variants("at least 12 hours"))
 
 
 def test_a_corrupted_quote_turns_the_check_red(tmp_path: Path) -> None:

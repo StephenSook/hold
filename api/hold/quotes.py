@@ -20,11 +20,34 @@ from api.hold.registry import RuleRecord, load_rules
 _QUOTE_MARKS = {"\u2019": "'", "\u2018": "'", "\u201c": '"', "\u201d": '"', "\u2014": "-", "\u2013": "-", "\u00ad": ""}
 
 
+_LINE_END_HYPHEN = re.compile(r"-[ \t]*\n[ \t]*")
+
+
 def normalize(text: str) -> str:
-    """Straighten quote marks, drop hyphens and soft hyphens, collapse whitespace. Words are untouched."""
+    """Straighten quote marks, map dashes to a hyphen, drop soft hyphens, collapse whitespace.
+    Words, numbers and hyphens are untouched, so "1-2 hours" never reads as "12 hours"."""
     for src, dst in _QUOTE_MARKS.items():
         text = text.replace(src, dst)
-    return re.sub(r"\s+", " ", text.replace("-", "")).strip()
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def snapshot_variants(text: str) -> tuple[str, str]:
+    """Two readings of a snapshot: a hyphen at a line end kept (a real hyphen) and dropped (an
+    extraction artifact). A quote matches when it matches either reading."""
+    return normalize(_LINE_END_HYPHEN.sub("-", text)), normalize(_LINE_END_HYPHEN.sub("", text))
+
+
+_LETTER_HYPHEN = re.compile(r"(?<=[A-Za-z])-(?=[A-Za-z])")
+
+
+def quote_matches(quote: str, variants: tuple[str, str]) -> bool:
+    """A quote matches a snapshot reading verbatim, or with hyphens between two letters treated
+    as optional on both sides (PDF reading-order extraction joins words hyphenated at a line end,
+    so "half-hour" arrives as "halfhour"). A hyphen touching a digit is never optional."""
+    nq = normalize(quote)
+    if any(nq in v for v in variants):
+        return True
+    return _LETTER_HYPHEN.sub("", nq) in _LETTER_HYPHEN.sub("", variants[0])
 
 
 def snapshot_url(path: Path) -> str:
@@ -58,7 +81,7 @@ def verify_rules(rules_dir: Path, sources_dir: Path, verification_path: Path) ->
         if path.name not in snapshots:
             problems.append(Problem("<snapshots>", f"snapshot on disk not listed in verification.json: {path.name}"))
 
-    texts: dict[str, str] = {}
+    texts: dict[str, tuple[str, str]] = {}
     for r in records:
         entry = entries.get(r.id)
         if entry is None:
@@ -76,8 +99,8 @@ def verify_rules(rules_dir: Path, sources_dir: Path, verification_path: Path) ->
             if snapshot_url(sources_dir / snap) != r.source_url:
                 problems.append(Problem(r.id, f"snapshot {snap} was fetched from a different URL than source_url"))
             if snap not in texts:
-                texts[snap] = normalize((sources_dir / snap).read_text(encoding="utf-8"))
-            if normalize(r.quote) not in texts[snap]:
+                texts[snap] = snapshot_variants((sources_dir / snap).read_text(encoding="utf-8"))
+            if not quote_matches(r.quote, texts[snap]):
                 problems.append(Problem(r.id, f"quote is not a verbatim substring of {snap}"))
         elif status == "UNVERIFIABLE":
             counts["unverifiable"] += 1
