@@ -1,0 +1,26 @@
+name: Uptime
+
+# Task 5.8: content-check the live /api/status on a schedule. Offset minutes, because :00 and
+# */N schedules are throttled hardest. Fails when the HOLD_URL repository variable is unset or
+# the body does not carry benchmark_matched, so a dead or moved deployment shows red here.
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+jobs:
+  status:
+    name: Live /api/status carries benchmark_matched
+    runs-on: ubuntu-latest
+    steps:
+      - name: Content-check /api/status
+        env:
+          HOLD_URL: ${{ vars.HOLD_URL }}
+        run: |
+          if [ -z "$HOLD_URL" ]; then
+            echo "::error::HOLD_URL repository variable is unset"; exit 1
+          fi
+          body="$(curl -sS --max-time 30 "$HOLD_URL/api/status")" || { echo "::error::no answer from $HOLD_URL/api/status"; exit 1; }
+          printf '%s\n' "$body" | head -c 600; echo
+          printf '%s' "$body" | grep -q '"benchmark_matched"' || { echo "::error::benchmark_matched missing from the status body"; exit 1; }
+          echo "ok: $HOLD_URL/api/status carries benchmark_matched"
