@@ -67,7 +67,7 @@ def build_status() -> dict[str, Any]:
             },
             "invoked_by_this_endpoint": [],
             "note": "This endpoint reads committed files and invokes no model and no broker; Gemini is invoked by "
-            "/api/extract and Confluent by /api/set-events once tasks 3.5 and 4.1 land.",
+            "/api/extract and Confluent by /api/set-events.",
         },
     }
 

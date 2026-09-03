@@ -73,3 +73,10 @@ def test_placeholder_secret_value_reads_as_absent(monkeypatch: pytest.MonkeyPatc
     reset_cache()
     assert TestClient(app).get("/api/status").json()["runtime"]["confluent"]["bootstrap_configured"] is True
     reset_cache()
+
+
+def test_status_note_describes_shipped_routes_not_pending_tasks(client: TestClient) -> None:
+    """3.5 and 4.1 landed: the note names the routes that invoke Gemini and Confluent and no pending task."""
+    note = client.get("/api/status").json()["runtime"]["note"]
+    assert "once tasks" not in note
+    assert "/api/extract" in note and "/api/set-events" in note
