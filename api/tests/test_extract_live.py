@@ -13,7 +13,7 @@ from typing import Any
 
 import pytest
 
-from api.hold.schemas import ExtractResult
+from api.hold.schemas import ExtractResult, ScheduleInput
 
 ROOT = Path(__file__).parents[2]
 SAMPLES = ROOT / "data" / "demo" / "samples"
@@ -38,6 +38,14 @@ def _golden(name: str) -> ExtractResult:
     return ExtractResult.model_validate({k: v for k, v in raw.items() if not k.startswith("_")})
 
 
+def _undefined_cast_ids(schedule: ScheduleInput) -> set[str]:
+    """Ids a scene or a constraint names that no cast record defines. The comparison below maps every
+    id to its letter, so a fallback to the raw id would let "A" compare equal to "cA", and pass 1
+    refuses such a schedule (Pass1ScopeError). Both sides of the comparison go through this."""
+    used = {cid for s in schedule.scenes for cid in s.cast_ids} | {c.cast_id for c in schedule.constraints if c.cast_id}
+    return used - {c.id for c in schedule.cast}
+
+
 @pytest.mark.network
 @pytest.mark.parametrize("name", ["callsheet-day3", "constraints-note"])
 def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
@@ -54,9 +62,9 @@ def test_live_extraction_matches_the_golden_on_solver_fields(name: str) -> None:
     want_letter = {c.id: c.letter for c in w.cast}
     # Every id a scene or constraint names must be a cast record on both sides: a fallback to the raw
     # id would let "A" compare equal to "cA", and pass 1 refuses that schedule (round nine, finding 2).
-    for schedule, letters, side in ((g, got_letter, "live"), (w, want_letter, "golden")):
-        used = {cid for s in schedule.scenes for cid in s.cast_ids} | {c.cast_id for c in schedule.constraints if c.cast_id}
-        assert used <= set(letters), f"{side} names cast ids with no cast record: {sorted(used - set(letters))}"
+    for schedule, side in ((g, "live"), (w, "golden")):
+        dangling = _undefined_cast_ids(schedule)
+        assert not dangling, f"{side} names cast ids with no cast record: {sorted(dangling)}"
     assert [(s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(got_letter[i] for i in s.cast_ids)) for s in g.scenes] == [
         (s.number, s.int_ext, s.day_night, s.pages_eighths, sorted(want_letter[i] for i in s.cast_ids)) for s in w.scenes
     ]
@@ -101,10 +109,22 @@ def test_golden_files_are_valid_extract_results() -> None:
 @pytest.mark.parametrize("name", ["callsheet-day3", "constraints-note"])
 def test_every_cast_id_the_live_answer_uses_is_defined(name: str) -> None:
     """Round nine, finding 2: a scene that names a cast id with no cast record is refused by pass 1
-    (Pass1ScopeError), so the golden comparison must never accept one by falling back to the raw id."""
+    (Pass1ScopeError), so a live answer must never carry one."""
     got = _extract((SAMPLES / f"{name}.txt").read_text())
     assert got.schedule is not None
-    defined = {c.id for c in got.schedule.cast}
-    used = {cid for s in got.schedule.scenes for cid in s.cast_ids}
-    used |= {c.cast_id for c in got.schedule.constraints if c.cast_id}
-    assert used <= defined, f"cast ids with no cast record: {sorted(used - defined)}"
+    assert not _undefined_cast_ids(got.schedule)
+
+
+def test_the_dangling_id_check_rejects_a_golden_that_names_a_letter() -> None:
+    """Round ten, finding 5: the guard above reads only the live answer, while the defect it exists
+    for is a golden whose scene names "A" where the cast record is "cA". Feed it exactly that."""
+    raw = json.loads((GOLDEN / "callsheet-day3.expected.json").read_text())
+    body = {k: v for k, v in raw.items() if not k.startswith("_")}
+    schedule = ExtractResult.model_validate(body).schedule
+    assert schedule is not None and not _undefined_cast_ids(schedule)
+    letter = {c.id: c.letter for c in schedule.cast}
+    scene = next(s for s in body["schedule"]["scenes"] if s["cast_ids"])
+    scene["cast_ids"] = [letter[cid] for cid in scene["cast_ids"]]
+    broken = ExtractResult.model_validate(body).schedule
+    assert broken is not None
+    assert _undefined_cast_ids(broken) == set(scene["cast_ids"]), "a scene naming a letter must be refused"
