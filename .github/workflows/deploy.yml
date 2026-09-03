@@ -55,6 +55,16 @@ jobs:
           docker build -t "$IMAGE" .
           docker push "$IMAGE"
 
+      # The service URL is not the project-number form on this project (that form answers 404), so
+      # the CORS origin is read from the service itself; empty on the very first deploy.
+      - name: Resolve the service URL for CORS
+        if: steps.creds.outputs.configured == 'true'
+        id: url
+        run: |
+          URL="$(gcloud run services describe hold --project "${{ secrets.GCP_PROJECT }}" --region us-central1 --format='value(status.url)' 2>/dev/null || true)"
+          echo "origin=${URL}" >> "$GITHUB_OUTPUT"
+          echo "service url: ${URL:-<none yet>}"
+
       # Deploy to Cloud Run - exact flags from PLAN.md task 1.10 / D11
       - name: Deploy to Cloud Run
         if: steps.creds.outputs.configured == 'true'
@@ -75,4 +85,4 @@ jobs:
             --timeout=3600 \
             --session-affinity \
             --set-secrets="GEMINI_MODEL=GEMINI_MODEL:latest,GOOGLE_CLOUD_PROJECT=GOOGLE_CLOUD_PROJECT:latest,GOOGLE_CLOUD_LOCATION=GOOGLE_CLOUD_LOCATION:latest,GOOGLE_GENAI_USE_ENTERPRISE=GOOGLE_GENAI_USE_ENTERPRISE:latest,CONFLUENT_BOOTSTRAP=CONFLUENT_BOOTSTRAP:latest,CONFLUENT_API_KEY=CONFLUENT_API_KEY:latest,CONFLUENT_API_SECRET=CONFLUENT_API_SECRET:latest" \
-            --set-env-vars="HOLD_ORIGIN=https://hold-${{ secrets.GCP_PROJECT_NUMBER }}-uc.a.run.app"
+            --set-env-vars="HOLD_ORIGIN=${{ steps.url.outputs.origin }}"
