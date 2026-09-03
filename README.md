@@ -21,8 +21,9 @@ legal, and if not, every rule you broke and where each one is written down.
 1. **The residual.** CP-SAT solver against the published proven optima of the academic
    talent-scheduling benchmark (8 medium instances, MIT-licensed data). Difference: 0.
    Re-run on every push in CI with no key and no account.
-2. **The dollars.** A realistic schedule with hold days and penalties disappearing. The
-   published SAG-AFTRA rate card on screen so anyone with a calculator can check.
+2. **The dollars.** A realistic schedule with its hold days disappearing (contract penalties
+   are PLAN.md task 2.11 and are not modeled yet). The published SAG-AFTRA rate card on screen
+   so anyone with a calculator can check.
 3. **The verdict.** An illegal day names every violated rule: citation, limit, computed
    value, over-by, the verbatim sentence from the statute, a deep link.
 
