@@ -3,8 +3,9 @@ content, never by status code."""
 from __future__ import annotations
 
 import shutil
-import pytest
 from pathlib import Path
+
+import pytest
 
 from scripts.verify_quotes import Fetched, classify, plan
 
