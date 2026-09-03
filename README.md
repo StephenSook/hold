@@ -116,7 +116,8 @@ and the in-process bus is the transport. The deployed instance has them. `script
   fetches is captured from a browser and the snapshot header says so; a quote with no snapshot
   at all would be labeled UNVERIFIABLE and excluded from claims (none is, at this writing).
 - Louisiana hour caps are unverified; the registry refuses them rather than guessing.
-- The solver runs on the server. The phone displays and caches.
+- The solver runs on the server. The phone app is not in this repository yet; when it lands it
+  displays and caches rather than solving.
 - Practitioner interview: five practitioners were written to on 2026-09-02; no reply as of
   2026-09-03. Nothing here claims a working assistant director has used HOLD.
 
