@@ -118,7 +118,9 @@ and the in-process bus is the transport. The deployed instance has them. `script
   assumed parameter. A page that refuses scripted
   fetches is captured from a browser and the snapshot header says so; a quote with no snapshot
   at all would be labeled UNVERIFIABLE and excluded from claims (none is, at this writing).
-- Louisiana hour caps are unverified; the registry refuses them rather than guessing.
+- Louisiana hour caps are unverified, so the registry carries no record for them and the
+  jurisdiction has no Louisiana shoot state: such a shoot is `other` and gets the SAG-AFTRA
+  records only. Its Coogan trust records are real and display only.
 - The solver runs on the server. The phone app is not in this repository yet; when it lands it
   displays and caches rather than solving.
 - Practitioner interview: five practitioners were written to on 2026-09-02; no reply as of
