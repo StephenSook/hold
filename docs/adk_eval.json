@@ -64,9 +64,9 @@
       }
     }
   },
-  "history_file": "hold_agent_hold_extraction_v1_1788451609.3528152.evalset_result.json",
-  "run_at": "2026-09-03T16:06:49+00:00",
-  "recorded_at": "2026-09-03T16:08:25+00:00",
+  "history_file": "hold_agent_hold_extraction_v1_1788457166.9429271.evalset_result.json",
+  "run_at": "2026-09-03T17:39:26+00:00",
+  "recorded_at": "2026-09-03T17:39:29+00:00",
   "model": "gemini-3.1-flash-lite",
   "models_invoked": [
     "gemini-2.5-flash",
