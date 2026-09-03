@@ -36,7 +36,7 @@ class _Rogue:
 def test_agent_shape() -> None:
     assert root_agent.name == "hold_agent"
     assert root_agent.model == GEMINI_MODEL
-    assert root_agent.output_schema is ExtractResult
+    assert root_agent.output_schema is None  # with tools and a schema this model loops on tool calls and never answers (3.4 trace)
     names = {str(getattr(t, "name", None) or getattr(t, "__name__", "")) for t in root_agent.tools}
     assert names == set(ALLOWED_TOOLS) == {"check_legality", "optimize_schedule", "lookup_rule"}
     assert root_agent.before_tool_callback is guard_tool_call

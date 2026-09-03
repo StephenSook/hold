@@ -122,7 +122,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "{\n \"status\": \"needs_clarification\",\n \"schedule\": null,\n \"questions\": [],\n \"notes\": \"GA_300_7_1_03_earliest_call, Ga. Comp. R. & Regs. 300-7-1-.03: \\\"No work day shall start earlier than 5:00 A.M.\\\" (Georgia Department of Labor, rules.sos.ga.gov/gac/300-7-1). No document to extract, so no schedule.\"\n}"
+                "text": "GA_300_7_1_03_earliest_call, Ga. Comp. R. & Regs. 300-7-1-.03(2)(d), Georgia Department of Labor: \"No work day shall start earlier than 5:00 A.M.\" There is no document to extract, so there is no schedule."
               }
             ]
           },
