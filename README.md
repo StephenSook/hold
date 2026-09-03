@@ -58,8 +58,10 @@ Replace `HOLD_URL` with the hosted URL printed at the top of this README once de
 - Hold days: under the SAG-AFTRA low-budget agreements a day between work days is paid only on an overnight
   location (SAGindie FAQ, quoted in `rules/sag_rates.yaml`); the demo declares one. The Basic Agreement pays
   consecutive employment everywhere.
-- Every rule quote is verbatim from a committed snapshot under `rules/sources/` and checked in CI; the one
-  record whose page refuses scripted fetches is labeled UNVERIFIABLE and excluded from claims.
+- Every rule quote is verbatim from a committed snapshot under `rules/sources/` and checked in CI, and every
+  number in a record's params is stated by that quote, by a second verified fragment, or by a stated
+  derivation (one value is a labeled assumption: a paid hold day at the tier day rate); the one record
+  whose page refuses scripted fetches is labeled UNVERIFIABLE and excluded from claims.
 - Streaming: connected at submission time; live state at `/api/status`.
 - Practitioner interview: _pending_
 
