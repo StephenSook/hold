@@ -375,7 +375,7 @@ def test_check_schedule_legality_returns_per_day_lists() -> None:
 
 
 def test_check_schedule_legality_flags_illegal_day() -> None:
-    """check_schedule_legality flags the one illegal day in the two-day window."""
+    """check_schedule_legality flags day 0 (16h at location) and day 1 (8h turnaround)."""
     days = [
         _day(date(2026, 10, 7), "07:00", "23:00", school_day=False),  # 16h - over location cap
         _day(date(2026, 10, 8), "07:00", "16:00", school_day=False),
@@ -383,7 +383,10 @@ def test_check_schedule_legality_flags_illegal_day() -> None:
     schedule = _make_schedule(days)
     result = check_schedule_legality(schedule)
     assert len(result[0]) > 0, "Day 0 should have violations (16h location)"
-    assert len(result[1]) == 0 or True  # day 1 may have turnaround issue; just check day 0
+    day1_ids = {v.rule_id for v in result[1]}
+    assert "CA_11760_i_turnaround_12_hours" in day1_ids, (
+        f"Day 1 follows a 23:00 wrap with a 07:00 call (8h): CA turnaround must fire, got {day1_ids}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -406,3 +409,99 @@ def test_multiple_violations_same_day() -> None:
         f"Expected >= 3 violations for an extreme day, got {len(violations)}: "
         f"{[v.rule_id for v in violations]}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Test 10: turnaround only across consecutive calendar dates
+# ---------------------------------------------------------------------------
+
+def test_turnaround_skipped_when_dates_not_consecutive() -> None:
+    """A Friday 22:00 wrap and a Monday 07:00 call is a 57-hour rest, not a 9-hour one."""
+    days = [
+        _day(date(2026, 10, 9), "07:00", "22:00", school_day=False),   # Friday
+        _day(date(2026, 10, 12), "07:00", "16:00", school_day=True),   # Monday
+    ]
+    schedule = _make_schedule(days)
+    rule_ids = {v.rule_id for v in check_day_legality(schedule, 1)}
+    assert not rule_ids & {
+        "GA_300_7_1_03_turnaround_school_hours",
+        "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY",
+        "CA_11760_i_turnaround_12_hours",
+    }, f"Turnaround must not fire across a weekend gap, got: {rule_ids}"
+
+
+# ---------------------------------------------------------------------------
+# Test 11: Cal. Lab. Code 1308.7 earliest call, gated by night type
+# ---------------------------------------------------------------------------
+
+def test_ca_earliest_call_fires_on_school_night_record() -> None:
+    """A 04:30 call the day before a school day breaches Lab. Code 1308.7(a), the 5 a.m. floor."""
+    days = [
+        _day(date(2026, 10, 7), "04:30", "09:00", school_day=False),
+        _day(date(2026, 10, 8), "07:00", "16:00", school_day=True),
+    ]
+    schedule = _make_schedule(days)
+    rule_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
+    assert "CA_1308_7_curfew_school_night" in rule_ids, rule_ids
+    assert "CA_1308_7_curfew_non_school_night" not in rule_ids, rule_ids
+    assert "GA_300_7_1_03_earliest_call" in rule_ids, rule_ids
+
+
+def test_ca_earliest_call_fires_on_non_school_night_record() -> None:
+    """A 04:30 call with no school day following breaches Lab. Code 1308.7(b), not (a)."""
+    days = [_day(date(2026, 10, 7), "04:30", "09:00", school_day=False)]
+    schedule = _make_schedule(days)
+    rule_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
+    assert "CA_1308_7_curfew_non_school_night" in rule_ids, rule_ids
+    assert "CA_1308_7_curfew_school_night" not in rule_ids, rule_ids
+
+
+# ---------------------------------------------------------------------------
+# Test 12: a concrete per-minor timeline overrides the crew-window proxy
+# ---------------------------------------------------------------------------
+
+def test_timeline_overrides_crew_window() -> None:
+    """A 12-hour crew day is legal for a minor who is called for two hours of it."""
+    from api.hold.legality_checker import DayTimeline, MinorTimeline
+
+    days = [_day(date(2026, 10, 5), "07:00", "19:00", school_day=False)]
+    schedule = _make_schedule(days)
+    timeline = DayTimeline(
+        minors={"cM": MinorTimeline(call=time(9, 0), dismiss=time(11, 0), work_minutes=120)}
+    )
+    assert check_day_legality(schedule, 0, timeline=timeline) == []
+
+
+def test_timeline_meal_check() -> None:
+    """Eight hours on set with no recorded meal breaches 8 CCR 11761; a 30-minute meal inside six hours clears it."""
+    from api.hold.legality_checker import DayTimeline, MinorTimeline
+
+    days = [_day(date(2026, 10, 5), "07:00", "19:00", school_day=False)]
+    schedule = _make_schedule(days)
+    no_meal = DayTimeline(
+        minors={"cM": MinorTimeline(call=time(7, 0), dismiss=time(15, 0), work_minutes=240)}
+    )
+    ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=no_meal)}
+    assert "CA_11761_meal_period_6_hours" in ids, ids
+    with_meal = DayTimeline(
+        minors={
+            "cM": MinorTimeline(
+                call=time(7, 0),
+                dismiss=time(15, 0),
+                work_minutes=240,
+                meal_start=time(12, 0),
+                meal_end=time(12, 30),
+            )
+        }
+    )
+    ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=with_meal)}
+    assert "CA_11761_meal_period_6_hours" not in ids, ids
+
+
+def test_timeline_skips_absent_minor() -> None:
+    """A minor with no timeline entry was not on set: a 16-hour crew day yields nothing for them."""
+    from api.hold.legality_checker import DayTimeline
+
+    days = [_day(date(2026, 10, 5), "07:00", "23:00", school_day=False)]
+    schedule = _make_schedule(days)
+    assert check_day_legality(schedule, 0, timeline=DayTimeline(minors={})) == []

@@ -27,9 +27,19 @@ Rules skipped (display facts only, not checkable from schedule timing alone):
 - Chaperone requirement (SAG_MINORS_2026_CHAPERONE_UNDER_16) - same
 - Infant restriction (SAG_MINORS_P23) - no infant in demo; age check guards it
 - CA weekly cap (CA_11760_e_weekly_cap_48_hours) - needs full week context
+
+Concrete timeline (task 2.7): pass a DayTimeline to check a minor's own call, dismissal,
+work minutes and meal instead of the crew-window proxy. Only then is the meal rule
+(CA_11761_meal_period_6_hours) checked; the proxy path cannot see meals and never lists it.
+A minor absent from the timeline was not on set that day and is skipped.
+
+Turnaround is checked only when the previous shoot day is the previous calendar date.
+The CA 1308.7 5 a.m. floor is checked on the record whose curfew matches the night type.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
+from dataclasses import dataclass
 from datetime import time
 from pathlib import Path
 from typing import NamedTuple
@@ -38,6 +48,28 @@ from api.hold.registry import RuleRecord, load_rules
 from api.hold.schemas import CastMember, ScheduleInput, ShootDay, ViolationRecord
 
 _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
+
+# Rules that can only be judged on a concrete timeline (never on the crew-window proxy).
+# The pass-1 solver may name them in a core; the proxy checker never lists them.
+TIMING_ONLY_RULE_IDS = frozenset({"CA_11761_meal_period_6_hours"})
+
+
+@dataclass(frozen=True)
+class MinorTimeline:
+    """One minor's concrete times on one shoot day (from a pass-1 witness or a call sheet)."""
+
+    call: time
+    dismiss: time
+    work_minutes: int
+    meal_start: time | None = None
+    meal_end: time | None = None
+
+
+@dataclass(frozen=True)
+class DayTimeline:
+    """Per-minor timelines for one day. A minor absent from `minors` was not on set."""
+
+    minors: Mapping[str, MinorTimeline]
 
 
 # ---------------------------------------------------------------------------
@@ -117,7 +149,7 @@ def _build_day_context(schedule: ScheduleInput, day_index: int) -> _DayContext:
 
     # Previous wrap for turnaround
     prev_wrap: time | None = None
-    if day_index > 0:
+    if day_index > 0 and (sd.date - days[day_index - 1].date).days == 1:
         prev_wrap = days[day_index - 1].wrap
 
     # Consecutive run: count backwards how many consecutive days in the list
@@ -262,14 +294,15 @@ def _check_location_hours(
 
 def _check_work_hours(
     rule: RuleRecord,
-    location_hours: float,
+    work_hours: float,
     age: int,
     school_day: bool,
+    proxy: bool,
 ) -> ViolationRecord | None:
     """
-    Check max work hours. Uses location hours as a conservative proxy.
-    The proxy is conservative: location hours >= actual work hours,
-    so a clean check here is definitive; a flagged check is labeled as such.
+    Check max work hours. On the proxy path work_hours is the crew location span
+    (conservative: location hours >= actual work hours, so a clean check is definitive
+    and a flagged check is labeled as a proxy). On the timeline path it is exact.
     """
     params = rule.params
     age_min = int(params.get("age_min", 0))
@@ -293,14 +326,19 @@ def _check_work_hours(
     else:
         return None
 
-    if location_hours > limit:
-        over = location_hours - limit
+    if work_hours > limit:
+        over = work_hours - limit
+        computed = (
+            f"{work_hours:.1f}h at location (proxy for work hours)"
+            if proxy
+            else f"{work_hours:.1f}h work"
+        )
         return ViolationRecord(
             rule_id=rule.id,
             citation=rule.citation,
             title=rule.title,
             limit=f"{limit:.0f}h {label}",
-            computed=f"{location_hours:.1f}h at location (proxy for work hours)",
+            computed=computed,
             over_by=f"{over:.1f}h",
             quote=rule.quote,
             source_url=rule.source_url,
@@ -337,6 +375,48 @@ def _check_turnaround(
             jurisdiction=rule.jurisdiction,
         )
     return None
+
+
+def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
+    """
+    Meal within N hours (8 CCR 11761), timeline path only. Same predicate as the solver:
+    a span over the limit requires a meal inside the span, starting within the limit of
+    the call, lasting at least the minimum.
+    """
+    params = rule.params
+    if "max_work_before_meal_hours" not in params:
+        return None
+    limit_min = int(float(params["max_work_before_meal_hours"]) * 60)
+    min_meal = int(params.get("min_meal_duration_minutes", 30))
+    call_m = _time_to_minutes(mt.call)
+    span = _time_to_minutes(mt.dismiss) - call_m
+    if span <= limit_min:
+        return None
+    ok = False
+    computed = "no meal break recorded"
+    if mt.meal_start is not None and mt.meal_end is not None:
+        ms = _time_to_minutes(mt.meal_start)
+        me = _time_to_minutes(mt.meal_end)
+        computed = f"meal {mt.meal_start.strftime('%H:%M')} to {mt.meal_end.strftime('%H:%M')}"
+        ok = (
+            ms >= call_m
+            and me <= call_m + span
+            and ms - call_m <= limit_min
+            and me - ms >= min_meal
+        )
+    if ok:
+        return None
+    return ViolationRecord(
+        rule_id=rule.id,
+        citation=rule.citation,
+        title=rule.title,
+        limit=f"Meal of {min_meal}m within {limit_min // 60}h of call",
+        computed=f"{span / 60:.1f}h span, {computed}",
+        over_by=f"{(span - limit_min) / 60:.1f}h past the meal limit",
+        quote=rule.quote,
+        source_url=rule.source_url,
+        jurisdiction=rule.jurisdiction,
+    )
 
 
 def _check_consecutive_days(
@@ -385,6 +465,7 @@ def check_day_legality(
     schedule: ScheduleInput,
     day_index: int,
     rules_dir: Path | None = None,
+    timeline: DayTimeline | None = None,
 ) -> list[ViolationRecord]:
     """
     Enumerate every legality violation for one shoot day.
@@ -393,6 +474,7 @@ def check_day_legality(
         schedule: The full ScheduleInput (jurisdiction, cast, days).
         day_index: 0-based index into schedule.days.
         rules_dir: Override for the rules directory (tests inject a temp dir).
+        timeline: Concrete per-minor times. None means the crew-window proxy.
 
     Returns:
         List of ViolationRecord. Empty means LEGAL for that day.
@@ -430,6 +512,22 @@ def check_day_legality(
         is_ca_resident = minor.resident_state == "CA"
         is_ga_shoot = shoot_state == "GA"
 
+        # Which times to judge: the minor's own (timeline) or the crew window (proxy).
+        mt: MinorTimeline | None = None
+        if timeline is not None:
+            mt = timeline.minors.get(minor.id)
+            if mt is None:
+                continue  # not on set this day
+            call_t, dismiss_t = mt.call, mt.dismiss
+            location_hours = _duration_hours(call_t, dismiss_t)
+            work_hours = mt.work_minutes / 60.0
+            proxy = False
+        else:
+            call_t, dismiss_t = shoot_day.call, shoot_day.wrap
+            location_hours = ctx.location_hours
+            work_hours = ctx.location_hours
+            proxy = True
+
         for rule in all_rules:
             if rule.id in _DISPLAY_ONLY_IDS:
                 continue
@@ -446,39 +544,49 @@ def check_day_legality(
             if not applies:
                 continue
 
-            # Curfew checks
-            if "curfew_school_night" in rule.params or "curfew_non_school_night" in rule.params:
-                _add(_check_curfew(rule, shoot_day.wrap, ctx.is_school_night, age))
+            has_school_curfew = "curfew_school_night" in rule.params
+            has_non_school_curfew = "curfew_non_school_night" in rule.params
 
-            # Earliest call
-            if "earliest_call" in rule.params and "curfew_school_night" not in rule.params and "curfew_non_school_night" not in rule.params:
-                _add(_check_earliest_call(rule, shoot_day.call, age))
+            # Curfew checks
+            if has_school_curfew or has_non_school_curfew:
+                _add(_check_curfew(rule, dismiss_t, ctx.is_school_night, age))
+
+            # Earliest call: a record that also carries a curfew applies only on its night type
+            if "earliest_call" in rule.params:
+                night_matches = (
+                    (not has_school_curfew and not has_non_school_curfew)
+                    or (has_school_curfew and ctx.is_school_night)
+                    or (has_non_school_curfew and not ctx.is_school_night)
+                )
+                if night_matches:
+                    _add(_check_earliest_call(rule, call_t, age))
 
             # Location hours
             if "max_location_hours" in rule.params:
-                _add(_check_location_hours(rule, ctx.location_hours, age))
+                _add(_check_location_hours(rule, location_hours, age))
 
-            # Work hours (proxy)
+            # Work hours (exact on the timeline path, proxy otherwise)
             if any(k in rule.params for k in ("max_work_hours", "max_work_hours_school_day", "max_work_hours_day")):
-                _add(_check_work_hours(rule, ctx.location_hours, age, shoot_day.school_day))
+                _add(_check_work_hours(rule, work_hours, age, shoot_day.school_day, proxy))
 
             # Turnaround: GA turnaround applies when school_day=True (working during school hours)
             if "min_turnaround_hours" in rule.params:
                 if rule.id == "GA_300_7_1_03_turnaround_school_hours":
                     if shoot_day.school_day:
-                        _add(_check_turnaround(rule, ctx.prev_wrap, shoot_day.call))
+                        _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
                 elif rule.id == "CA_11760_i_turnaround_12_hours":
-                    _add(_check_turnaround(rule, ctx.prev_wrap, shoot_day.call))
+                    _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
                 elif rule.id == "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY" and shoot_day.school_day:
                     # Applies when this day is a school day (minor was working day before school)
-                    _add(_check_turnaround(rule, ctx.prev_wrap, shoot_day.call))
+                    _add(_check_turnaround(rule, ctx.prev_wrap, call_t))
+
+            # Meal within N hours: only judgeable on a concrete timeline
+            if "max_work_before_meal_hours" in rule.params and mt is not None:
+                _add(_check_meal(rule, mt))
 
             # Consecutive days
             if "max_consecutive_days" in rule.params:
                 _add(_check_consecutive_days(rule, ctx.consecutive_run))
-
-        # Break after processing the first minor if there is only one set of rules
-        # (violations are per-day, not per-minor; we accumulate the superset)
 
     return violations
 
