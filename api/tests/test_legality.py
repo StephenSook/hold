@@ -417,10 +417,8 @@ def test_multiple_violations_same_day() -> None:
 
 def test_turnaround_skipped_when_dates_not_consecutive() -> None:
     """A Friday 22:00 wrap and a Monday 07:00 call is a 57-hour rest, not a 9-hour one."""
-    days = [
-        _day(date(2026, 10, 9), "07:00", "22:00", school_day=False),   # Friday
-        _day(date(2026, 10, 12), "07:00", "16:00", school_day=True),   # Monday
-    ]
+    friday = ShootDay(date=date(2026, 10, 9), call=time(7, 0), wrap=time(23, 0), school_day=False, school_night=False)
+    days = [friday, _day(date(2026, 10, 12), "07:00", "16:00", school_day=True)]  # Monday
     schedule = _make_schedule(days)
     rule_ids = {v.rule_id for v in check_day_legality(schedule, 1)}
     assert not rule_ids & {
@@ -428,6 +426,22 @@ def test_turnaround_skipped_when_dates_not_consecutive() -> None:
         "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY",
         "CA_11760_i_turnaround_12_hours",
     }, f"Turnaround must not fire across a weekend gap, got: {rule_ids}"
+    friday_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
+    assert not friday_ids & {"GA_300_7_1_03_school_night_curfew", "CA_1308_7_curfew_school_night"}, friday_ids
+
+
+def test_school_night_unknown_across_a_gap_is_assumed_and_labeled() -> None:
+    days = [_day(date(2026, 10, 9), "07:00", "23:00", school_day=False), _day(date(2026, 10, 12), "07:00", "16:00", school_day=True)]
+    schedule = _make_schedule(days)
+    curfew = next(v for v in check_day_legality(schedule, 0) if v.rule_id == "GA_300_7_1_03_school_night_curfew")
+    assert "assumed" in curfew.limit
+
+
+def test_school_night_derived_from_the_next_calendar_day_is_not_labeled() -> None:
+    days = [_day(date(2026, 10, 7), "07:00", "23:00", school_day=False), _day(date(2026, 10, 8), "07:00", "16:00", school_day=True)]
+    schedule = _make_schedule(days)
+    curfew = next(v for v in check_day_legality(schedule, 0) if v.rule_id == "GA_300_7_1_03_school_night_curfew")
+    assert "assumed" not in curfew.limit
 
 
 # ---------------------------------------------------------------------------
@@ -448,8 +462,9 @@ def test_ca_earliest_call_fires_on_school_night_record() -> None:
 
 
 def test_ca_earliest_call_fires_on_non_school_night_record() -> None:
-    """A 04:30 call with no school day following breaches Lab. Code 1308.7(b), not (a)."""
-    days = [_day(date(2026, 10, 7), "04:30", "09:00", school_day=False)]
+    """A 04:30 call with no school day following breaches Lab. Code 1308.7(b), not (a).
+    A lone day says so explicitly; with nothing listed after it the schedule would assume a school night."""
+    days = [ShootDay(date=date(2026, 10, 7), call=time(4, 30), wrap=time(9, 0), school_day=False, school_night=False)]
     schedule = _make_schedule(days)
     rule_ids = {v.rule_id for v in check_day_legality(schedule, 0)}
     assert "CA_1308_7_curfew_non_school_night" in rule_ids, rule_ids

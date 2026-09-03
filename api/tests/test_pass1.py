@@ -501,3 +501,48 @@ def test_standalone_day_without_history_is_conservative_and_says_so() -> None:
     assert result.verdict.core_rule_ids == ["GA_300_7_1_03_consecutive_days"]
     record = next(v for v in result.verdict.violations if v.rule_id == "GA_300_7_1_03_consecutive_days")
     assert "assumed" in record.computed
+
+
+# ---------------------------------------------------------------------------
+# Contract: Verdict.reason and ShootDay.school_night
+# ---------------------------------------------------------------------------
+
+def test_verdict_reason_carries_the_explanation() -> None:
+    schedule = _schedule([_scene(1, 24, ["cA"])], [_day(date(2026, 10, 5), "07:00", "09:00")], [_A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "window" in result.verdict.reason
+    illegal, _ = _run(FIXTURES / "ga-work-hours.json")
+    assert illegal.verdict.reason == illegal.note != ""
+
+
+def _friday_before_monday(school_night: bool | None) -> ScheduleInput:
+    fri = ShootDay(date=date(2026, 10, 9), call=time(14, 0), wrap=time(23, 0), school_day=False, school_night=school_night)
+    mon = ShootDay(date=date(2026, 10, 12), call=time(7, 0), wrap=time(11, 0), school_day=True)
+    scenes = [_scene(1, 32, ["cA"]), _scene(2, 32, ["cA"]), _scene(3, 8, ["cM"])]
+    return _schedule(scenes, [fri, mon], [_M, _A])
+
+
+def test_explicit_school_night_false_clears_a_weekend_curfew() -> None:
+    """A Friday shoot before a Monday school day is not a school night when the schedule says so."""
+    result = pass1_day(_friday_before_monday(False), 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "LEGAL", (result.verdict.status, result.per_rule)
+
+
+def test_unknown_school_night_across_a_gap_is_assumed_and_labeled() -> None:
+    result = pass1_day(_friday_before_monday(None), 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "ILLEGAL"
+    assert "GA_300_7_1_03_school_night_curfew" in result.verdict.core_rule_ids
+    record = next(v for v in result.verdict.violations if v.rule_id == "GA_300_7_1_03_school_night_curfew")
+    assert "assumed" in record.limit
+    assert "school night" in result.verdict.reason
+
+
+def test_explicit_school_night_true_overrides_a_non_school_next_day() -> None:
+    days = [
+        ShootDay(date=date(2026, 10, 7), call=time(14, 0), wrap=time(23, 0), school_day=False, school_night=True),
+        ShootDay(date=date(2026, 10, 8), call=time(7, 0), wrap=time(11, 0), school_day=False),
+    ]
+    schedule = _schedule([_scene(1, 32, ["cA"]), _scene(2, 32, ["cA"]), _scene(3, 8, ["cM"])], days, [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert "GA_300_7_1_03_school_night_curfew" in result.verdict.core_rule_ids

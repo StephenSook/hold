@@ -42,6 +42,10 @@ class ShootDay(BaseModel):
     call: time
     wrap: time
     school_day: bool
+    # The following calendar day is a school day (curfew and 5 a.m. floor trigger). None means
+    # derive from the next shoot day when it is the next calendar date, else assume True and
+    # label the assumption on the verdict.
+    school_night: bool | None = None
 
 
 class Constraint(BaseModel):
@@ -68,6 +72,9 @@ class ScheduleInput(BaseModel):
     constraints: list[Constraint] = Field(default_factory=list)
     jurisdiction: Jurisdiction
     constructed: bool  # must be True for demo data; shown in the UI
+    # Under the SAG-AFTRA low-budget agreements consecutive employment (paid hold days) applies
+    # only on overnight locations; the Basic Agreement pays it everywhere.
+    overnight_location: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -118,6 +125,7 @@ class Verdict(BaseModel):
     violations: list[ViolationRecord] = Field(default_factory=list)
     core_rule_ids: list[str] = Field(default_factory=list)
     witness: dict[str, object] | None = None
+    reason: str = ""  # one sentence for the card: why UNDETERMINED, or how the core reads
 
 
 # ---------------------------------------------------------------------------

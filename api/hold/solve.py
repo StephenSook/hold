@@ -37,6 +37,7 @@ from api.hold.legality_checker import (
     TIMING_ONLY_RULE_IDS,
     DayTimeline,
     MinorTimeline,
+    build_day_context,
     check_day_legality,
 )
 from api.hold.schemas import ScheduleInput, Verdict
@@ -52,6 +53,11 @@ class Pass1Result:
     sufficient_core: list[str] = field(default_factory=list)
     per_rule: dict[str, str] = field(default_factory=dict)
     note: str = ""
+
+    def __post_init__(self) -> None:
+        # The contract carries the explanation; the note is the same sentence.
+        if not self.verdict.reason:
+            self.verdict.reason = self.note
 
 
 def _hhmm(minutes: int) -> str:
@@ -260,6 +266,8 @@ def pass1_day(
     else:
         core = sufficient_core
         note = "joint: no single rule makes this day impossible, these rules do together"
+    if build_day_context(schedule, day_index).school_night_assumed and any("curfew" in r or "1308_7" in r for r in core):
+        note += "; the night was assumed to be a school night because the schedule does not say"
 
     if core and set(core) <= TIMING_ONLY_RULE_IDS:
         return Pass1Result(

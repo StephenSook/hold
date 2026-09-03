@@ -14,6 +14,9 @@
       "jurisdiction": "CA"
     }
   ],
-  "core_rule_ids": ["CA_11760e_work_cap"],
-  "witness": null
+  "core_rule_ids": [
+    "CA_11760e_work_cap"
+  ],
+  "witness": null,
+  "reason": "each listed rule alone makes this day impossible"
 }

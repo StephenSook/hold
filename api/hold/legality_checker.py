@@ -143,9 +143,23 @@ class DayContext(NamedTuple):
     day_index: int
     shoot_day: ShootDay
     location_hours: float
-    is_school_night: bool  # next day is a school day (curfew and turnaround trigger)
+    is_school_night: bool  # the following calendar day is a school day (curfew, 5 a.m. floor)
+    school_night_assumed: bool  # True when nothing in the schedule says, so the safe reading was taken
     prev_wrap: time | None  # previous consecutive shoot day wrap, None if first day
     consecutive_run: int  # how many consecutive shoot days ending on this day
+
+
+def school_night(schedule: ScheduleInput, day_index: int) -> tuple[bool, bool]:
+    """(is_school_night, assumed). An explicit ShootDay.school_night wins; otherwise the next shoot
+    day decides when it is the next calendar date; otherwise the schedule cannot say, so the
+    protective reading (a school night) is taken and flagged as assumed."""
+    days = schedule.days
+    sd = days[day_index]
+    if sd.school_night is not None:
+        return sd.school_night, False
+    if day_index + 1 < len(days) and (days[day_index + 1].date - sd.date).days == 1:
+        return days[day_index + 1].school_day, False
+    return True, True
 
 
 def build_day_context(
@@ -157,17 +171,7 @@ def build_day_context(
     sd = days[day_index]
     loc_hours = _duration_hours(sd.call, sd.wrap)
 
-    # Is the following calendar day a school day? (curfew trigger)
-    # Check if next shoot day is a school day, OR if day_index+1 exists in days list.
-    is_school_night = False
-    # Check the shoot day immediately after this one in the days list
-    if day_index + 1 < len(days):
-        is_school_night = days[day_index + 1].school_day
-    # Also honor: the current day itself being a school day counts as a school night
-    # for curfew purposes (minor attending school next morning).
-    # Rule: "preceding a school day" means the night before a school day.
-    # Our school_day flag is on the day the minor is working. The curfew applies
-    # when the NEXT day is a school day. Use the next shoot day's school_day flag.
+    is_school_night, school_night_assumed = school_night(schedule, day_index)
 
     # Previous wrap for turnaround
     prev_wrap: time | None = prev_dismissal
@@ -188,6 +192,7 @@ def build_day_context(
         shoot_day=sd,
         location_hours=loc_hours,
         is_school_night=is_school_night,
+        school_night_assumed=school_night_assumed,
         prev_wrap=prev_wrap,
         consecutive_run=run,
     )
@@ -273,6 +278,7 @@ def _check_curfew(
     wrap: time,
     is_school_night: bool,
     age: int,
+    school_night_assumed: bool = False,
 ) -> ViolationRecord | None:
     """Check one curfew rule against this day's wrap time."""
     params = rule.params
@@ -311,7 +317,11 @@ def _check_curfew(
         rule_id=rule.id,
         citation=rule.citation,
         title=rule.title,
-        limit=f"Wrap by {curfew_str} ({'school' if is_school_night else 'non-school'} night)",
+        limit=(
+            f"Wrap by {curfew_str} ({'school' if is_school_night else 'non-school'} night"
+            + (", assumed: the schedule does not say whether the next calendar day is a school day" if school_night_assumed else "")
+            + ")"
+        ),
         computed=f"Wrap at {wrap.strftime('%H:%M')}",
         over_by=f"{over_minutes // 60}h {over_minutes % 60:02d}m",
         quote=rule.quote,
@@ -622,7 +632,7 @@ def check_day_legality(
 
             # Curfew checks
             if "curfew_school_night" in rule.params or "curfew_non_school_night" in rule.params:
-                _add(_check_curfew(rule, dismiss_t, ctx.is_school_night, age))
+                _add(_check_curfew(rule, dismiss_t, ctx.is_school_night, age, ctx.school_night_assumed))
 
             # Earliest call: a record that also carries a curfew applies only on its night type
             if earliest_call_applies(rule, ctx.is_school_night):
