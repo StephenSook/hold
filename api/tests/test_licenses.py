@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from scripts.check_licenses import blocked_reason
+from scripts.check_licenses import blocked_reason, expression_reason
 
 
 @pytest.mark.parametrize(
@@ -52,3 +52,21 @@ def test_the_installed_environment_is_clean() -> None:
     from scripts.check_licenses import offenders
 
     assert offenders() == []
+
+
+@pytest.mark.parametrize(
+    ("expression", "blocked"),
+    [
+        ("MIT OR GPL-2.0-or-later", False),  # a real PyPI declaration; the MIT branch may be taken
+        ("GPL-2.0-only OR LGPL-2.1-only", False),  # LGPL is allowed here, so the choice clears
+        ("Apache-2.0 OR MIT", False),
+        ("AGPL-3.0-only OR SSPL-1.0", True),  # every branch blocked, so the choice is no escape
+        ("GPL-3.0-only", True),
+        ("Apache-2.0 AND GPL-3.0-only", True),  # AND is not a choice
+        ("Apache-2.0 WITH Commons-Clause", True),
+        ("(MIT OR Apache-2.0) AND GPL-3.0-only", True),  # the OR is inside the parentheses
+        ("MIT OR (GPL-3.0-only AND SSPL-1.0)", False),
+    ],
+)
+def test_spdx_expressions_treat_or_as_a_choice(expression: str, blocked: bool) -> None:
+    assert (expression_reason(expression) is not None) is blocked, expression
