@@ -15,7 +15,11 @@ from __future__ import annotations
 
 from datetime import date, time
 
-from api.hold.legality_checker import check_day_legality, check_schedule_legality
+from api.hold.legality_checker import (
+    check_day_legality,
+    check_schedule_legality,
+    rule_applies_to_minor,
+)
 from api.hold.schemas import (
     CastMember,
     Jurisdiction,
@@ -599,3 +603,18 @@ def test_turnaround_respects_the_record_age_bracket() -> None:
     ids = {v.rule_id for v in check_day_legality(_make_schedule(days, minor=toddler), 1)}
     assert "GA_300_7_1_03_turnaround_school_hours" not in ids, ids
     assert "SAG_MINORS_P22_TURNAROUND_SCHOOL_DAY" in ids, ids
+
+
+def test_trust_records_are_display_facts_that_never_apply() -> None:
+    """A record marked params.kind: trust (task 2.6) is never a constraint, whatever its jurisdiction."""
+    from datetime import date as _date
+
+    from api.hold.registry import RuleRecord
+
+    trust = RuleRecord(
+        id="CA_TRUST_TEST", jurisdiction="CA", authority="t", citation="t", title="t", quote="t",
+        source_url="https://example.invalid", valid_from=_date(2020, 1, 1), valid_to=None,
+        params={"kind": "trust", "percent": 15}, verified="VERIFIED", note="",
+    )
+    assert not rule_applies_to_minor(trust, _MINOR_M, "GA")
+    assert not rule_applies_to_minor(trust, _MINOR_M, "CA")

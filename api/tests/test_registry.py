@@ -4,6 +4,7 @@ D4: citation and quote are required; a record missing either raises RegistryErro
 """
 from __future__ import annotations
 
+import json
 import textwrap
 from datetime import date
 from pathlib import Path
@@ -194,3 +195,9 @@ def test_files_with_underscore_prefix_skipped(tmp_path: Path) -> None:
     _write_yaml(tmp_path, "_schema.yaml", VALID_RECORD_YAML)
     records = load_rules(tmp_path)
     assert len(records) == 0
+
+
+def test_schema_jurisdictions_cover_the_five_trust_states() -> None:
+    """Contract change announced in PLAN.md Shared Contracts (6b75832): NY, IL, LA, NM join the enum for task 2.6."""
+    schema = json.loads((Path(__file__).parents[2] / "rules" / "schema.json").read_text())
+    assert {"CA", "GA", "NY", "IL", "LA", "NM", "SAG-AFTRA"} <= set(schema["properties"]["jurisdiction"]["enum"])

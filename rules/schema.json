@@ -3,7 +3,17 @@
   "title": "HOLD Rules Record",
   "description": "Schema for every record in rules/*.yaml. citation and quote are required; a record missing either is UNVERIFIABLE and excluded from all claims.",
   "type": "object",
-  "required": ["id", "jurisdiction", "authority", "citation", "title", "quote", "source_url", "valid_from", "verified"],
+  "required": [
+    "id",
+    "jurisdiction",
+    "authority",
+    "citation",
+    "title",
+    "quote",
+    "source_url",
+    "valid_from",
+    "verified"
+  ],
   "additionalProperties": false,
   "properties": {
     "id": {
@@ -12,8 +22,17 @@
     },
     "jurisdiction": {
       "type": "string",
-      "enum": ["CA", "GA", "SAG-AFTRA", "FEDERAL"],
-      "description": "Primary jurisdiction this rule applies to."
+      "enum": [
+        "CA",
+        "GA",
+        "NY",
+        "IL",
+        "LA",
+        "NM",
+        "SAG-AFTRA",
+        "FEDERAL"
+      ],
+      "description": "Primary jurisdiction this rule applies to. NY, IL, LA and NM carry trust records only (params.kind: trust)."
     },
     "authority": {
       "type": "string",
@@ -42,22 +61,35 @@
       "description": "ISO date from which this record is effective. Inclusive."
     },
     "valid_to": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date",
       "description": "ISO date after which this record is no longer effective. Null = indefinitely valid."
     },
     "params": {
-      "type": ["object", "null"],
-      "description": "Rule-specific numeric parameters keyed by name. Example: {max_work_hours: 5, curfew_school_night: '22:00'}",
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Rule-specific numeric parameters keyed by name. Example: {max_work_hours: 5, curfew_school_night: '22:00'}. kind: trust marks a display fact that the checker and the solver never read.",
       "additionalProperties": true
     },
     "verified": {
       "type": "string",
-      "enum": ["VERIFIED", "UNVERIFIABLE", "PENDING"],
+      "enum": [
+        "VERIFIED",
+        "UNVERIFIABLE",
+        "PENDING"
+      ],
       "description": "VERIFIED: quote confirmed against source snapshot in rules/sources/. UNVERIFIABLE: source not accessible. PENDING: not yet checked."
     },
     "note": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Optional free-text note for unusual interpretation or caveats."
     }
   }

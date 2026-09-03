@@ -44,7 +44,7 @@ from datetime import date, time
 from pathlib import Path
 from typing import NamedTuple
 
-from api.hold.registry import RuleRecord, load_rules
+from api.hold.registry import RuleRecord, is_trust_record, load_rules
 from api.hold.schemas import CastMember, ScheduleInput, ShootDay, ViolationRecord
 
 _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
@@ -212,7 +212,7 @@ def build_day_context(
 
 def rule_applies_to_minor(rule: RuleRecord, minor: CastMember, shoot_state: str) -> bool:
     """Cumulative jurisdiction (D5): GA on a GA shoot, CA for a CA-resident minor, SAG always."""
-    if rule.id in DISPLAY_ONLY_RULE_IDS:
+    if rule.id in DISPLAY_ONLY_RULE_IDS or is_trust_record(rule):
         return False
     jur = rule.jurisdiction
     if jur == "SAG-AFTRA":
