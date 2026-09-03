@@ -318,3 +318,22 @@ def test_registry_corruption_raises_instead_of_undetermined(tmp_path: Path) -> N
 def test_scope_error_type_is_distinct_from_registry_error() -> None:
     assert issubclass(Pass1ScopeError, ValueError)
     assert not issubclass(RegistryError, Pass1ScopeError)
+
+
+# ---------------------------------------------------------------------------
+# A day with no scene list is never a verdict
+# ---------------------------------------------------------------------------
+
+def test_explicit_empty_scene_list_is_undetermined() -> None:
+    schedule, _ = _load(FIXTURES / "curfew-school-night.json")
+    result = pass1_day(schedule, 0, day_scene_ids=[], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "no scenes" in result.note
+    assert result.verdict.witness is None
+
+
+def test_pass1_schedule_raises_on_a_missing_day_key() -> None:
+    schedule, meta = _load(FIXTURES / "curfew-school-night.json")
+    incomplete = {0: _day_scenes(meta, 0)}  # day 1 missing on purpose
+    with pytest.raises(KeyError):
+        pass1_schedule(schedule, day_scene_ids=incomplete, time_limit_s=TIME_LIMIT)

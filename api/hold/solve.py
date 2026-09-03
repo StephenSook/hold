@@ -151,9 +151,10 @@ def pass1_day(
     """
     Pass-1 verdict for one day. See the module docstring for the three-step solve.
 
-    day_scene_ids: the scenes shot that day, in shooting order (default: every scene, in
-    listed order). prev_dismissal: override for the previous day's dismissal; by default
-    the previous consecutive calendar day's crew wrap.
+    day_scene_ids: the scenes shot that day, in shooting order. None means every scene in
+    the production, in listed order (only sensible for a one-day schedule); an explicit
+    empty list is UNDETERMINED, never a verdict. prev_dismissal: override for the previous
+    day's dismissal; by default the previous consecutive calendar day's crew wrap.
     """
     if day_scene_ids is None:
         day_scene_ids = [s.id for s in schedule.scenes]
@@ -166,6 +167,9 @@ def pass1_day(
             note=note,
             **extra,
         )
+
+    if not day_scene_ids:
+        return undetermined("no scenes assigned to this day; nothing to judge", "NOT_RUN")
 
     try:
         dm = build_day_model(schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir)
@@ -278,6 +282,11 @@ def pass1_schedule(
     """Pass 1 over every day. Days are independent: turnaround uses the previous day's crew wrap."""
     results: list[Pass1Result] = []
     for i in range(len(schedule.days)):
-        ids = None if day_scene_ids is None else day_scene_ids.get(i, [])
+        if day_scene_ids is None:
+            ids = None
+        elif i in day_scene_ids:
+            ids = day_scene_ids[i]
+        else:
+            raise KeyError(f"pass1_schedule: no scene list for day {i}; an empty list must be explicit")
         results.append(pass1_day(schedule, i, day_scene_ids=ids, time_limit_s=time_limit_s, rules_dir=rules_dir))
     return results
