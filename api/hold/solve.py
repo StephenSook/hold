@@ -109,16 +109,19 @@ def _witness(dm: DayModel, solver: cp_model.CpSolver, schedule: ScheduleInput) -
     if int(solver.value(dm.meal_present)) == 1:
         ms = int(solver.value(dm.meal_start))
         meal = {"start": _hhmm(ms), "end": _hhmm(ms + dm.meal_minutes)}
+    meal_start_m = int(solver.value(dm.meal_start)) if meal is not None else None
     minors: dict[str, object] = {}
     for cast_id, mv in dm.minors.items():
         call = int(solver.value(mv.call))
         dismiss = int(solver.value(mv.dismiss))
+        # The crew meal belongs on a minor's line only when it falls inside that minor's span.
+        own_meal = meal if meal_start_m is not None and call <= meal_start_m and meal_start_m + dm.meal_minutes <= dismiss else None
         minors[cast_id] = {
             "call": _hhmm(call),
             "dismiss": _hhmm(dismiss),
             "work_minutes": mv.work_minutes,
             "location_minutes": dismiss - call,
-            "meal": meal,
+            "meal": own_meal,
         }
     return {
         "day": dm.day_index,
@@ -215,10 +218,12 @@ def pass1_day(
             schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir, tidy_objective=True, worked_dates=worked_dates
         )
         tidy_status, tidy_solver = _solve_with(tidy, tidy.all_literals(), time_limit_s)
+        tidy_note = ""
         if tidy_status in ("OPTIMAL", "FEASIBLE"):
             witness = _witness(tidy, tidy_solver, schedule)
         else:
             witness = _witness(dm, solver, schedule)
+            tidy_note = "; the tidy re-solve did not finish, so the witness is the raw feasible timing"
         feasible_table: dict[str, str] = dict.fromkeys(rule_ids, "FEASIBLE")
         leftovers = check_day_legality(
             schedule, day_index, rules_dir=rules_dir, timeline=_timeline(witness), prev_dismissal=prev_dismissal,
@@ -235,7 +240,7 @@ def pass1_day(
             verdict=Verdict(status="LEGAL", day=day_index, violations=[], core_rule_ids=[], witness=witness),
             solver_status=full_status,
             per_rule=feasible_table,
-            note="a legal timing exists; witness checked by the independent checker",
+            note="a legal timing exists; witness checked by the independent checker" + tidy_note,
         )
 
     # INFEASIBLE: CP-SAT's sufficient core, then one solve per rule

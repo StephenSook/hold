@@ -115,6 +115,7 @@ def test_illegal_fixture_core_is_exact(path: Path) -> None:
         f"{path.stem}: core {sorted(result.verdict.core_rule_ids)} vs expected {sorted(meta['_expected_core'])}; "
         f"per_rule={result.per_rule}"
     )
+    assert result.verdict.witness is None
 
 
 @pytest.mark.parametrize("path", ILLEGAL, ids=[p.stem for p in ILLEGAL])
@@ -165,8 +166,8 @@ def test_legal_fixture_returns_witness_the_checker_passes() -> None:
     scenes = w["scenes"]
     assert isinstance(scenes, list)
     assert [s["id"] for s in scenes] == _day_scenes(meta, 0)
-    call_m = 7 * 60
-    wrap_m = 16 * 60
+    call_m = _minutes(str(w["crew_call"]))
+    wrap_m = _minutes(str(w["crew_wrap"]))
     prev_end = call_m
     for s in scenes:
         start = _minutes(str(s["start"]))
@@ -178,6 +179,7 @@ def test_legal_fixture_returns_witness_the_checker_passes() -> None:
     assert isinstance(minors, dict)
     assert _minutes(str(minors["cM"]["call"])) >= 5 * 60
     assert check_day_legality(schedule, 0, timeline=_timeline_from_witness(w)) == []
+    assert result.per_rule and all(v == "FEASIBLE" for v in result.per_rule.values()), result.per_rule
 
 
 def test_legal_witness_is_deterministic() -> None:
@@ -556,3 +558,104 @@ def test_explicit_school_night_true_overrides_a_non_school_next_day() -> None:
     schedule = _schedule([_scene(1, 32, ["cA"]), _scene(2, 32, ["cA"]), _scene(3, 8, ["cM"])], days, [_M, _A])
     result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
     assert "GA_300_7_1_03_school_night_curfew" in result.verdict.core_rule_ids
+
+
+# ---------------------------------------------------------------------------
+# Two minors, one crew meal; witness fidelity; odd eighths; registry injection; SAG-only
+# ---------------------------------------------------------------------------
+
+_N = CastMember(id="cN", letter="N", age=15, resident_state="CA", day_rate_cents=83400, rate_tier="low_budget")
+
+
+def test_two_minors_share_one_meal_when_both_spans_contain_it() -> None:
+    scenes = [_scene(1, 8, ["cM", "cN"]), _scene(2, 36, ["cA"]), _scene(3, 8, ["cM", "cN"])]
+    schedule = _schedule(scenes, [_day(date(2026, 10, 5), "07:00", "17:00")], [_M, _N, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "LEGAL", (result.verdict.status, result.per_rule, result.note)
+    w = result.verdict.witness
+    assert w is not None
+    minors = w["minors"]
+    assert isinstance(minors, dict)
+    assert minors["cM"]["meal"] is not None and minors["cN"]["meal"] is not None
+
+
+def test_two_minors_with_disjoint_spans_and_no_shared_meal_are_undetermined() -> None:
+    """One crew meal cannot sit inside two spans that barely overlap: the documented limit."""
+    scenes = [_scene(1, 8, ["cM"]), _scene(2, 36, ["cA"]), _scene(3, 8, ["cM", "cN"]), _scene(4, 36, ["cA"]), _scene(5, 8, ["cN"])]
+    schedule = _schedule(scenes, [_day(date(2026, 10, 5), "07:00", "21:00")], [_M, _N, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3", "s4", "s5"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED", (result.verdict.status, result.per_rule)
+    assert "GA_300_7_1_03_first_meal_within_6_hours" in result.verdict.reason
+
+
+def test_witness_meal_only_for_minors_whose_span_contains_it() -> None:
+    scenes = [_scene(1, 8, ["cM"]), _scene(2, 36, ["cA"]), _scene(3, 8, ["cM"]), _scene(4, 8, ["cA"]), _scene(5, 8, ["cN"])]
+    schedule = _schedule(scenes, [_day(date(2026, 10, 5), "07:00", "17:00")], [_M, _N, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3", "s4", "s5"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "LEGAL", (result.verdict.status, result.per_rule)
+    w = result.verdict.witness
+    assert w is not None
+    minors = w["minors"]
+    assert isinstance(minors, dict)
+    assert minors["cM"]["meal"] is not None, "M spans 6.5 h and needs the meal"
+    assert minors["cN"]["meal"] is None, "N works one late hour; the crew meal is not inside N's span"
+
+
+def test_scene_minutes_round_up_inside_a_solve() -> None:
+    schedule = _schedule([_scene(1, 3, ["cM"]), _scene(2, 5, ["cM"])], [_day(date(2026, 10, 5), "07:00", "16:00")], [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "LEGAL", result.per_rule
+    w = result.verdict.witness
+    assert w is not None
+    scenes = w["scenes"]
+    assert isinstance(scenes, list)
+    assert (scenes[0]["start"], scenes[0]["end"], scenes[1]["end"]) == ("07:00", "07:23", "08:01")
+    minors = w["minors"]
+    assert isinstance(minors, dict)
+    assert minors["cM"]["work_minutes"] == 61
+
+
+def test_rules_dir_injection_sets_the_meal_length(tmp_path: Path) -> None:
+    src = Path(__file__).parents[2] / "rules"
+    for f in src.glob("*.yaml"):
+        text = f.read_text()
+        if f.name == "ga.yaml":
+            assert text.count("    min_meal_duration_minutes: 30\n") == 1
+            text = text.replace("    min_meal_duration_minutes: 30\n", "    min_meal_duration_minutes: 45\n")
+        (tmp_path / f.name).write_text(text)
+    scenes = [_scene(1, 8, ["cM"]), _scene(2, 36, ["cA"]), _scene(3, 8, ["cM"])]
+    schedule = _schedule(scenes, [_day(date(2026, 10, 5), "07:00", "17:00")], [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2", "s3"], time_limit_s=TIME_LIMIT, rules_dir=tmp_path)
+    assert result.verdict.status == "LEGAL", (result.verdict.status, result.per_rule, result.note)
+    w = result.verdict.witness
+    assert w is not None
+    minors = w["minors"]
+    assert isinstance(minors, dict)
+    meal = minors["cM"]["meal"]
+    assert meal is not None
+    assert _minutes(meal["end"]) - _minutes(meal["start"]) == 45
+
+
+def test_sag_only_minor_outside_ga_and_ca() -> None:
+    """A New York resident on a non-Georgia shoot answers only to the SAG-AFTRA tables."""
+    ny = CastMember(id="cP", letter="P", age=14, resident_state="NY", day_rate_cents=83400, rate_tier="low_budget")
+    schedule = _schedule([_scene(1, 48, ["cP"])], [_day(date(2026, 10, 5), "07:00", "16:00", school_day=True)], [ny, _A], state="other")
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.core_rule_ids == ["SAG_MINORS_9_15_WORK_HOURS"], result.per_rule
+    assert all(rid.startswith("SAG_") for rid in result.per_rule), result.per_rule
+
+
+def test_tidy_resolve_fallback_is_recorded(monkeypatch: pytest.MonkeyPatch) -> None:
+    import api.hold.solve as solve_mod
+
+    original = solve_mod._solve_with
+
+    def flaky(dm: Any, assumptions: list[Any], time_limit_s: float) -> Any:
+        if "tidy objective" in dm.notes:
+            return "UNKNOWN", original(dm, [], time_limit_s)[1]
+        return original(dm, assumptions, time_limit_s)
+
+    monkeypatch.setattr(solve_mod, "_solve_with", flaky)
+    result, _ = _run(LEGAL)
+    assert result.verdict.status == "LEGAL"
+    assert "tidy" in result.note

@@ -251,6 +251,7 @@ def build_day_model(
                 )
 
     if tidy_objective:
+        dm.notes.append("tidy objective")
         terms: list[Any] = [starts[sid] for sid in day_scene_ids]
         terms.extend(mv.dismiss - mv.call for mv in minors.values())
         terms.append(meal_minutes * meal_present)
