@@ -33,10 +33,12 @@ async def _stream(job_id: str | None, replay: bool, limit: int | None, timeout_s
     after that many events and timeout_s after that many seconds (both unbounded by default)."""
     queue = BUS.subscribe()
     sent = 0
+    replayed_through = -1  # a live event at or below this number was already sent by the replay
     deadline = None if timeout_s is None else asyncio.get_running_loop().time() + timeout_s
     try:
         if replay:
-            for event in BUS.replay(job_id):
+            for seq, event in BUS.replay_seq(job_id):
+                replayed_through = max(replayed_through, seq)
                 yield _sse(event)
                 sent += 1
                 if limit is not None and sent >= limit:
@@ -46,12 +48,14 @@ async def _stream(job_id: str | None, replay: bool, limit: int | None, timeout_s
             if wait <= 0:
                 return
             try:
-                event = await asyncio.wait_for(queue.get(), timeout=wait)
+                seq, event = await asyncio.wait_for(queue.get(), timeout=wait)
             except TimeoutError:
                 if deadline is not None and asyncio.get_running_loop().time() >= deadline:
                     return
                 yield ": keepalive\n\n"
                 continue
+            if seq <= replayed_through:
+                continue  # the replay already sent this one (round eight, finding 1)
             if job_id is None or event.get("job_id") == job_id:
                 yield _sse(event)
                 sent += 1

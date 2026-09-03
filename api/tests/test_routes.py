@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 
 from api.hold.bus import BUS
 from api.hold.jobs import JOBS
+from api.hold.schemas import ScheduleInput
 from api.main import app
 
 ROOT = Path(__file__).parents[2]
@@ -276,3 +277,64 @@ def test_history_holds_every_verdict_at_done_even_when_the_loop_is_blocked(clien
         release.set()
         thread.join(5)
         loop.close()
+
+
+def test_replay_never_delivers_an_event_twice(client: TestClient) -> None:
+    """Round eight, finding 1: an event published between subscribe() and replay() was copied into the
+    replay while its live delivery was still queued on the loop, so the stream sent it twice."""
+    import asyncio
+
+    async def drive() -> tuple[int, int]:
+        from api.hold.bus import BUS as bus
+
+        bus.clear()
+        bus.bind(asyncio.get_running_loop())
+        queue = bus.subscribe()
+        try:
+            event = {"event": "verdict", "job_id": "j1", "n": 1}
+            await asyncio.get_running_loop().run_in_executor(None, bus.publish, event)  # published from a worker
+            replayed = bus.replay_seq("j1")
+            last = replayed[-1][0] if replayed else -1
+            await asyncio.sleep(0)  # the queued fan-out runs here
+            live = 0
+            while not queue.empty():
+                seq, _ = queue.get_nowait()
+                if seq > last:
+                    live += 1
+            return len(replayed), live
+        finally:
+            bus.unsubscribe(queue)
+            bus.clear()
+
+    replayed, live = asyncio.run(drive())
+    assert (replayed, live) == (1, 0), (replayed, live)
+
+
+def test_a_failed_job_publishes_before_it_reads_failed(client: TestClient) -> None:
+    """Round eight, finding 2: the failure path wrote the status before publishing, so a client that
+    saw failed and then replayed could miss the event."""
+    from api.hold import jobs as jobs_module
+    from api.hold.jobs import JOBS
+
+    real_publish = BUS.publish
+
+    def slow_publish(event: dict[str, Any]) -> None:
+        if event.get("status") == "failed":
+            time.sleep(0.05)
+        real_publish(event)
+
+    def boom(schedule: Any, **kwargs: Any) -> Any:
+        raise RuntimeError("injected")
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(BUS, "publish", slow_publish)
+        patch.setattr(jobs_module, "pass2", boom)
+        job = JOBS.submit(ScheduleInput.model_validate(_demo()))
+        deadline = time.monotonic() + 30
+        seen = -1
+        while time.monotonic() < deadline:
+            if job.status == "failed":
+                seen = len([e for e in BUS.replay(job.id) if e.get("status") == "failed"])
+                break
+            time.sleep(0.001)
+        assert seen == 1, seen
