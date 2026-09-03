@@ -20,13 +20,14 @@ from typing import Any
 
 import pytest
 
-from api.hold.legality import scene_minutes
+from api.hold.legality import Pass1ScopeError, scene_minutes
 from api.hold.legality_checker import (
     TIMING_ONLY_RULE_IDS,
     DayTimeline,
     MinorTimeline,
     check_day_legality,
 )
+from api.hold.registry import RegistryError
 from api.hold.schemas import CastMember, Jurisdiction, Scene, ScheduleInput, ShootDay
 from api.hold.solve import Pass1Result, pass1_day, pass1_schedule
 
@@ -280,3 +281,40 @@ def test_pass1_schedule_returns_one_verdict_per_day() -> None:
     assert verdicts[0].verdict.status == "LEGAL"
     assert verdicts[6].verdict.status == "ILLEGAL"
     assert verdicts[6].verdict.core_rule_ids == ["GA_300_7_1_03_consecutive_days"]
+
+
+# ---------------------------------------------------------------------------
+# Errors are errors: scope problems are UNDETERMINED, data corruption raises
+# ---------------------------------------------------------------------------
+
+def test_wrap_before_call_is_out_of_scope_not_a_verdict() -> None:
+    schedule = _schedule([_scene(1, 8, ["cM"])], [_day(date(2026, 10, 5), "20:00", "02:00")], [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "out of scope" in result.note
+    assert result.solver_status == "NOT_RUN"
+
+
+def test_unknown_scene_id_is_out_of_scope_not_a_verdict() -> None:
+    schedule = _schedule([_scene(1, 8, ["cM"])], [_day(date(2026, 10, 5), "07:00", "16:00")], [_M, _A])
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s9"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status == "UNDETERMINED"
+    assert "s9" in result.note
+
+
+def test_registry_corruption_raises_instead_of_undetermined(tmp_path: Path) -> None:
+    """A rule record missing its citation is a D4 violation: the solver must raise like the checker."""
+    src = Path(__file__).parents[2] / "rules"
+    for f in src.glob("*.yaml"):
+        text = f.read_text()
+        if f.name == "ca.yaml":
+            text = text.replace("citation: 8 CCR 11761", "citation:", 1)
+        (tmp_path / f.name).write_text(text)
+    schedule, meta = _load(LEGAL)
+    with pytest.raises(RegistryError):
+        pass1_day(schedule, 0, day_scene_ids=_day_scenes(meta, 0), time_limit_s=TIME_LIMIT, rules_dir=tmp_path)
+
+
+def test_scope_error_type_is_distinct_from_registry_error() -> None:
+    assert issubclass(Pass1ScopeError, ValueError)
+    assert not issubclass(RegistryError, Pass1ScopeError)

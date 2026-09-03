@@ -31,7 +31,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
-from api.hold.legality import HEURISTIC_NOTE, DayModel, build_day_model, minutes_of
+from api.hold.legality import HEURISTIC_NOTE, DayModel, Pass1ScopeError, build_day_model, minutes_of
 from api.hold.legality_checker import (
     TIMING_ONLY_RULE_IDS,
     DayTimeline,
@@ -40,13 +40,7 @@ from api.hold.legality_checker import (
 )
 from api.hold.schemas import ScheduleInput, Verdict
 
-_STATUS = {
-    cp_model.OPTIMAL: "OPTIMAL",
-    cp_model.FEASIBLE: "FEASIBLE",
-    cp_model.INFEASIBLE: "INFEASIBLE",
-    cp_model.UNKNOWN: "UNKNOWN",
-    cp_model.MODEL_INVALID: "MODEL_INVALID",
-}
+_KNOWN_STATUSES = frozenset({"OPTIMAL", "FEASIBLE", "INFEASIBLE", "UNKNOWN", "MODEL_INVALID"})
 
 
 @dataclass
@@ -76,7 +70,9 @@ def _solve_with(dm: DayModel, assumptions: list[Any], time_limit_s: float) -> tu
     if assumptions:
         dm.model.add_assumptions(assumptions)
     solver = _solver(time_limit_s)
-    status = _STATUS.get(solver.solve(dm.model), "UNKNOWN")
+    status = solver.status_name(solver.solve(dm.model))
+    if status not in _KNOWN_STATUSES:
+        raise RuntimeError(f"CP-SAT returned an unexpected status {status!r}")
     return status, solver
 
 
@@ -173,14 +169,18 @@ def pass1_day(
 
     try:
         dm = build_day_model(schedule, day_index, day_scene_ids, prev_m, rules_dir=rules_dir)
-    except ValueError as exc:
-        return undetermined(f"out of scope for pass 1: {exc}", "MODEL_INVALID")
+    except Pass1ScopeError as exc:
+        # Only the two documented scope cases land here. Registry corruption and parse
+        # errors propagate, exactly as they do from the checker.
+        return undetermined(f"out of scope for pass 1: {exc}", "NOT_RUN")
 
     # 1. base feasibility: rules unenforced
     base_status, _ = _solve_with(dm, [], time_limit_s)
+    if base_status == "MODEL_INVALID":
+        raise RuntimeError(f"pass 1 built an invalid CP-SAT model for day {day_index}: {dm.model.validate()}")
     if base_status == "UNKNOWN":
         return undetermined("time limit reached before the base model was decided", base_status)
-    if base_status not in ("OPTIMAL", "FEASIBLE"):
+    if base_status == "INFEASIBLE":
         return undetermined(
             "the scenes do not fit the crew window under the page-per-hour heuristic; "
             "no rule was consulted",
@@ -219,12 +219,22 @@ def pass1_day(
         )
 
     # INFEASIBLE: CP-SAT's sufficient core, then one solve per rule
+    if full_status != "INFEASIBLE":
+        raise RuntimeError(f"unexpected full-solve status {full_status!r} for day {day_index}")
     index_to_id = {dm.literals[rid].index: rid for rid in rule_ids}
-    sufficient_core = sorted(index_to_id[i] for i in solver.sufficient_assumptions_for_infeasibility() if i in index_to_id)
+    raw_core = list(solver.sufficient_assumptions_for_infeasibility())
+    unmapped = [i for i in raw_core if i not in index_to_id]
+    if unmapped:
+        raise RuntimeError(f"core indices are not rule literals: {unmapped}")
+    sufficient_core = sorted(index_to_id[i] for i in raw_core)
+    if not sufficient_core:
+        raise RuntimeError(f"INFEASIBLE with a feasible base but an empty core on day {day_index}")
 
     per_rule: dict[str, str] = {}
     for rid in rule_ids:
         status, _ = _solve_with(dm, [dm.literals[rid]], time_limit_s)
+        if status == "MODEL_INVALID":
+            raise RuntimeError(f"per-rule solve for {rid} reports an invalid model")
         per_rule[rid] = "FEASIBLE" if status in ("OPTIMAL", "FEASIBLE") else status
     if any(s == "UNKNOWN" for s in per_rule.values()):
         return undetermined("time limit reached during per-rule solves", "UNKNOWN", per_rule=per_rule, sufficient_core=sufficient_core)

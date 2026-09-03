@@ -57,6 +57,10 @@ from api.hold.registry import RuleRecord, load_rules
 from api.hold.schemas import ScheduleInput
 
 HEURISTIC_NOTE = "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)"
+
+
+class Pass1ScopeError(ValueError):
+    """The input is outside what pass 1 models (not a data error, not a solver error)."""
 MEAL_MINUTES_DEFAULT = 30
 
 _RULES_DIR = Path(__file__).parent.parent.parent / "rules"
@@ -133,12 +137,12 @@ def build_day_model(
     call_m = minutes_of(day.call)
     wrap_m = minutes_of(day.wrap)
     if wrap_m <= call_m:
-        raise ValueError("wrap at or before call: same-day windows only in pass 1")
+        raise Pass1ScopeError("wrap at or before call: same-day windows only in pass 1")
 
     scenes_by_id = {s.id: s for s in schedule.scenes}
     unknown = [sid for sid in day_scene_ids if sid not in scenes_by_id]
     if unknown:
-        raise ValueError(f"unknown scene ids for day {day_index}: {unknown}")
+        raise Pass1ScopeError(f"unknown scene ids for day {day_index}: {unknown}")
 
     model = cp_model.CpModel()
     durations: dict[str, int] = {}
