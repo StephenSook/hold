@@ -21,12 +21,14 @@ need() { command -v "$1" >/dev/null 2>&1 || { echo "missing: $1"; exit 1; }; }
 need gcloud; need gh
 
 step "gcloud configuration ${CONFIG} (keeps other projects' default config untouched)"
+# The account is read before switching configurations (a fresh configuration has none active);
+# HOLD_ACCOUNT overrides it so the trial account is named explicitly.
+ACCOUNT="${HOLD_ACCOUNT:-$(gcloud auth list --filter=status:ACTIVE --format='value(account)' | head -1)}"
+[ -n "$ACCOUNT" ] || { echo "no active gcloud account: run gcloud auth login first or set HOLD_ACCOUNT"; exit 1; }
 if ! gcloud config configurations describe "$CONFIG" >/dev/null 2>&1; then
   gcloud config configurations create "$CONFIG" --no-activate || exit 1
 fi
 gcloud config configurations activate "$CONFIG" || exit 1
-ACCOUNT="$(gcloud auth list --filter=status:ACTIVE --format='value(account)' | head -1)"
-[ -n "$ACCOUNT" ] || { echo "no active gcloud account: run gcloud auth login first"; exit 1; }
 gcloud config set account "$ACCOUNT" >/dev/null && gcloud config set project "$PROJECT_ID" >/dev/null
 echo "account ${ACCOUNT}, project ${PROJECT_ID}"
 
@@ -83,11 +85,23 @@ WIF_PROVIDER="$(gcloud iam workload-identity-pools providers describe "$PROVIDER
 echo "WIF provider ${WIF_PROVIDER}"
 
 step "Secret Manager entries deploy.yml mounts (values added separately; placeholders for the ones not yet known)"
-declare -A DEFAULTS=( [GEMINI_MODEL]="gemini-3.1-flash-lite" [GOOGLE_CLOUD_PROJECT]="$PROJECT_ID" [GOOGLE_CLOUD_LOCATION]="$REGION" [GOOGLE_GENAI_USE_ENTERPRISE]="true" [CONFLUENT_BOOTSTRAP]="" [CONFLUENT_API_KEY]="" [CONFLUENT_API_SECRET]="" )
+# macOS ships bash 3.2 (no associative arrays), so the defaults are a case statement.
+default_for() {
+  case "$1" in
+    GEMINI_MODEL) printf '%s' "gemini-3.1-flash-lite" ;;
+    GOOGLE_CLOUD_PROJECT) printf '%s' "$PROJECT_ID" ;;
+    GOOGLE_CLOUD_LOCATION) printf '%s' "$REGION" ;;
+    GOOGLE_GENAI_USE_ENTERPRISE) printf '%s' "true" ;;
+    *) printf '%s' "unset" ;;  # Secret Manager refuses an empty payload; the API reads "unset" as absent
+  esac
+}
 for name in GEMINI_MODEL GOOGLE_CLOUD_PROJECT GOOGLE_CLOUD_LOCATION GOOGLE_GENAI_USE_ENTERPRISE CONFLUENT_BOOTSTRAP CONFLUENT_API_KEY CONFLUENT_API_SECRET; do
   if ! gcloud secrets describe "$name" --project "$PROJECT_ID" >/dev/null 2>&1; then
     gcloud secrets create "$name" --replication-policy=automatic --project "$PROJECT_ID" || exit 1
-    printf '%s' "${DEFAULTS[$name]}" | gcloud secrets versions add "$name" --data-file=- --project "$PROJECT_ID" >/dev/null || exit 1
+  fi
+  if [ -z "$(gcloud secrets versions list "$name" --filter=state:ENABLED --format='value(name)' --project "$PROJECT_ID" 2>/dev/null)" ]; then
+    default_for "$name" | gcloud secrets versions add "$name" --data-file=- --project "$PROJECT_ID" >/dev/null || exit 1
+    echo "added version to ${name}"
   fi
 done
 
