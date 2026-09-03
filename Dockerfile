@@ -4,17 +4,22 @@
 # Stage 2: Python runtime with the built web/dist copied in
 
 # ---- Stage 1: web build ----
+# The web app is task 0.10 onward (Deem's lane). Until web/package.json exists the stage writes a
+# placeholder index.html so the API image still builds and /api/status serves; with the web app
+# present it runs the real build. Docker cannot COPY a missing directory, so the whole context is
+# copied and the check happens in the shell (.dockerignore keeps the context small).
 FROM node:22-slim AS web-build
-WORKDIR /app/web
-
-# Copy package files first for layer caching
-COPY web/package.json web/package-lock.json* ./
-RUN npm ci --ignore-scripts
-
-# Copy source and build
-COPY web/ ./
-RUN npm run build
-# Output: /app/web/dist/
+WORKDIR /src
+COPY . /src
+RUN if [ -f web/package.json ]; then \
+      cd web && npm ci --ignore-scripts && npm run build; \
+    else \
+      mkdir -p web/dist && printf '%s\n' \
+        '<!doctype html><meta charset="utf-8"><title>HOLD</title>' \
+        '<p>HOLD API is running. The web app has not been built into this image yet; see /api/status and /api/docs.</p>' \
+        > web/dist/index.html; \
+    fi
+# Output: /src/web/dist/
 
 # ---- Stage 2: Python runtime ----
 FROM python:3.12-slim AS runtime
@@ -33,7 +38,7 @@ COPY rules/ rules/
 COPY docs/ docs/
 
 # Copy built web assets from stage 1
-COPY --from=web-build /app/web/dist web/dist
+COPY --from=web-build /src/web/dist web/dist
 
 # Install Python dependencies (no dev deps)
 RUN uv sync --frozen --no-dev

@@ -1,0 +1,21 @@
+# Keep the build context to what the image needs. Secrets and local material never enter it.
+.git
+.github
+.venv
+.mypy_cache
+.ruff_cache
+.pytest_cache
+__pycache__
+**/__pycache__
+node_modules
+web/node_modules
+web/dist
+private
+*.pdf
+.env
+.env.*
+!.env.example
+*.local.json
+.bob
+docs/bob-evidence
+bench/instances

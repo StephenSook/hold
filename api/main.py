@@ -84,9 +84,17 @@ def _spa_response() -> FileResponse | JSONResponse:
     )
 
 
-if _DIST.is_dir():
-    # Mount assets so /assets/... serves from web/dist/assets/
-    app.mount("/assets", StaticFiles(directory=str(_DIST / "assets")), name="assets")
+def _mount_assets(application: FastAPI, dist: Path) -> bool:
+    """Serve /assets/... from web/dist/assets when the built web app is present. A placeholder
+    dist with only index.html (the image built before the web app exists) mounts nothing."""
+    assets = dist / "assets"
+    if not assets.is_dir():
+        return False
+    application.mount("/assets", StaticFiles(directory=str(assets)), name="assets")
+    return True
+
+
+_mount_assets(app, _DIST)
 
 
 @app.get("/{full_path:path}", response_model=None)  # a Response union is not a response model
