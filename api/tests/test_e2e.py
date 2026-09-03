@@ -89,9 +89,9 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
 
     # Every path the walkthrough prints must resolve in a real answer. JUDGE.md named a key the API
     # flattens away, so the one step that shows the verdict found nothing (round eleven, finding 1).
-    documented = re.findall(r"`result\.([A-Za-z0-9_.\[\]]+)`", (ROOT / "JUDGE.md").read_text(encoding="utf-8"))
-    assert documented, "JUDGE.md names no result path, so this guard is checking nothing"
-    for path in documented:
+    doc_paths = re.findall(r"`result\.([A-Za-z0-9_.\[\]]+)`", (ROOT / "JUDGE.md").read_text(encoding="utf-8"))
+    assert doc_paths, "JUDGE.md names no result path, so this guard is checking nothing"
+    for path in doc_paths:
         _resolve(solved["result"], path)
 
     # Step 4: the hand-built order the demo improves on is the recorded one, and FACTS agrees with it.
