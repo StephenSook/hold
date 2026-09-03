@@ -423,3 +423,18 @@ def test_school_day_three_hour_cap_binds_in_the_solver() -> None:
     result = pass1_day(schedule, 0, day_scene_ids=["s1"], time_limit_s=TIME_LIMIT)
     assert set(result.verdict.core_rule_ids) == {"CA_11760_e_work_hours_9_15_school_day"}, result.per_rule
     assert result.per_rule["GA_300_7_1_03_ages_9_15_work_hours"] == "FEASIBLE"
+
+
+# ---------------------------------------------------------------------------
+# Meal rule: no stretch over the limit on either side of the meal
+# ---------------------------------------------------------------------------
+
+def test_seven_hours_after_the_meal_is_not_legal() -> None:
+    """Second-model finding: 05:00 to 13:30, a 1h minor scene, then a 7h minor scene. One 30-minute
+    meal at 06:00 satisfied "within six hours of call" and left seven uninterrupted hours after it."""
+    days = [_day(date(2026, 10, 5), "05:00", "13:30")]
+    schedule = _schedule([_scene(1, 8, ["cM"]), _scene(2, 56, ["cM"])], days, [_M, _A], state="other")
+    result = pass1_day(schedule, 0, day_scene_ids=["s1", "s2"], time_limit_s=TIME_LIMIT)
+    assert result.verdict.status != "LEGAL", (result.verdict.status, result.verdict.witness)
+    assert "CA_11761_meal_period_6_hours" in result.per_rule
+    assert result.per_rule["CA_11761_meal_period_6_hours"] == "INFEASIBLE"

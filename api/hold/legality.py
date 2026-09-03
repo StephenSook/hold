@@ -25,7 +25,8 @@ Rule constraints (applicability shared with the checker through its public predi
   CA always, and only when the previous shoot day is the previous calendar date
 - max_consecutive_days: a constant test on the run of consecutive shoot dates
 - max_work_before_meal_hours (CA 11761): a span over the limit requires the meal to be
-  present, to start within the limit of the call, and to sit inside the span
+  present, to start within the limit of the call, to sit inside the span, and to leave no
+  more than the limit between its end and dismissal
 
 Out of scope for pass 1 (stated so nobody assumes them): wraps past midnight (rejected as
 UNDETERMINED upstream), more than one meal per day (two minors whose calls differ by more
@@ -294,3 +295,6 @@ def _add_rule_constraints(
         model.add(dm.meal_start >= mv.call).only_enforce_if([lit, needs_meal])
         model.add(dm.meal_start <= mv.call + limit).only_enforce_if([lit, needs_meal])
         model.add(dm.meal_start + dm.meal_minutes <= mv.dismiss).only_enforce_if([lit, needs_meal])
+        # No stretch over the limit after the meal either (one meal per day: a span longer
+        # than two limits plus the meal is infeasible under this rule and reads UNDETERMINED).
+        model.add(mv.dismiss - (dm.meal_start + dm.meal_minutes) <= limit).only_enforce_if([lit, needs_meal])

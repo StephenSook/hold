@@ -542,3 +542,15 @@ def test_prev_dismissal_override_in_checker() -> None:
     assert "CA_11760_i_turnaround_12_hours" not in {v.rule_id for v in check_day_legality(schedule, 1)}
     ids = {v.rule_id for v in check_day_legality(schedule, 1, prev_dismissal=time(22, 0))}
     assert "CA_11760_i_turnaround_12_hours" in ids
+
+
+def test_timeline_meal_too_early_leaves_a_long_stretch_after_it() -> None:
+    """A meal at 06:00 on a 05:00 to 13:30 day leaves seven hours after it: still a breach."""
+    from api.hold.legality_checker import DayTimeline, MinorTimeline
+
+    days = [_day(date(2026, 10, 5), "05:00", "13:30", school_day=False)]
+    schedule = _make_schedule(days)
+    tl = DayTimeline(minors={"cM": MinorTimeline(call=time(5, 0), dismiss=time(13, 30), work_minutes=480,
+                                                  meal_start=time(6, 0), meal_end=time(6, 30))})
+    ids = {v.rule_id for v in check_day_legality(schedule, 0, timeline=tl)}
+    assert "CA_11761_meal_period_6_hours" in ids

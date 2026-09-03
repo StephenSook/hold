@@ -454,7 +454,7 @@ def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
     """
     Meal within N hours (8 CCR 11761), timeline path only. Same predicate as the solver:
     a span over the limit requires a meal inside the span, starting within the limit of
-    the call, lasting at least the minimum.
+    the call, lasting at least the minimum, and leaving no more than the limit after it.
     """
     params = rule.params
     if "max_work_before_meal_hours" not in params:
@@ -476,6 +476,7 @@ def _check_meal(rule: RuleRecord, mt: MinorTimeline) -> ViolationRecord | None:
             and me <= call_m + span
             and ms - call_m <= limit_min
             and me - ms >= min_meal
+            and (call_m + span) - me <= limit_min
         )
     if ok:
         return None
