@@ -17,3 +17,12 @@ GOOGLE_CLOUD_LOCATION: str = "us-central1"
 
 # google-adk version pinned in pyproject.toml
 ADK_VERSION: str = "2.6.3"
+
+
+def env_value(name: str) -> str | None:
+    """An environment value, or None when it is empty or the literal placeholder "unset" (Secret
+    Manager refuses an empty payload, so scripts/gcp_setup.sh seeds unknown secrets with that word)."""
+    import os
+
+    value = os.environ.get(name, "").strip()
+    return None if value == "" or value.lower() == "unset" else value

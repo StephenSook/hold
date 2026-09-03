@@ -55,3 +55,15 @@ def test_live_mode_is_named_when_fakes_are_off(monkeypatch: pytest.MonkeyPatch) 
     reset_cache()
     assert TestClient(app).get("/api/status").json()["runtime"]["mode"] == "live"
     reset_cache()
+
+
+def test_placeholder_secret_value_reads_as_absent(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Secret Manager refuses an empty payload, so unset secrets carry the literal 'unset'."""
+    monkeypatch.setenv("HOLD_FAKE_EXTERNALS", "1")
+    monkeypatch.setenv("CONFLUENT_BOOTSTRAP", "unset")
+    reset_cache()
+    assert TestClient(app).get("/api/status").json()["runtime"]["confluent"]["bootstrap_configured"] is False
+    monkeypatch.setenv("CONFLUENT_BOOTSTRAP", "pkc-example.us-central1.gcp.confluent.cloud:9092")
+    reset_cache()
+    assert TestClient(app).get("/api/status").json()["runtime"]["confluent"]["bootstrap_configured"] is True
+    reset_cache()
