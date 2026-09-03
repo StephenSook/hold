@@ -1,6 +1,6 @@
 # Evidence honesty log
 
-Task 5.12 asks for a log of any evidence row that could not be captured. Three could not, all for
+Task 5.12 asks for a log of any evidence row that could not be captured. Four could not, all for
 the same reason, and this file states it rather than leaving the rows blank.
 
 ## What could not be captured, and why
@@ -12,7 +12,7 @@ were not renewed, so from commit `f00aa11` onward no Bob session could be starte
 | Row | State | Why |
 |---|---|---|
 | `/review` SARIF over `api/hold/` and `api/agents/` | not captured | requires a Bob session; no account has coins |
-| Lane-enforcement record with a real refusal SHA | not captured as a refusal | the write-scoped modes exist and their regexes are tested (`api/tests/test_bob_lane_enforcement.py`, twelve allow and refuse cases run in CI), but no Bob session remained in which to trigger and record an actual refusal |
+| Lane-enforcement record with a real refusal SHA | not captured as a refusal | the write-scoped modes exist and their regexes are tested (`api/tests/test_bob_lane_enforcement.py`, nineteen allow and refuse cases run in CI), but no Bob session remained in which to trigger and record an actual refusal |
 | Session-store export after Phase 2 | not captured | the export in this directory is the last one taken while a session existed |
 | Self-referential MCP server called by Bob (task 1.11) | server built, never called by Bob | `api/hold/mcp_server.py` and `.bob/mcp.json` ship and a test drives the server over the protocol; the "Bob calls `run_residual` from a Plan session" half needs an account |
 
