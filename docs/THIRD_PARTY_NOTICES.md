@@ -4,13 +4,14 @@ Generated on 2026-09-03 with `uv run --with pip-licenses pip-licenses --format=m
 over the environment `uv.lock` resolves. Every entry is the license string the package's own metadata carries.
 One package, google-crc32c, carries no license string in its metadata; the LICENSE file inside its wheel is
 Apache-2.0. `hold` is this project (Apache-2.0). Nothing here is copyleft or proprietary; the CI license guard
-holds that.
+holds that, and `api/tests/test_notices.py` holds this file to every package `uv.lock` names.
 
 | Name                               | Version     | License                                                                        | URL                                                                                                 |
 |------------------------------------|-------------|--------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
 | Authlib                            | 1.8.0       | BSD License                                                                    | https://github.com/authlib/authlib                                                                  |
 | Jinja2                             | 3.1.6       | BSD License                                                                    | https://github.com/pallets/jinja/                                                                   |
 | MarkupSafe                         | 3.0.3       | BSD-3-Clause                                                                   | https://github.com/pallets/markupsafe/                                                              |
+| PyJWT                              | 2.13.0      | MIT                                                                            | https://github.com/jpadilla/pyjwt                                                                   |
 | PyYAML                             | 6.0.3       | MIT License                                                                    | https://pyyaml.org/                                                                                 |
 | Pygments                           | 2.21.0      | BSD-2-Clause                                                                   | https://pygments.org                                                                                |
 | absl-py                            | 2.5.0       | Apache-2.0                                                                     | https://github.com/abseil/abseil-py                                                                 |
@@ -60,8 +61,10 @@ holds that.
 | hf-xet                             | 1.6.0       | Apache-2.0                                                                     | https://github.com/huggingface/xet-core                                                             |
 | hold                               | 0.1.0       | Apache-2.0                                                                     | UNKNOWN                                                                                             |
 | httpcore                           | 1.0.9       | BSD-3-Clause                                                                   | https://www.encode.io/httpcore/                                                                     |
+| httpcore2                          | 2.12.0      | BSD-3-Clause                                                                   | https://github.com/pydantic/httpx2                                                                  |
 | httptools                          | 0.8.0       | MIT                                                                            | https://github.com/MagicStack/httptools                                                             |
 | httpx                              | 0.28.1      | BSD License                                                                    | https://github.com/encode/httpx                                                                     |
+| httpx2                             | 2.12.0      | BSD-3-Clause                                                                   | https://github.com/pydantic/httpx2                                                                  |
 | huggingface_hub                    | 1.30.0      | Apache Software License                                                        | https://github.com/huggingface/huggingface_hub                                                      |
 | hypothesis                         | 6.167.1     | MPL-2.0                                                                        | https://hypothesis.works                                                                            |
 | idna                               | 3.19        | BSD-3-Clause                                                                   | https://github.com/kjd/idna                                                                         |
@@ -75,6 +78,8 @@ holds that.
 | jsonschema-specifications          | 2025.9.1    | MIT                                                                            | https://github.com/python-jsonschema/jsonschema-specifications                                      |
 | librt                              | 0.15.0      | MIT                                                                            | https://github.com/mypyc/librt                                                                      |
 | litellm                            | 1.85.7      | MIT                                                                            | https://litellm.ai                                                                                  |
+| mcp                                | 2.1.1       | MIT License                                                                    | https://modelcontextprotocol.io                                                                     |
+| mcp-types                          | 2.1.1       | MIT License                                                                    | https://modelcontextprotocol.io                                                                     |
 | multidict                          | 6.7.1       | Apache License 2.0                                                             | https://github.com/aio-libs/multidict                                                               |
 | mypy                               | 2.3.1       | MIT                                                                            | https://www.mypy-lang.org/                                                                          |
 | mypy_extensions                    | 1.1.0       | MIT                                                                            | https://github.com/python/mypy_extensions                                                           |
@@ -114,6 +119,7 @@ holds that.
 | six                                | 1.17.0      | MIT License                                                                    | https://github.com/benjaminp/six                                                                    |
 | sniffio                            | 1.3.1       | Apache Software License; MIT License                                           | https://github.com/python-trio/sniffio                                                              |
 | sortedcontainers                   | 2.4.0       | Apache Software License                                                        | http://www.grantjenks.com/docs/sortedcontainers/                                                    |
+| sse-starlette                      | 3.4.10      | BSD-3-Clause                                                                   | https://github.com/sysid/sse-starlette                                                              |
 | starlette                          | 1.6.0       | BSD-3-Clause                                                                   | https://github.com/Kludex/starlette                                                                 |
 | tabulate                           | 0.10.0      | MIT                                                                            | https://github.com/astanin/python-tabulate                                                          |
 | tenacity                           | 9.1.4       | Apache Software License                                                        | https://github.com/jd/tenacity                                                                      |
@@ -142,6 +148,7 @@ holds that.
 |                                    |             |                                                                                |                                                                                                     |
 | tokenizers                         | 0.23.2      | Apache Software License                                                        | https://github.com/huggingface/tokenizers                                                           |
 | tqdm                               | 4.70.0      | MPL-2.0 AND MIT                                                                | https://tqdm.github.io                                                                              |
+| truststore                         | 0.10.4      | MIT                                                                            | https://github.com/sethmlarson/truststore                                                           |
 | typing-inspection                  | 0.4.4       | MIT                                                                            | https://github.com/pydantic/typing-inspection                                                       |
 | typing_extensions                  | 4.16.0      | PSF-2.0                                                                        | https://github.com/python/typing_extensions                                                         |
 | tzlocal                            | 5.4.4       | MIT                                                                            | https://github.com/regebro/tzlocal/blob/master/CHANGES.txt                                          |
