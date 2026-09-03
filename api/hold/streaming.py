@@ -169,14 +169,21 @@ class ConfluentBridge:
                 self.skipped += 1
             log.warning("confluent: skipped a message on %s (%s: %s)", TOPIC_SET_EVENTS, type(exc).__name__, exc)
             return
+        if self.on_set_event is None:
+            return
+        reason: str | None = None
+        try:
+            job_id = self.on_set_event(payload)
+        except Exception as exc:  # refused by the handler (round five, finding 3)
+            job_id, reason = None, f"{type(exc).__name__}: {exc}"
+        if job_id is None:  # not applied: skipped, with the reason on status, never counted as handled
+            self.last_error = reason or "no schedule to apply the event to; nothing solved since the API started"
+            with self._lock:
+                self.skipped += 1
+            log.warning("confluent: set event not applied (%s)", self.last_error)
+            return
         with self._lock:
             self.received += 1
-        if self.on_set_event is not None:
-            try:
-                self.on_set_event(payload)
-            except Exception as exc:
-                self.last_error = f"{type(exc).__name__}: {exc}"
-                log.warning("confluent: re-solve handler failed (%s)", self.last_error)
 
     def status(self) -> dict[str, Any]:
         return {

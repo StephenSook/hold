@@ -233,3 +233,28 @@ def test_stop_turns_connected_off() -> None:
     assert bridge.start() is True and bridge.status()["connected"] is True
     bridge.stop()
     assert bridge.status()["connected"] is False and bridge.status()["transport"] == "in-process"
+
+
+def test_an_event_the_handler_cannot_apply_counts_as_skipped_with_the_reason() -> None:
+    """Round five, finding 3: received was counted before the handler ran, so an event with no
+    schedule to edit (None) or one the handler refused (an exception) was committed and dropped as
+    if handled."""
+    external = {"event": "set-event", "kind": "scene_dropped", "payload": {"scene_id": "s6"}, "source": "simulation"}
+    calls: list[int] = []
+
+    def handler(payload: dict[str, Any]) -> str | None:
+        calls.append(1)
+        if len(calls) == 1:
+            return None  # nothing solved yet
+        raise ValueError("scene 's6' is not in the schedule")
+
+    messages = [FakeMessage(json.dumps(external).encode()), FakeMessage(json.dumps(external).encode())]
+    bridge = ConfluentBridge(CONFIG, producer_factory=FakeProducer, consumer_factory=lambda cfg: FakeConsumer(cfg, messages), on_set_event=handler, poll_timeout_s=0.01)
+    assert bridge.start() is True
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline and bridge.status()["skipped"] < 2:
+        time.sleep(0.02)
+    bridge.stop()
+    status = bridge.status()
+    assert status["received"] == 0 and status["skipped"] == 2
+    assert "not in the schedule" in str(status["last_error"])
