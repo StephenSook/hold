@@ -479,7 +479,7 @@ def test_duplicate_scene_ids_are_undetermined() -> None:
 def test_consecutive_days_count_the_minor_not_the_production() -> None:
     """Second-model finding: seven production dates with the minor only on the seventh read ILLEGAL."""
     schedule, meta = _load(FIXTURES / "consecutive-days.json")
-    only_last = {i: [] for i in range(6)}
+    only_last: dict[int, list[str]] = {i: [] for i in range(6)}
     only_last[6] = _day_scenes(meta, 6)
     results = pass1_schedule(schedule, day_scene_ids=only_last, time_limit_s=TIME_LIMIT)
     assert results[6].verdict.status == "LEGAL", (results[6].verdict.status, results[6].per_rule)

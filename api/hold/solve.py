@@ -298,12 +298,13 @@ def pass1_schedule(
     if day_scene_ids is not None:
         scenes_by_id = {s.id: s for s in schedule.scenes}
         worked = {}
-        for i, ids in day_scene_ids.items():
-            for sid in ids:
+        for day_i, scene_list in day_scene_ids.items():
+            for sid in scene_list:
                 for cid in scenes_by_id[sid].cast_ids if sid in scenes_by_id else ():
-                    worked.setdefault(cid, set()).add(schedule.days[i].date)
+                    worked.setdefault(cid, set()).add(schedule.days[day_i].date)
     results: list[Pass1Result] = []
     for i in range(len(schedule.days)):
+        ids: list[str] | None
         if day_scene_ids is None:
             ids = None
         elif i in day_scene_ids:
