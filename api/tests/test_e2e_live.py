@@ -66,9 +66,13 @@ def test_the_deployed_url_walks_the_judge_path() -> None:
     used = {int(d) for d, ids in solved["day_scene_ids"].items() if ids}
     assert all(v["status"] == "LEGAL" for v in solved["result"]["pass1"] if v["day"] in used)
 
+    # Two events without waiting: the second must chain onto a plan that is still solving, which is
+    # the case a "latest solved job" base silently reverts (round five, finding 1; round ten, finding 3).
     event = _post("/api/set-events", {"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
     assert event["base_job_id"] == job_id and event["transport"] in ("confluent", "in-process")
-    resolved = _wait(event["job_id"])
+    late = _post("/api/set-events", {"kind": "actor_late", "payload": {"cast_id": "cM", "day_index": 0}, "source": "ui"})
+    assert late["base_job_id"] == event["job_id"], "the deployed service did not chain the second event"
+    resolved = _wait(late["job_id"])
     assert "s3" not in {s for ids in resolved["day_scene_ids"].values() for s in ids}
 
     _, stream = _get(f"/api/events?job_id={job_id}&replay=true&limit=40&timeout_s=8", timeout_s=60)

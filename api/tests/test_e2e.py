@@ -89,6 +89,13 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
     assert "s3" not in {s for ids in resolved["day_scene_ids"].values() for s in ids}, "the dropped scene came back"
     chained = client.get(f"/api/jobs/{late.json()['job_id']}").json()
     assert chained["source"].endswith("actor_late:ui")
+    # Assert what the event did, not only that a job appeared: a no-op actor_late kept this green.
+    from api.hold.jobs import JOBS
+
+    job = JOBS.get(late.json()["job_id"])
+    assert job is not None
+    assert any(c.type == "availability" and c.cast_id == "cM" and 0 in (c.unavailable_day_indices or []) for c in job.schedule.constraints), "actor_late left no availability constraint"
+    assert "cM" not in {c for sid in resolved["day_scene_ids"].get("0", []) for c in next(s.cast_ids for s in job.schedule.scenes if s.id == sid)}, "the late minor is still on day 0"
 
     # Step 6: the replayed stream carries the objective and one verdict per shot day, never twice.
     stream = client.get(f"/api/events?job_id={job_id}&replay=true&limit=50&timeout_s=5")
@@ -107,9 +114,19 @@ def test_judge_walkthrough_end_to_end(client: TestClient) -> None:
     bench = client.get("/api/bench").json()
     assert bench["benchmark_matched"] == FACTS["benchmark_matched"]
 
-    # Step 8: extraction answers from the recorded fixture while externals are faked.
+    # Step 8: extraction answers from the recorded fixture while externals are faked. This proves the
+    # route is wired, not that the model extracted anything: in fake mode the fixture is returned
+    # whatever the body says. The model's own behaviour is covered by the network-marked goldens.
     extracted = client.post("/api/extract", json={"text": (ROOT / "data" / "demo" / "samples" / "callsheet-day3.txt").read_text(encoding="utf-8")})
     assert extracted.status_code == 200 and extracted.json()["status"] == "ok"
+    from api.hold.schemas import ExtractResult
+
+    fixture = ExtractResult.model_validate_json((ROOT / "data" / "fixtures" / "contracts" / "extract-result.json").read_text(encoding="utf-8"))
+    answer = extracted.json()
+    # Compare the parsed models: the committed fixture predates two schema fields, and the route
+    # serialises their defaults, so raw JSON differs while the schedule is the same schedule.
+    assert ExtractResult.model_validate(answer).schedule == fixture.schedule, "fake mode must answer with the committed contract fixture"
+    assert "no model was called" in (answer.get("notes") or ""), "a fixture answer must say it is one"
 
 
 def test_an_illegal_day_names_its_rule_with_the_statute_sentence(client: TestClient) -> None:
