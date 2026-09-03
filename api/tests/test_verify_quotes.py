@@ -31,3 +31,19 @@ def test_classify_judges_the_body_not_the_status() -> None:
     assert classify(Fetched(status=200, body="%PDF-1.7 binary", is_pdf=True), [quote]) == "unchanged"
     assert classify(Fetched(status=200, body="not a pdf at all", is_pdf=True), [quote]) == "refused"
     assert classify(Fetched(status=500, body="", is_pdf=False), [quote]) == "error"
+
+
+def test_html_entities_do_not_read_as_drift() -> None:
+    """First live run: sagindie.org serves "Pension &amp; Health" and the quote says "Pension & Health";
+    an entity-blind check called an unchanged page drifted."""
+    quote = "Pension & Health contribution is also owed (21% for performers)"
+    page = "<html><body>" + ("filler about low budget agreements. " * 80) + "Pension &amp; Health contribution is also owed (21% for performers)</body></html>"
+    assert classify(Fetched(status=200, body=page, is_pdf=False), [quote]) == "unchanged"
+
+
+def test_error_rows_say_what_happened() -> None:
+    from scripts.verify_quotes import describe
+
+    assert describe(Fetched(status=0, body="", is_pdf=False, note="TimeoutError")) == "error (TimeoutError)"
+    assert describe(Fetched(status=500, body="", is_pdf=False)) == "error (HTTP 500)"
+    assert describe(Fetched(status=200, body="", is_pdf=False)) == ""

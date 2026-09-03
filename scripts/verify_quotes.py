@@ -15,6 +15,7 @@ rules/sources-cache/ (gitignored); the repository is written only with --write.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import re
 import subprocess
@@ -51,6 +52,7 @@ class Fetched:
     status: int
     body: str
     is_pdf: bool
+    note: str = ""  # the exception class when the transport failed, so an error row says what happened
 
 
 def plan(rules_dir: Path) -> list[Source]:
@@ -72,9 +74,9 @@ def fetch(url: str, timeout_s: float = 60.0) -> Fetched:
             raw = response.read()
             return Fetched(status=response.status, body=raw.decode("utf-8", "ignore"), is_pdf=raw[:5] == b"%PDF-" or url.lower().endswith(".pdf"))
     except urllib.error.HTTPError as exc:
-        return Fetched(status=exc.code, body="", is_pdf=False)
-    except Exception:
-        return Fetched(status=0, body="", is_pdf=False)
+        return Fetched(status=exc.code, body="", is_pdf=False, note=f"HTTP {exc.code}")
+    except Exception as exc:
+        return Fetched(status=0, body="", is_pdf=False, note=type(exc).__name__)
 
 
 def classify(fetched: Fetched, quotes: list[str]) -> str:
@@ -88,9 +90,16 @@ def classify(fetched: Fetched, quotes: list[str]) -> str:
         return "unchanged" if fetched.body.startswith("%PDF") else "refused"
     if len(fetched.body) < _MIN_HTML or _STUB.search(fetched.body[:4000]):
         return "refused"
-    text = normalize(re.sub(r"<[^>]+>", " ", fetched.body))
+    text = normalize(html.unescape(re.sub(r"<[^>]+>", " ", fetched.body)))  # &amp; in the page is & in the quote
     variants = (text, text)
     return "unchanged" if all(quote_matches(q, variants) for q in quotes) else "drifted"
+
+
+def describe(fetched: Fetched) -> str:
+    """The reason an error row failed: the exception class for a transport failure, the status otherwise."""
+    if fetched.status == 200:
+        return ""
+    return f"error ({fetched.note or f'HTTP {fetched.status}'})"
 
 
 def main() -> int:
@@ -111,7 +120,8 @@ def main() -> int:
         counts[verdict] += 1
         if fetched.body:
             (CACHE / (row.snapshot or re.sub(r"\W+", "-", row.url)[:80])).write_text(fetched.body, encoding="utf-8")
-        print(f"| {row.url} | {row.snapshot or '(none)'} | {len(row.record_ids)} | {verdict} |")
+        detail = describe(fetched) if verdict == "error" else verdict
+        print(f"| {row.url} | {row.snapshot or '(none)'} | {len(row.record_ids)} | {detail} |")
         if args.write and args.write == row.snapshot and row.snapshot:
             if verdict != "unchanged":
                 print(f"\nrefusing to write {args.write}: the fetch was {verdict}", file=sys.stderr)
