@@ -28,7 +28,9 @@ HEADLINE_FIELDS: tuple[str, ...] = (
     "hold_days_before", "hold_days_after", "payroll_removed_usd", "illegal_days_before",
     "illegal_days_after", "benchmark_matched", "solve_ms", "adk_eval",
 )
-# Fields a fresh run must reproduce exactly (solve_ms and the SHAs vary run to run).
+# Fields a fresh run must reproduce exactly (solve_ms and run_sha vary run to run). The residual
+# run's own SHA is not recorded here: bench/results.json is rewritten by every test run and
+# /api/status serves it live; FACTS keeps the matched count, which is what the headline claims.
 DETERMINISTIC_FIELDS: tuple[str, ...] = (
     "hold_days_before", "hold_days_after", "payroll_removed_usd", "payroll_removed_cents",
     "illegal_days_before", "illegal_days_after", "undetermined_days_before", "benchmark_matched",
@@ -95,7 +97,6 @@ def compute_facts(root: Path, time_limit_s: float = 60.0) -> dict[str, Any]:
         "undetermined_days_before": sum(s == "UNDETERMINED" for s in statuses_before),
         "illegal_days_after": sum(p.verdict.status == "ILLEGAL" for p in used),
         "benchmark_matched": bench["benchmark_matched"],
-        "benchmark_run_sha": bench.get("_run_sha"),
         "solve_ms": round(outcome.solve_ms, 1),
         "pass2_status": outcome.result.status,
         "checker_agrees": bool(outcome.checker.agrees),
