@@ -115,7 +115,39 @@ def _mount_assets(application: FastAPI, dist: Path) -> bool:
 _mount_assets(app, _DIST)
 
 
+def _dist_file(full_path: str, dist: Path | None = None) -> Path | None:
+    """
+    The file in web/dist this path names, or None.
+
+    Vite emits more than assets/ at the root of dist: registerSW.js, sw.js,
+    manifest.webmanifest, favicon.svg and the PWA icons all sit beside index.html. Mounting only
+    /assets sent every one of them to the catch-all below, which answered index.html with
+    content-type text/html, and the browser then parsed HTML as JavaScript and threw
+    "SyntaxError: Unexpected token '<'" on every route. CI was green throughout: the bug lives
+    between a correct build and a correct server, so only the deployed origin shows it.
+
+    The resolve-then-contains check is what makes this safe to serve from a user-supplied path:
+    a request for ../../etc/passwd resolves outside dist and is refused.
+
+    `dist` is injectable so the decision can be tested without a built web app. The CI job that
+    runs pytest does not build the web app, so a test that needed one would skip in CI, and a
+    skipped guard is a false green.
+    """
+    root = (dist or _DIST).resolve()
+    if not full_path:
+        return None
+    try:
+        candidate = (root / full_path).resolve()
+        candidate.relative_to(root)
+    except (ValueError, OSError):
+        return None
+    return candidate if candidate.is_file() else None
+
+
 @app.get("/{full_path:path}", response_model=None)  # a Response union is not a response model
 async def spa_fallback(full_path: str) -> FileResponse | JSONResponse:
-    """Serve index.html for all non-/api paths (HashRouter SPA)."""
+    """Serve a real file from web/dist when the path names one, else index.html (HashRouter SPA)."""
+    found = _dist_file(full_path)
+    if found is not None:
+        return FileResponse(str(found))
     return _spa_response()
