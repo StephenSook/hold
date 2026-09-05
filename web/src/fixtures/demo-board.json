@@ -1,0 +1,728 @@
+{
+  "_generated_by": "web/scripts/capture_demo_board.py from a real solver and checker run",
+  "_generated_at": "2026-09-05T23:06:19+00:00",
+  "_run_sha": "dd05f69",
+  "_note": "Constructed demo data (PLAN.md D8): cast are letters, not names. The rule side is real. This file is the offline snapshot only; the app reads the live API whenever it answers.",
+  "schedule": {
+    "scenes": [
+      {
+        "id": "s1",
+        "number": 1,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "Peach Orchard",
+        "pages_eighths": 16,
+        "cast_ids": [
+          "cA",
+          "cB",
+          "cM"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s2",
+        "number": 2,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Farmhouse Kitchen",
+        "pages_eighths": 12,
+        "cast_ids": [
+          "cA",
+          "cM"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s3",
+        "number": 3,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "County Road",
+        "pages_eighths": 8,
+        "cast_ids": [
+          "cB",
+          "cC"
+        ],
+        "location_id": "locGA2"
+      },
+      {
+        "id": "s4",
+        "number": 4,
+        "int_ext": "INT",
+        "day_night": "NIGHT",
+        "set": "Farmhouse Kitchen",
+        "pages_eighths": 10,
+        "cast_ids": [
+          "cA",
+          "cB"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s5",
+        "number": 5,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "Peach Orchard",
+        "pages_eighths": 14,
+        "cast_ids": [
+          "cA",
+          "cC",
+          "cM"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s6",
+        "number": 6,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Packing Shed",
+        "pages_eighths": 8,
+        "cast_ids": [
+          "cB",
+          "cM"
+        ],
+        "location_id": "locGA2"
+      },
+      {
+        "id": "s7",
+        "number": 7,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "County Road",
+        "pages_eighths": 6,
+        "cast_ids": [
+          "cA",
+          "cB",
+          "cC"
+        ],
+        "location_id": "locGA2"
+      },
+      {
+        "id": "s8",
+        "number": 8,
+        "int_ext": "INT",
+        "day_night": "DAY",
+        "set": "Farmhouse Kitchen",
+        "pages_eighths": 16,
+        "cast_ids": [
+          "cA",
+          "cB",
+          "cM"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s9",
+        "number": 9,
+        "int_ext": "EXT",
+        "day_night": "DAY",
+        "set": "Peach Orchard",
+        "pages_eighths": 10,
+        "cast_ids": [
+          "cC"
+        ],
+        "location_id": "locGA1"
+      },
+      {
+        "id": "s10",
+        "number": 10,
+        "int_ext": "INT",
+        "day_night": "NIGHT",
+        "set": "Packing Shed",
+        "pages_eighths": 12,
+        "cast_ids": [
+          "cA",
+          "cB"
+        ],
+        "location_id": "locGA2"
+      }
+    ],
+    "cast": [
+      {
+        "id": "cA",
+        "letter": "A",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "cB",
+        "letter": "B",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "cC",
+        "letter": "C",
+        "age": null,
+        "resident_state": null,
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      },
+      {
+        "id": "cM",
+        "letter": "M",
+        "age": 14,
+        "resident_state": "CA",
+        "day_rate_cents": 83400,
+        "rate_tier": "low_budget"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-05",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-06",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-07",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-08",
+        "call": "07:00:00",
+        "wrap": "21:30:00",
+        "school_day": true,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-09",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-12",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      },
+      {
+        "date": "2026-10-13",
+        "call": "07:00:00",
+        "wrap": "19:00:00",
+        "school_day": false,
+        "school_night": null
+      }
+    ],
+    "constraints": [],
+    "jurisdiction": {
+      "shoot_state": "GA"
+    },
+    "constructed": true,
+    "overnight_location": true
+  },
+  "before": {
+    "day_scene_ids": {
+      "0": [
+        "s1"
+      ],
+      "1": [
+        "s9"
+      ],
+      "2": [
+        "s7"
+      ],
+      "3": [
+        "s2",
+        "s4",
+        "s10",
+        "s3",
+        "s6",
+        "s5",
+        "s8"
+      ],
+      "4": [],
+      "5": [],
+      "6": []
+    },
+    "scene_order": [
+      "s1",
+      "s9",
+      "s7",
+      "s2",
+      "s4",
+      "s10",
+      "s3",
+      "s6",
+      "s5",
+      "s8"
+    ],
+    "hold_days": 4,
+    "holding_cents": 406992,
+    "verdicts": [
+      {
+        "status": "LEGAL",
+        "day": 0,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": {
+          "day": 0,
+          "date": "2026-10-05",
+          "crew_call": "07:00",
+          "crew_wrap": "19:00",
+          "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+          "scenes": [
+            {
+              "id": "s1",
+              "start": "07:00",
+              "end": "09:00",
+              "cast_ids": [
+                "cA",
+                "cB",
+                "cM"
+              ]
+            }
+          ],
+          "minors": {
+            "cM": {
+              "call": "07:00",
+              "dismiss": "09:00",
+              "work_minutes": 120,
+              "location_minutes": 120,
+              "meal": null
+            }
+          }
+        },
+        "reason": "a legal timing exists; witness checked by the independent checker"
+      },
+      {
+        "status": "LEGAL",
+        "day": 1,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": {
+          "day": 1,
+          "date": "2026-10-06",
+          "crew_call": "07:00",
+          "crew_wrap": "19:00",
+          "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+          "scenes": [
+            {
+              "id": "s9",
+              "start": "07:00",
+              "end": "08:15",
+              "cast_ids": [
+                "cC"
+              ]
+            }
+          ],
+          "minors": {}
+        },
+        "reason": "a legal timing exists; witness checked by the independent checker"
+      },
+      {
+        "status": "LEGAL",
+        "day": 2,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": {
+          "day": 2,
+          "date": "2026-10-07",
+          "crew_call": "07:00",
+          "crew_wrap": "19:00",
+          "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+          "scenes": [
+            {
+              "id": "s7",
+              "start": "07:00",
+              "end": "07:45",
+              "cast_ids": [
+                "cA",
+                "cB",
+                "cC"
+              ]
+            }
+          ],
+          "minors": {}
+        },
+        "reason": "a legal timing exists; witness checked by the independent checker"
+      },
+      {
+        "status": "ILLEGAL",
+        "day": 3,
+        "violations": [
+          {
+            "rule_id": "CA_11760_e_location_hours_9_15",
+            "citation": "8 CCR 11760(e)",
+            "title": "Minor ages 9 to 15: 9 hours at the place of employment",
+            "limit": "9h at location",
+            "computed": "14.5h at location",
+            "over_by": "5.5h",
+            "quote": "Minors who have reached the age of nine (9) years but who have not attained the age of sixteen (16) years may be permitted at the place of employment for a maximum of nine (9) hours.",
+            "source_url": "https://www.dir.ca.gov/t8/11760.html",
+            "jurisdiction": "CA"
+          },
+          {
+            "rule_id": "CA_11760_e_work_hours_9_15_school_day",
+            "citation": "8 CCR 11760(e)",
+            "title": "Minor ages 9 to 15: 5 hours of work when school is in session",
+            "limit": "5h work (school day)",
+            "computed": "14.5h at location (proxy for work hours)",
+            "over_by": "9.5h",
+            "quote": "Minors who have reached the age of nine (9) years but who have not attained the age of sixteen (16) years may be permitted at the place of employment for a maximum of nine (9) hours. Such nine (9)-hour period shall consist of not more than five (5) hours of work and at least three (3) hours of schooling when the minor's school is in session.",
+            "source_url": "https://www.dir.ca.gov/t8/11760.html",
+            "jurisdiction": "CA"
+          },
+          {
+            "rule_id": "CA_1308_7_daily_cap_8_hours",
+            "citation": "Cal. Lab. Code 1308.7(a)",
+            "title": "Minor daily cap: 8 hours of work in one day",
+            "limit": "8h work",
+            "computed": "14.5h at location (proxy for work hours)",
+            "over_by": "6.5h",
+            "quote": "No minor shall be employed in the entertainment industry more than eight hours in one day of 24 hours, or more than 48 hours in one week, or before 5 a.m., or after 10 p.m. on any day preceding a schoolday. However, a minor may work the hours authorized by this section during any evening preceding a nonschoolday until 12:30 a.m. of the nonschoolday.",
+            "source_url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1308.7.&lawCode=LAB",
+            "jurisdiction": "CA"
+          },
+          {
+            "rule_id": "GA_300_7_1_03_ages_9_15_location_hours",
+            "citation": "Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(1), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)",
+            "title": "Minor ages 9 to 15: 10 hours at the Location per day",
+            "limit": "10h at location",
+            "computed": "14.5h at location",
+            "over_by": "4.5h",
+            "quote": "May be at the Location up to 10 hours per day and no later than 10:00 p.m. on a school night and 12:00 midnight on a non-school night.",
+            "source_url": "https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download",
+            "jurisdiction": "GA"
+          },
+          {
+            "rule_id": "GA_300_7_1_03_ages_9_15_work_hours",
+            "citation": "Ga. Dept. of Labor, Schedule of Hours of Performance, (g)(2), incorporated by Ga. Comp. R. & Regs. 300-7-1-.03(2)(a)",
+            "title": "Minor ages 9 to 15: 5 hours of work per day",
+            "limit": "5h work",
+            "computed": "14.5h at location (proxy for work hours)",
+            "over_by": "9.5h",
+            "quote": "Shall work no longer than a total of 5 hours per day.",
+            "source_url": "https://dol.georgia.gov/document/child-labor/schedule-hours-performance/download",
+            "jurisdiction": "GA"
+          },
+          {
+            "rule_id": "SAG_MINORS_9_15_ON_SET_HOURS",
+            "citation": "SAG-AFTRA Young Performers Handbook, School-Age Minors",
+            "title": "Ages 9 to 15: maximum 9.5 hours on the set",
+            "limit": "9.5h at location",
+            "computed": "14.5h at location",
+            "over_by": "5.0h",
+            "quote": "Ages 9 to 15 - five hours (maximum of 9.5 hours on the set).",
+            "source_url": "https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf",
+            "jurisdiction": "SAG-AFTRA"
+          },
+          {
+            "rule_id": "SAG_MINORS_9_15_WORK_HOURS",
+            "citation": "SAG-AFTRA Young Performers Handbook, School-Age Minors",
+            "title": "Ages 9 to 15: five hours of work on a school day",
+            "limit": "5h work (school day)",
+            "computed": "14.5h at location (proxy for work hours)",
+            "over_by": "9.5h",
+            "quote": "Ages 9 to 15 - five hours (maximum of 9.5 hours on the set).",
+            "source_url": "https://www.bizparentz.org/wp-content/uploads/2021/07/SAGAFTRA-young_performers_handbook-2020.pdf",
+            "jurisdiction": "SAG-AFTRA"
+          }
+        ],
+        "core_rule_ids": [
+          "CA_11760_e_location_hours_9_15",
+          "CA_11760_e_work_hours_9_15_school_day",
+          "GA_300_7_1_03_ages_9_15_work_hours",
+          "SAG_MINORS_9_15_ON_SET_HOURS",
+          "SAG_MINORS_9_15_WORK_HOURS"
+        ],
+        "witness": null,
+        "reason": "each listed rule alone makes this day impossible"
+      },
+      {
+        "status": "UNDETERMINED",
+        "day": 4,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": null,
+        "reason": "no scenes assigned to this day; nothing to judge"
+      },
+      {
+        "status": "UNDETERMINED",
+        "day": 5,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": null,
+        "reason": "no scenes assigned to this day; nothing to judge"
+      },
+      {
+        "status": "UNDETERMINED",
+        "day": 6,
+        "violations": [],
+        "core_rule_ids": [],
+        "witness": null,
+        "reason": "no scenes assigned to this day; nothing to judge"
+      }
+    ]
+  },
+  "after": {
+    "day_scene_ids": {
+      "2": [
+        "s8"
+      ],
+      "3": [
+        "s7",
+        "s5",
+        "s4",
+        "s2",
+        "s10",
+        "s3"
+      ],
+      "4": [
+        "s1",
+        "s9",
+        "s6"
+      ]
+    },
+    "result": {
+      "pass1": [
+        {
+          "status": "UNDETERMINED",
+          "day": 0,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": null,
+          "reason": "no scenes assigned to this day; nothing to judge"
+        },
+        {
+          "status": "UNDETERMINED",
+          "day": 1,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": null,
+          "reason": "no scenes assigned to this day; nothing to judge"
+        },
+        {
+          "status": "LEGAL",
+          "day": 2,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": {
+            "day": 2,
+            "date": "2026-10-07",
+            "crew_call": "07:00",
+            "crew_wrap": "19:00",
+            "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+            "scenes": [
+              {
+                "id": "s8",
+                "start": "07:00",
+                "end": "09:00",
+                "cast_ids": [
+                  "cA",
+                  "cB",
+                  "cM"
+                ]
+              }
+            ],
+            "minors": {
+              "cM": {
+                "call": "07:00",
+                "dismiss": "09:00",
+                "work_minutes": 120,
+                "location_minutes": 120,
+                "meal": null
+              }
+            }
+          },
+          "reason": "a legal timing exists; witness checked by the independent checker"
+        },
+        {
+          "status": "LEGAL",
+          "day": 3,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": {
+            "day": 3,
+            "date": "2026-10-08",
+            "crew_call": "07:00",
+            "crew_wrap": "21:30",
+            "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+            "scenes": [
+              {
+                "id": "s7",
+                "start": "07:00",
+                "end": "07:45",
+                "cast_ids": [
+                  "cA",
+                  "cB",
+                  "cC"
+                ]
+              },
+              {
+                "id": "s5",
+                "start": "07:45",
+                "end": "09:30",
+                "cast_ids": [
+                  "cA",
+                  "cC",
+                  "cM"
+                ]
+              },
+              {
+                "id": "s4",
+                "start": "09:30",
+                "end": "10:45",
+                "cast_ids": [
+                  "cA",
+                  "cB"
+                ]
+              },
+              {
+                "id": "s2",
+                "start": "10:45",
+                "end": "12:15",
+                "cast_ids": [
+                  "cA",
+                  "cM"
+                ]
+              },
+              {
+                "id": "s10",
+                "start": "12:15",
+                "end": "13:45",
+                "cast_ids": [
+                  "cA",
+                  "cB"
+                ]
+              },
+              {
+                "id": "s3",
+                "start": "13:45",
+                "end": "14:45",
+                "cast_ids": [
+                  "cB",
+                  "cC"
+                ]
+              }
+            ],
+            "minors": {
+              "cM": {
+                "call": "07:45",
+                "dismiss": "12:15",
+                "work_minutes": 195,
+                "location_minutes": 270,
+                "meal": null
+              }
+            }
+          },
+          "reason": "a legal timing exists; witness checked by the independent checker"
+        },
+        {
+          "status": "LEGAL",
+          "day": 4,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": {
+            "day": 4,
+            "date": "2026-10-09",
+            "crew_call": "07:00",
+            "crew_wrap": "19:00",
+            "heuristic": "scene minutes = ceil(pages_eighths * 15 / 2), one page per hour (PLAN.md D16 heuristic)",
+            "scenes": [
+              {
+                "id": "s1",
+                "start": "07:00",
+                "end": "09:00",
+                "cast_ids": [
+                  "cA",
+                  "cB",
+                  "cM"
+                ]
+              },
+              {
+                "id": "s9",
+                "start": "09:00",
+                "end": "10:15",
+                "cast_ids": [
+                  "cC"
+                ]
+              },
+              {
+                "id": "s6",
+                "start": "10:15",
+                "end": "11:15",
+                "cast_ids": [
+                  "cB",
+                  "cM"
+                ]
+              }
+            ],
+            "minors": {
+              "cM": {
+                "call": "07:00",
+                "dismiss": "11:15",
+                "work_minutes": 180,
+                "location_minutes": 255,
+                "meal": null
+              }
+            }
+          },
+          "reason": "a legal timing exists; witness checked by the independent checker"
+        },
+        {
+          "status": "UNDETERMINED",
+          "day": 5,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": null,
+          "reason": "no scenes assigned to this day; nothing to judge"
+        },
+        {
+          "status": "UNDETERMINED",
+          "day": 6,
+          "violations": [],
+          "core_rule_ids": [],
+          "witness": null,
+          "reason": "no scenes assigned to this day; nothing to judge"
+        }
+      ],
+      "pass2": {
+        "order": [
+          7,
+          6,
+          4,
+          3,
+          1,
+          9,
+          2,
+          0,
+          8,
+          5
+        ],
+        "status": "OPTIMAL",
+        "holding_cents": 0,
+        "total_cents": 1119228,
+        "bound": 0,
+        "hold_days": 0,
+        "penalties_cents": 0,
+        "reasons": []
+      },
+      "checker": {
+        "agrees": true,
+        "note": "pass 1 confirms every used day and the recount matches"
+      },
+      "benchmark": null
+    }
+  }
+}
