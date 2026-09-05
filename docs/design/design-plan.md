@@ -31,25 +31,35 @@ the physical strips do, and every status is colour plus word plus icon.
 
 Base, dark (the board):
 
-| Token | OKLCH | Role |
-|---|---|---|
-| `board` | `oklch(0.18 0.004 120)` | page, the aluminium board |
-| `board-2` | `oklch(0.23 0.004 120)` | raised surface, the channel rails |
-| `rail` | `oklch(0.31 0.004 120)` | hairlines and dividers |
-| `bone` | `oklch(0.96 0.008 85)` | primary text, call-sheet stock |
-| `bone-dim` | `oklch(0.72 0.006 85)` | secondary text |
+| Token | OKLCH | Role | Measured on the board |
+|---|---|---|---|
+| `board` | `oklch(0.175 0 0)` | page, the aluminium board | ground |
+| `board-2` | `oklch(0.222 0 0)` | raised surface | |
+| `board-3` | `oklch(0.262 0 0)` | day breaks and table headers | |
+| `rail` | `oklch(0.315 0 0)` | decorative hairlines only | 1.46:1, never a control boundary |
+| `edge` | `oklch(0.53 0 0)` | the boundary of a control | 3.15:1, over the non-text floor |
+| `bone` | `oklch(0.96 0.008 85)` | primary text | **16.89:1** |
+| `bone-dim` | `oklch(0.75 0.006 85)` | secondary text | **8.59:1** |
+| `bone-faint` | `oklch(0.702 0.005 85)` | labels and sources | **7.19:1** |
+
+The greys carry no chroma at all. A tinted chrome shifts the INT NIGHT strip, and that strip has
+to read as itself.
 
 Light mode is the other physical artifact: the call sheet. Bone paper, graphite ink, the same
 strips, the same red.
 
 Strips are printed cardstock, not screen neon:
 
-| Token | OKLCH | Means |
-|---|---|---|
-| `strip-white` | `oklch(0.93 0.010 85)` | INT DAY |
-| `strip-yellow` | `oklch(0.88 0.115 95)` | EXT DAY |
-| `strip-blue` | `oklch(0.78 0.075 245)` | INT NIGHT |
-| `strip-green` | `oklch(0.84 0.090 150)` | EXT NIGHT |
+| Token | OKLCH | Means | Ink on it, measured |
+|---|---|---|---|
+| `strip-white` | `oklch(0.93 0.010 85)` | INT DAY | 15.88:1 |
+| `strip-yellow` | `oklch(0.88 0.115 95)` | EXT DAY | 13.68:1 |
+| `strip-blue` | `oklch(0.78 0.075 245)` | INT NIGHT | 9.85:1 |
+| `strip-green` | `oklch(0.84 0.090 150)` | EXT NIGHT | 12.41:1 |
+
+Every figure above is read from the painted pixels by `web/scripts/measure_contrast.mjs`. An
+earlier version of this document computed them by hand and every one was wrong, in the flattering
+direction. See `axe-report.md`.
 
 Verdict:
 
@@ -93,8 +103,15 @@ second while the two dollar totals count down and the red day goes quiet. That i
 Everything else moves only in answer to a click, a drag or a hover.
 
 The second beat is the load-in: four panels forming a **camera gate**, held closed while the
-fonts and the demo fixture load, then opening as an aperture while the mark assembles from four
-quarter marks. The centre holds the figure the site is about to prove, counting to `8/8`.
+fonts load, then opening as an aperture while the mark assembles from four quarter marks. The
+centre holds the figure the site is about to prove, counting to `8/8`. It is capped at about 1.6
+seconds and skipped on a repeat view and under reduced motion, because a hero held at zero
+opacity behind an overlay is excluded from the largest-contentful-paint candidates and the
+overlay's duration is then added to the metric.
+
+**Text hierarchy never comes from opacity.** Opacity multiplies the effective contrast down, so a
+dimmed label is a colour no token table describes and no audit of tokens will catch. It is used
+only on things that are not text.
 
 ## Structural devices
 
@@ -115,3 +132,8 @@ Checked for the defaults that appear regardless of subject:
 - A monospace face for small data labels is on the tell list, and is kept here, because the
   domain's own documents are monospaced and the numbers are tabular. It is a choice, not a
   default.
+- **Film grain was planned and then cut.** This document originally called it "the only
+  decorative layer in the interface". A noise overlay hurts exactly the small type that carries a
+  data table, and no professional post or camera tool ships grain in its own chrome. The board's
+  milled vertical channel is the texture instead, which is a reference to the physical artifact
+  rather than to films about films.
