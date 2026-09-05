@@ -84,7 +84,7 @@ export const Strip = forwardRef<HTMLDivElement, StripProps>(function Strip(
         ))}
       </span>
 
-      <span className="hidden truncate text-11 opacity-70 sm:block">{scene.location_id}</span>
+      <span className="hidden truncate text-11 sm:block">{scene.location_id}</span>
 
       {/* Below the small breakpoint the cast row moves under the set, because a phone on set
           reads one strip at a time and the cast is the half that decides the day. */}
@@ -100,7 +100,7 @@ export const Strip = forwardRef<HTMLDivElement, StripProps>(function Strip(
             {castChip(member.letter, member.age)}
           </span>
         ))}
-        <span className="ml-auto text-11 opacity-70">{scene.location_id}</span>
+        <span className="ml-auto text-11">{scene.location_id}</span>
       </span>
     </div>
   )

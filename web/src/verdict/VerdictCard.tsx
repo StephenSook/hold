@@ -33,12 +33,12 @@ export function VerdictCard({ verdict, date }: { verdict: Verdict; date?: string
           <Icon className="size-4" aria-hidden="true" />
           {word}
         </span>
-        <span className="script text-12 opacity-80">
+        <span className="script text-12 text-bone">
           DAY {verdict.day + 1}
           {date ? ` ${date}` : ''}
         </span>
         {verdict.status === 'ILLEGAL' && (
-          <span className="script ml-auto text-12 opacity-80">
+          <span className="script ml-auto text-12 text-bone">
             {verdict.violations.length} {verdict.violations.length === 1 ? 'RULE' : 'RULES'} BROKEN
           </span>
         )}
@@ -93,16 +93,20 @@ function Violation({ violation, inCore }: { violation: ViolationRecord; inCore: 
           </span>
           <span className="script mt-1.5 flex flex-wrap gap-x-5 gap-y-1 text-12 text-bone-dim">
             <span>
-              <span className="opacity-60">LIMIT </span>
+              <span className="text-bone-faint">LIMIT </span>
               {violation.limit}
             </span>
             <span>
-              <span className="opacity-60">COMPUTED </span>
+              <span className="text-bone-faint">COMPUTED </span>
               {violation.computed}
             </span>
-            <span className="text-flag">
-              <span className="opacity-70">OVER BY </span>
-              {violation.over_by}
+            {/* The figure is bone and the red is a bar beside it. Red type at this size clears
+                the graphic floor and not the AAA bar this card is held to, and the colour was
+                never the signal anyway. */}
+            <span className="flex items-center gap-1.5">
+              <span aria-hidden="true" className="inline-block h-3 w-0.5 bg-flag" />
+              <span className="text-bone-faint">OVER BY </span>
+              <span className="font-bold text-bone">{violation.over_by}</span>
             </span>
           </span>
           <span className="script mt-1.5 block text-11 text-bone-faint">
@@ -156,19 +160,19 @@ function Witness({ verdict }: { verdict: Verdict }) {
             <li key={castId} className="flex flex-wrap gap-x-5 gap-y-1 border-t border-rail-soft pt-2">
               <span className="font-bold">CAST {castId.replace(/^c/, '')}K</span>
               <span>
-                <span className="opacity-60">CALL </span>
+                <span className="text-bone-faint">CALL </span>
                 {hhmm(minor.call)}
               </span>
               <span>
-                <span className="opacity-60">PUMPKIN </span>
+                <span className="text-bone-faint">PUMPKIN </span>
                 {hhmm(minor.dismiss)}
               </span>
               <span>
-                <span className="opacity-60">WORK </span>
+                <span className="text-bone-faint">WORK </span>
                 {Math.floor(minor.work_minutes / 60)}h {minor.work_minutes % 60}m
               </span>
               <span>
-                <span className="opacity-60">AT LOCATION </span>
+                <span className="text-bone-faint">AT LOCATION </span>
                 {Math.floor(minor.location_minutes / 60)}h {minor.location_minutes % 60}m
               </span>
             </li>

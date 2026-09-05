@@ -106,7 +106,7 @@ export function ImportPage() {
             <span className="font-bold tracking-[0.1em]">
               {result.status === 'ok' ? 'READ' : 'NEEDS CLARIFICATION'}
             </span>
-            {fileName && <span className="opacity-70">{fileName}</span>}
+            {fileName && <span className="text-bone-dim">{fileName}</span>}
           </header>
 
           {result.notes && <p className="border-b border-rail px-5 py-4 text-14 text-bone-dim">{result.notes}</p>}

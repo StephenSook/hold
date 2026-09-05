@@ -22,19 +22,19 @@ export function Figure({
 }) {
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
-      <span className="script-label text-10 text-bone-faint">{label}</span>
-      <span className="script flex items-baseline gap-2 text-bone">
+      <dt className="script-label text-10 text-bone-faint">{label}</dt>
+      <dd className="script flex items-baseline gap-2 text-bone">
         {from !== undefined && from !== to ? (
           <>
-            <span className="text-22 line-through decoration-flag decoration-2 opacity-55">{from}</span>
-            <span className="text-11 opacity-45">to</span>
+            <span className="text-22 text-bone-faint line-through decoration-flag decoration-2">{from}</span>
+            <span className="text-11 text-bone-faint">to</span>
             <span className="text-28 font-bold">{to}</span>
           </>
         ) : (
           <span className="text-28 font-bold">{from !== undefined ? to : value}</span>
         )}
-      </span>
-      {source && <span className="script text-10 text-bone-faint">{source}</span>}
+      </dd>
+      {source && <dd className="script text-10 text-bone-faint">{source}</dd>}
     </div>
   )
 }

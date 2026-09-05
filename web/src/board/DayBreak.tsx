@@ -55,29 +55,29 @@ export const DayBreak = forwardRef<HTMLDivElement, DayBreakProps>(function DayBr
           ? 'bg-flag-deep text-bone shadow-[inset_0_0_0_1px_var(--color-flag)]'
           : 'bg-board-3 text-bone',
         undetermined && 'hatch',
-        !used && 'opacity-55',
+        !used && 'text-bone-faint',
         className,
       )}
     >
       <span className="font-bold tracking-[0.1em] whitespace-nowrap">
         {used ? `END OF DAY ${day + 1}` : `DAY ${day + 1}`}
-        <span className="opacity-55"> OF {dayCount}</span>
+        <span className="font-normal"> OF {dayCount}</span>
       </span>
 
-      <span className="whitespace-nowrap opacity-80">{shootDate(shootDay.date)}</span>
+      <span className="whitespace-nowrap">{shootDate(shootDay.date)}</span>
 
-      <span className="tabular-nums whitespace-nowrap opacity-80">{eighths(pagesEighths)} PGS</span>
+      <span className="tabular-nums whitespace-nowrap">{eighths(pagesEighths)} PGS</span>
 
-      <span className="hidden tabular-nums whitespace-nowrap opacity-80 sm:inline">
+      <span className="hidden tabular-nums whitespace-nowrap sm:inline">
         CALL {hhmm(shootDay.call)} WRAP {hhmm(shootDay.wrap)}
       </span>
 
       {shootDay.school_day && (
-        <span className="hidden whitespace-nowrap opacity-70 sm:inline">SCHOOL DAY</span>
+        <span className="hidden whitespace-nowrap sm:inline">SCHOOL DAY</span>
       )}
 
       <span className="ml-auto flex items-center gap-2 whitespace-nowrap">
-        {!used && <span className="opacity-70">NO SCENES</span>}
+        {!used && <span>NO SCENES</span>}
 
         {status === 'LEGAL' && (
           <span className="flex items-center gap-1.5">
@@ -101,7 +101,7 @@ export const DayBreak = forwardRef<HTMLDivElement, DayBreakProps>(function DayBr
           >
             <CircleSlash className="size-3.5" aria-hidden="true" />
             ILLEGAL
-            <span className="opacity-75">
+            <span>
               {verdict?.violations.length} {verdict?.violations.length === 1 ? 'RULE' : 'RULES'}
             </span>
           </button>
