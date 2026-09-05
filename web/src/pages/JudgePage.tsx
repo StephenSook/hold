@@ -98,12 +98,12 @@ export function JudgePage() {
           />
           <Stat
             label="Solve"
-            value={`${Math.round(data?.headline.solve_ms ?? 0)} ms`}
+            value={data ? `${Math.round(data.headline.solve_ms)} ms` : 'not read'}
             note={data?.runtime.ortools_version ? `OR-Tools ${data.runtime.ortools_version}` : 'CP-SAT'}
           />
           <Stat
             label="Agent eval"
-            value={data ? 'recorded' : 'recorded'}
+            value={evalScore(data?.headline.adk_eval)}
             note={data?.runtime.gemini_model ?? 'Gemini through the Agent Development Kit'}
           />
         </dl>
@@ -216,6 +216,21 @@ function Contrast() {
       </table>
     </section>
   )
+}
+
+/**
+ * The recorded eval, read rather than asserted. It is a recorded run and not a live one, so the
+ * page says "not read" when the service does not answer instead of printing a zero that looks
+ * like a measurement.
+ */
+function evalScore(adkEval: unknown): string {
+  if (adkEval && typeof adkEval === 'object' && 'passed' in adkEval && 'failed' in adkEval) {
+    const { passed, failed } = adkEval as { passed: number; failed: number }
+    if (typeof passed === 'number' && typeof failed === 'number') {
+      return `${passed} of ${passed + failed}`
+    }
+  }
+  return 'not read'
 }
 
 function Stat({ label, value, note }: { label: string; value: string; note?: string }) {

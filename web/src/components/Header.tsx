@@ -20,15 +20,19 @@ export function Header() {
   const { pathname } = useLocation()
   return (
     <header className="sticky top-0 z-50 border-b border-rail bg-board/85 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-5 sm:px-8">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-3 px-4 sm:gap-6 sm:px-8">
         <NavLink to="/" className="group/swap flex shrink-0 items-center gap-2.5" aria-label="HOLD, home">
           <HoldMark className="h-5 w-5 text-bone" />
-          <span className="display-wide text-16 leading-none text-bone">HOLD</span>
+          {/* At 390 px the wordmark is the 48 px that pushes Import and Judge off the rail. The
+              mark carries the identity on its own and the page title carries the name. */}
+          <span className="display-wide hidden text-16 leading-none text-bone xs:inline sm:inline">
+            HOLD
+          </span>
         </NavLink>
 
         <span className="hidden h-4 w-px bg-rail sm:block" aria-hidden="true" />
 
-        <nav className="flex min-w-0 items-center gap-5 overflow-x-auto" aria-label="Sections">
+        <nav className="flex min-w-0 items-center gap-3.5 overflow-x-auto sm:gap-5" aria-label="Sections">
           {NAV.map((item) => {
             const active = pathname === item.to || pathname.startsWith(`${item.to}/`)
             return (

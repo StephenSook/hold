@@ -124,3 +124,6 @@
 @custom-variant touch (@media (pointer: coarse));
 @custom-variant nottouch (@media (hover: hover) and (pointer: fine));
 @custom-variant motion-ok (@media (prefers-reduced-motion: no-preference));
+
+/* The width at which the wordmark fits on the header rail beside all four sections. */
+@custom-variant xs (@media (width >= 26rem));
