@@ -72,3 +72,9 @@ rules/sources-cache/
 
 # ADK eval and session artifacts written beside the agent
 .adk/
+
+# Added 2026-09-05. Reference material for the front-end design pass: a scraped copy of another
+# site's compiled bundle (19.8 MB, third-party code). It is a design reference only, it is not
+# ours to publish, and it never reaches this repository.
+/frontend doc
+/frontend-doc
