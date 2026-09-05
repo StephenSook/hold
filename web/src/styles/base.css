@@ -1,0 +1,136 @@
+/* Dark is the board and is the default. Light is the other physical artifact: the call sheet. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root:not(.dark) {
+  --color-board: oklch(0.965 0.008 85);
+  --color-board-2: oklch(0.935 0.008 85);
+  --color-board-3: oklch(0.90 0.008 85);
+  --color-rail: oklch(0.78 0.006 85);
+  --color-rail-soft: oklch(0.87 0.006 85);
+  --color-bone: oklch(0.20 0.004 120);
+  --color-bone-dim: oklch(0.40 0.004 120);
+  --color-bone-faint: oklch(0.56 0.004 120);
+  --color-flag-deep: oklch(0.40 0.14 27);
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-rail);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--color-rail) transparent;
+  }
+
+  body {
+    background-color: var(--color-board);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-size: var(--text-16);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /* The focus ring carries no hue, like everything else in the chrome. It is a bone rule with
+     an offset in the surface colour, so it reads on a strip and on the board equally. */
+  :focus-visible {
+    outline: 2px solid var(--color-bone);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+  .dark :focus-visible {
+    outline-color: var(--color-bone);
+  }
+
+  ::selection {
+    background: var(--color-bone);
+    color: var(--color-board);
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Reduced motion is honoured by removing transitions and animations, never by removing the
+     information they carried: the reorder still happens, it just happens instantly. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* The board's surface: vertical channels, the way a physical strip board is milled, plus a
+     hairline every strip height so an empty board still reads as a board. */
+  .board-surface {
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--color-bone) 3%, transparent) 0 1px,
+        transparent 1px 4px
+      );
+  }
+
+  .rule-h {
+    background-image: linear-gradient(
+      to right,
+      var(--color-rail) 0 100%
+    );
+    height: 1px;
+  }
+
+  /* An UNDETERMINED day is an unfilled form, not a warning, so it is hatched rather than
+     coloured. */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-rail) 0 1px,
+      transparent 1px 7px
+    );
+  }
+
+  /* Scrollbar, styled to match the board's channel. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rail);
+    border-radius: 10px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-bone-faint);
+    background-clip: content-box;
+  }
+}
+
+@layer utilities {
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

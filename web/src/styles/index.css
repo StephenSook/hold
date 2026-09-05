@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+/* Latin subsets only; the other unicode ranges in these files never download. */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/courier-prime/latin-400.css';
+@import '@fontsource/courier-prime/latin-700.css';
+
+@import './theme.css';
+@import './base.css';
