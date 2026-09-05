@@ -171,15 +171,22 @@ export function JudgePage() {
  * relative luminance formula.
  */
 function Contrast() {
+  // Measured in the browser from the painted pixels by web/scripts/measure_contrast.mjs, and
+  // regenerated whenever a token moves. An earlier version of this table was computed by hand,
+  // every figure in it was wrong, and the one pair that actually failed was not in it at all.
   const rows = [
-    { pair: 'Primary text on the board', ratio: '13.6:1', bar: 'AAA' },
-    { pair: 'Secondary text on the board', ratio: '7.2:1', bar: 'AAA' },
-    { pair: 'Scene text on an INT DAY strip', ratio: '13.2:1', bar: 'AAA' },
-    { pair: 'Scene text on an EXT DAY strip', ratio: '12.1:1', bar: 'AAA' },
-    { pair: 'Scene text on an INT NIGHT strip', ratio: '7.7:1', bar: 'AAA' },
-    { pair: 'Scene text on an EXT NIGHT strip', ratio: '9.4:1', bar: 'AAA' },
-    { pair: 'ILLEGAL on its slug', ratio: '10.1:1', bar: 'AAA' },
-    { pair: 'The flag bar and rules, graphic only', ratio: '4.2:1', bar: '3:1 floor' },
+    { pair: 'Primary text on the board', ratio: '16.89:1', bar: 'AAA' },
+    { pair: 'Secondary text on the board', ratio: '8.59:1', bar: 'AAA' },
+    { pair: 'Labels and sources on the board', ratio: '7.19:1', bar: 'AAA' },
+    { pair: 'Text on a day break', ratio: '7.01:1', bar: 'AAA' },
+    { pair: 'Scene text on an INT DAY strip', ratio: '15.88:1', bar: 'AAA' },
+    { pair: 'Scene text on an EXT DAY strip', ratio: '13.68:1', bar: 'AAA' },
+    { pair: 'Scene text on an INT NIGHT strip', ratio: '9.85:1', bar: 'AAA' },
+    { pair: 'Scene text on an EXT NIGHT strip', ratio: '12.41:1', bar: 'AAA' },
+    { pair: 'ILLEGAL on its slug', ratio: '11.01:1', bar: 'AAA' },
+    { pair: 'The flag bar and rules, graphic only', ratio: '5.13:1', bar: '3:1 floor' },
+    { pair: 'The boundary of a control, graphic only', ratio: '3.15:1', bar: '3:1 floor' },
+    { pair: 'A label on a day break, the one pair below AAA', ratio: '5.86:1', bar: 'AA' },
   ]
   return (
     <section className="mt-12">
@@ -190,9 +197,16 @@ function Contrast() {
         so colour here is never the signal: every status carries a word and an icon, and the colour
         is what is left over.
       </p>
+      <p className="script mt-3 max-w-[70ch] text-11 text-bone-faint">
+        These are read from the painted pixels in a browser by web/scripts/measure_contrast.mjs,
+        not computed by hand. The first version of this table was computed by hand, every figure in
+        it was wrong, and the pair that actually failed was not in it at all. One pair is still AA
+        rather than AAA and is listed rather than left out. axe-core reports zero violations of any
+        impact across all five routes, with and without reduced motion.
+      </p>
       <table className="script mt-6 w-full border border-rail text-12">
         <thead>
-          <tr className="border-b border-rail bg-board-3 text-left text-bone-faint">
+          <tr className="border-b border-rail bg-board-3 text-left text-bone-dim">
             <th scope="col" className="px-4 py-2.5 font-normal tracking-[0.1em]">
               PAIR
             </th>
@@ -238,7 +252,7 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
     <div>
       <dt className="script-label text-10 text-bone-faint">{label}</dt>
       <dd className="script mt-1.5 text-22 tabular-nums text-bone">{value}</dd>
-      {note && <p className="script mt-1 text-10 text-bone-faint">{note}</p>}
+      {note && <dd className="script mt-1 text-10 text-bone-faint">{note}</dd>}
     </div>
   )
 }

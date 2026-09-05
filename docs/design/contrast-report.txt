@@ -1,0 +1,16 @@
+  16.89:1  AAA             bone on board            #f4f1ec on #101010
+   8.59:1  AAA             bone-dim on board        #b0aeaa on #101010
+   7.19:1  AAA             bone-faint on board      #a09f9c on #101010
+   7.01:1  AAA             bone-dim on board-3      #b0aeaa on #242424
+   5.86:1  AA only         bone-faint on board-3    #a09f9c on #242424
+  15.88:1  AAA             ink on strip-white       #0c0c0c on #ebe7e1
+  13.68:1  AAA             ink on strip-yellow      #0c0c0c on #efd77c
+   9.85:1  AAA             ink on strip-blue        #0c0c0c on #8fbde5
+  12.41:1  AAA             ink on strip-green       #0c0c0c on #a0dcac
+  11.01:1  AAA             bone on flag-deep        #f4f1ec on #671513
+  11.01:1  AAA             flag-deep on bone        #671513 on #f4f1ec
+   5.13:1  ok (3:1 floor)  flag on board            #f1453f on #101010
+   1.46:1  FAILS 3:1       rail on board            #313131 on #101010
+  16.89:1  ok (3:1 floor)  bone ring on board       #f4f1ec on #101010
+
+pairs below AAA (text) or below 3:1 (graphic): 2
