@@ -5,15 +5,24 @@
   something in film production. The chrome has no brand hue at all, so the only colour on a
   screen is a strip colour or a broken law. See docs/design/design-plan.md.
 
-  Contrast, measured against the base surfaces, with the ratio each pair is used at:
-    bone on board          13.6:1   AAA, primary text
-    bone-dim on board       7.2:1   AAA, secondary text
-    ink on strip-white     13.2:1   AAA
-    ink on strip-yellow    12.1:1   AAA
-    ink on strip-blue       7.7:1   AAA
-    ink on strip-green      9.4:1   AAA
-    bone on flag-deep      10.1:1   AAA, the ILLEGAL slug
-    flag on board           4.2:1   graphic only (bars, rules, icons), over the 3:1 floor
+  Contrast, measured in the browser from the painted pixels by scripts/measure_contrast.mjs, not
+  computed by hand. An earlier version of this comment carried hand-computed figures and every
+  one of them was wrong, in the flattering direction, while the pair that actually failed was
+  missing from the list entirely.
+
+    bone on board          16.89:1   AAA, primary text
+    bone-dim on board       8.59:1   AAA, secondary text
+    bone-faint on board     7.19:1   AAA, labels and sources
+    bone-dim on board-3     7.01:1   AAA, text on a day break
+    bone-faint on board-3   5.86:1   AA, the one pair below AAA, and it is on the judge page
+    ink on strip-white     15.88:1   AAA
+    ink on strip-yellow    13.68:1   AAA
+    ink on strip-blue       9.85:1   AAA
+    ink on strip-green     12.41:1   AAA
+    bone on flag-deep      11.01:1   AAA, the ILLEGAL slug
+    flag on board           5.13:1   graphic only (bars, rules, icons), over the 3:1 floor
+    edge on board           3.15:1   control boundaries, over the 3:1 floor
+    rail on board           1.46:1   decorative hairlines only, never a control boundary
 */
 
 @theme {
@@ -23,11 +32,14 @@
   --color-board-3: oklch(0.262 0 0);
   --color-rail: oklch(0.315 0 0);
   --color-rail-soft: oklch(0.255 0 0);
+  /* The boundary of a control, which the guideline holds to 3:1 as a non-text contrast. `rail`
+     is a decorative hairline at 1.46:1 and is not allowed to carry that job. */
+  --color-edge: oklch(0.53 0 0);
 
   /* ---- ink: call sheet stock ---- */
   --color-bone: oklch(0.96 0.008 85);
   --color-bone-dim: oklch(0.75 0.006 85);
-  --color-bone-faint: oklch(0.55 0.005 85);
+  --color-bone-faint: oklch(0.702 0.005 85);
   --color-ink: oklch(0.155 0 0);
 
   /* ---- strips: printed cardstock, industry colour code ---- */

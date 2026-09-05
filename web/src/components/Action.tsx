@@ -22,7 +22,7 @@ const base =
 
 const skin = {
   primary: 'border-bone text-bone',
-  quiet: 'border-rail text-bone-dim hover:border-bone-faint hover:text-bone',
+  quiet: 'border-edge text-bone-dim hover:border-bone hover:text-bone',
 } as const
 
 function Inner({ icon, children }: { icon?: ReactNode; children: string }) {
