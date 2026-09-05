@@ -1,0 +1,59 @@
+import { NavLink, useLocation } from 'react-router-dom'
+import { HoldMark } from './HoldMark'
+import { SwapText } from './SwapText'
+import { ThemeToggle } from './ThemeToggle'
+import { cn } from '@/lib/cn'
+
+const NAV = [
+  { to: '/board', label: 'Board' },
+  { to: '/day/0', label: 'Day' },
+  { to: '/import', label: 'Import' },
+  { to: '/judge', label: 'Judge' },
+]
+
+/**
+ * The header is the head block of a call sheet: a hairline rail with the production on the
+ * left, the sections across it, and nothing decorative. It does not float and it does not
+ * round, because the paperwork it comes from does neither.
+ */
+export function Header() {
+  const { pathname } = useLocation()
+  return (
+    <header className="sticky top-0 z-50 border-b border-rail bg-board/85 backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-[1440px] items-center gap-6 px-5 sm:px-8">
+        <NavLink to="/" className="group/swap flex shrink-0 items-center gap-2.5" aria-label="HOLD, home">
+          <HoldMark className="h-5 w-5 text-bone" />
+          <span className="display-wide text-16 leading-none text-bone">HOLD</span>
+        </NavLink>
+
+        <span className="hidden h-4 w-px bg-rail sm:block" aria-hidden="true" />
+
+        <nav className="flex min-w-0 items-center gap-5 overflow-x-auto" aria-label="Sections">
+          {NAV.map((item) => {
+            const active = pathname === item.to || pathname.startsWith(`${item.to}/`)
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={cn(
+                  'group/swap script-label shrink-0 text-11 transition-colors',
+                  active ? 'text-bone' : 'text-bone-faint hover:text-bone',
+                )}
+              >
+                <SwapText>{item.label}</SwapText>
+                <span
+                  className={cn('mt-1 block h-px origin-left transition-transform duration-300', active ? 'scale-x-100 bg-bone' : 'scale-x-0 bg-rail')}
+                  aria-hidden="true"
+                />
+              </NavLink>
+            )
+          })}
+        </nav>
+
+        <div className="ml-auto flex shrink-0 items-center gap-4">
+          <ThemeToggle />
+        </div>
+      </div>
+    </header>
+  )
+}
