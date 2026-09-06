@@ -13,6 +13,24 @@ const REPO = 'https://github.com/StephenSook/hold'
  * reads it from a file a real run wrote. Where the API cannot be reached the page says so and
  * shows the recorded run instead of quietly substituting one for the other.
  */
+/**
+ * The heading counts the list rather than stating a number.
+ *
+ * It read "Six things you can check" above a hardcoded six, and the seventh step turned the
+ * heading into a false statement about the page it sits on. A count that is typed once and a list
+ * that grows are the same defect as a headline figure typed by hand, which this project already
+ * refuses everywhere else.
+ */
+const COUNT_WORD: Record<number, string> = {
+  4: 'Four',
+  5: 'Five',
+  6: 'Six',
+  7: 'Seven',
+  8: 'Eight',
+  9: 'Nine',
+  10: 'Ten',
+}
+
 export function JudgePage() {
   const { data, isLoading, isError } = useStatus()
 
@@ -48,6 +66,12 @@ export function JudgePage() {
       label: 'The repository',
     },
     {
+      title: 'Drive the solver from your own AI client',
+      body: 'HOLD runs its own MCP server on this origin, so the optimizer and the rule registry are tools your client can call. Point any MCP client at https://hold-fwmdq7fc3q-uc.a.run.app/mcp/ over HTTP, then ask it to run_residual on film103: it solves a published benchmark instance and compares the cost it finds to the published optimum, so the cheapest-order claim is something you re-run rather than believe.',
+      href: `${REPO}/blob/main/api/hold/mcp_server.py`,
+      label: 'The MCP server',
+    },
+    {
       title: 'Check a quote against its source',
       body: 'Every rule record carries a quote that continuous integration verifies as a verbatim substring of a committed snapshot of its source. A record whose quote cannot be verified is excluded rather than paraphrased.',
       href: `${REPO}/tree/main/rules`,
@@ -58,7 +82,7 @@ export function JudgePage() {
   return (
     <div className="mx-auto max-w-[62rem] px-5 py-10 sm:px-8 sm:py-14">
       <p className="script-label text-11 text-bone-faint">For judges</p>
-      <h1 className="display-wide mt-3 text-36 text-bone sm:text-48">Six things you can check</h1>
+      <h1 className="display-wide mt-3 text-36 text-bone sm:text-48">{COUNT_WORD[steps.length] ?? steps.length} things you can check</h1>
       <p className="mt-4 max-w-[62ch] text-16 text-bone-dim">
         Nothing below needs a key or an account until step five, which needs a clone. Every figure
         on this page comes from the live service.

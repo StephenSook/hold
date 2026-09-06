@@ -30,11 +30,38 @@ task and is not described here; every step is the API and the repository.
 6. **The residual, on your machine.** `git clone https://github.com/StephenSook/hold && cd hold && uv sync && uv run pytest api/tests/test_residual.py -v`
    solves the eight published talent-scheduling instances and compares each cost to the proven
    optimum. `uv run python scripts/facts.py --check` recomputes every headline number.
-7. **The rules.** [`rules/`](rules/) holds the records; [`rules/sources/`](rules/sources/) the
+7. **Drive the solver from your own AI client.** HOLD runs its own MCP server on the deployed
+   origin, so the schedule optimizer and the rule registry are tools your client can call. Add it
+   Any MCP client can call them. To see the server answer with no client at all:
+
+   ```
+   curl -sS https://hold-fwmdq7fc3q-uc.a.run.app/mcp/ \
+     -H 'Content-Type: application/json' \
+     -H 'Accept: application/json, text/event-stream' \
+     -H 'MCP-Protocol-Version: 2025-11-25' \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+   ```
+
+   Or point any MCP client at `https://hold-fwmdq7fc3q-uc.a.run.app/mcp/` over HTTP.
+
+   Four tools: `solve_schedule`, `check_legality`, `lookup_rule`, `run_residual`. The one worth
+   your time is the last one. `run_residual` with `name: "film103"` solves a published academic
+   benchmark instance and compares the cost it finds to the published optimum, so the claim that
+   this solver finds the provably cheapest order is something you can re-run rather than believe:
+
+   ```
+   {"name": "film103", "status": "OPTIMAL", "holding": 187, "published_holding": 187, "matched": true}
+   ```
+
+   Solve time is capped on the public transport, and each tool says its own cap, because the
+   origin is one instance that also serves the app. The uncapped server is the same file, over
+   stdio, from a clone.
+
+8. **The rules.** [`rules/`](rules/) holds the records; [`rules/sources/`](rules/sources/) the
    snapshots each quote is verified against; `uv run pytest api/tests/test_quotes.py -v` runs the
    check. `GET /api/rules` serves the records.
-8. **The agent.** [`docs/adk_eval.json`](docs/adk_eval.json) is the recorded eval run, written by
+9. **The agent.** [`docs/adk_eval.json`](docs/adk_eval.json) is the recorded eval run, written by
    `scripts/adk_eval.py` from ADK's own result file. The live extraction goldens are under
    [`data/fixtures/extraction/`](data/fixtures/extraction/), each recorded from a real call.
-9. **IBM Bob.** [`docs/bob-evidence/`](docs/bob-evidence/): the session export, the attribution
+10. **IBM Bob.** [`docs/bob-evidence/`](docs/bob-evidence/): the session export, the attribution
    breakdown with the build trace, the Bobcoin screenshots and the lane-enforcement record.

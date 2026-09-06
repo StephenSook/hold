@@ -23,6 +23,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from api.hold.jobs import JOBS
+from api.hold.mcp_server import MOUNT as _mcp_mount
 from api.hold.streaming import BRIDGE
 from api.routes.events import handle_external_set_event
 from api.routes.events import router as events_router
@@ -55,12 +56,18 @@ _ORIGINS: list[str] = _ALWAYS_ALLOWED + (
 @asynccontextmanager
 async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Start the Confluent bridge when it is configured (metadata call proves the broker); the
-    in-process bus needs nothing. Stop it on shutdown."""
+    in-process bus needs nothing. Stop it on shutdown.
+
+    The MCP session manager runs here too. A Starlette app mounted inside another app does not get
+    its own lifespan run, so mounting the MCP transport without this gives a route that exists,
+    answers, and fails on every call, which is worse than not having it.
+    """
     BRIDGE.on_set_event = handle_external_set_event
     BRIDGE.is_own_job = lambda job_id: JOBS.get(job_id) is not None
     BRIDGE.start()
     try:
-        yield
+        async with _mcp_mount.running():
+            yield
     finally:
         BRIDGE.stop()
 
@@ -81,6 +88,11 @@ app.add_middleware(
 
 for _router in (status_router, solve_router, events_router, extract_router, rules_router):
     app.include_router(_router)
+
+# HOLD's own MCP server, on the deployed origin, so the solver can be driven by any MCP client
+# rather than only by this app. Mounted before the SPA catch-all, which would otherwise answer
+# /mcp with index.html and hand a JSON-RPC client an HTML page.
+app.mount("/mcp", _mcp_mount)
 
 
 # ---------------------------------------------------------------------------

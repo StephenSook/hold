@@ -93,6 +93,47 @@ An architecture diagram lands with task 5.6. Routes: `/api/solve`, `/api/jobs/{i
 `/api/events` (SSE), `/api/set-events`, `/api/extract`, `/api/rules`, `/api/bench`,
 `/api/status`, `/api/docs`.
 
+## Drive it from your own AI client
+
+HOLD runs its own MCP server on the deployed origin, so the optimizer and the rule registry are
+tools any MCP client can call. This is the same server IBM Bob calls over stdio while the code is
+being written, on a second transport.
+
+```json
+{
+  "mcpServers": {
+    "hold": { "type": "http", "url": "https://hold-fwmdq7fc3q-uc.a.run.app/mcp/" }
+  }
+}
+```
+
+Any MCP client takes that. To see it answer without a client at all:
+
+```
+curl -sS https://hold-fwmdq7fc3q-uc.a.run.app/mcp/ \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'MCP-Protocol-Version: 2025-11-25' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+| Tool | What it answers |
+|---|---|
+| `solve_schedule` | the cheapest legal order and day assignment for a schedule, then a verdict per day |
+| `check_legality` | one day judged, with every violated rule, its citation and the sentence from the statute |
+| `lookup_rule` | one rule record: citation, verbatim quote, source URL, params |
+| `run_residual` | one published benchmark instance solved, next to its published optimum |
+
+`run_residual` is the one to try. It re-proves the headline rather than restating it:
+
+```json
+{"name": "film103", "status": "OPTIMAL", "holding": 187, "published_holding": 187, "matched": true}
+```
+
+Solve time is capped on the public transport and each tool description states its own cap, because
+the origin is one Cloud Run instance that also serves the web app. The uncapped server is the same
+file over stdio from a clone: `uv run python -m api.hold.mcp_server`.
+
 ## Quick start
 
 Prerequisites: `uv`, `jq`, and Node 22 for the web app. No key and no account are needed for
