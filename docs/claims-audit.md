@@ -49,17 +49,30 @@ re-run after a lane ships is a stale document making a confident statement.
 | Tailwind v4 | `web/src/styles/theme.css` | not named on a judge surface; it is a build detail |
 | Motion, dnd-kit | `web/src/board/Stripboard.tsx` | the drag and the animated reorder |
 | TanStack Query, Workbox | `web/src/main.tsx`, `web/vite.config.ts` | the PWA and its offline cache |
+| Capacitor 8 | `web/capacitor.config.ts`, `web/android/`, `web/ios/` | the Android and iOS shells |
+
+## Capacitor, and a correction this audit has already had to make once
+
+This section said twice that Capacitor appeared nowhere. Both statements were true when written.
+The first stopped being true when the web app shipped; the second stopped being true on
+2026-09-06 when the native shells were added. That is twice in two days, and the lesson is the
+one the audit exists to teach: a claims document is a snapshot, and a lane shipping is the event
+that invalidates it.
+
+Capacitor 8 is now a dependency and generates `web/android/` and `web/ios/`. What is still true,
+and matters, is that **no Capacitor API is called from the web bundle**. The camera scan is the
+browser's own capture, which works in the shells and in a plain mobile browser alike, and
+`grep -i capacitor web/dist/assets/*.js` returns nothing. The shells load the same bundle a
+browser loads.
 
 ## Claimed nowhere and absent
 
-Postgres or Cloud SQL, Firestore, Redis and Capacitor appear in no shipped code and on no
-surface as a present-tense claim. Capacitor specifically: the camera scan is the browser's own
-capture, and no runtime check for a Capacitor plugin ships, so the name is not in the bundle.
-The native shells remain PLAN.md tasks in Stephen's mobile lane.
+Postgres or Cloud SQL, Firestore and Redis appear in no shipped code and on no surface as a
+present-tense claim.
 
 ## Devpost Built With
 
 `python`, `fastapi`, `or-tools`, `google-cloud-run`, `vertex-ai`, `gemini`, `google-adk`,
-`confluent-cloud`, `ibm-bob`, `github-actions`, `react`, `typescript`, `vite`, `tailwindcss`.
-Every tag maps to a row above. No tag names a library the code does not import, and no tag names
-a service the project does not run on.
+`confluent-cloud`, `ibm-bob`, `github-actions`, `react`, `typescript`, `vite`, `tailwindcss`,
+`capacitor`, `android`, `ios`. Every tag maps to a row above. No tag names a library the
+code does not import, and no tag names a service the project does not run on.
