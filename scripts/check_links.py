@@ -19,6 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SURFACES = ("README.md", "JUDGE.md")
 _URL = re.compile(r"https?://[^\s)>\]`\"']+")
 _PATH = re.compile(r"\]\(([A-Za-z0-9_./-]+)\)")
+# An image embedded as HTML rather than markdown, which is how the install QR codes are sized.
+# Without this the checker walks straight past them and a broken path stays invisible on the
+# one page a judge opens first.
+_SRC = re.compile(r"<img[^>]*?src=\"([A-Za-z0-9_./-]+)\"")
 
 
 def fetch(url: str) -> tuple[str, str]:
@@ -41,7 +45,7 @@ def main() -> int:
         text = (ROOT / name).read_text(encoding="utf-8")
         for u in _URL.findall(text):
             urls.setdefault(u.rstrip(".,"), name)
-        for p in _PATH.findall(text):
+        for p in list(_PATH.findall(text)) + list(_SRC.findall(text)):
             if not p.startswith("http"):
                 paths.setdefault(p, name)
     print(f"# Link check, {datetime.date.today().isoformat()}\n")
