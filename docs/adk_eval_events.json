@@ -3,21 +3,6 @@
   "passed": 4,
   "failed": 0,
   "cases": {
-    "event_scene_dropped": {
-      "status": "PASSED",
-      "metrics": {
-        "tool_trajectory_avg_score": {
-          "status": "PASSED",
-          "score": 1.0,
-          "threshold": 1.0
-        },
-        "final_response_match_v2": {
-          "status": "PASSED",
-          "score": 1.0,
-          "threshold": 0.8
-        }
-      }
-    },
     "event_out_of_scope": {
       "status": "PASSED",
       "metrics": {
@@ -33,7 +18,7 @@
         }
       }
     },
-    "event_actor_late": {
+    "event_scene_dropped": {
       "status": "PASSED",
       "metrics": {
         "tool_trajectory_avg_score": {
@@ -62,12 +47,27 @@
           "threshold": 0.8
         }
       }
+    },
+    "event_actor_late": {
+      "status": "PASSED",
+      "metrics": {
+        "tool_trajectory_avg_score": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 1.0
+        },
+        "final_response_match_v2": {
+          "status": "PASSED",
+          "score": 1.0,
+          "threshold": 0.8
+        }
+      }
     }
   },
-  "history_file": "event_agent_hold_events_v1_1788720690.58543.evalset_result.json",
-  "run_at": "2026-09-06T18:51:30+00:00",
-  "adk_eval_exit_code": null,
-  "recorded_at": "2026-09-06T18:52:18+00:00",
+  "history_file": "event_agent_hold_events_v1_1788724564.117732.evalset_result.json",
+  "run_at": "2026-09-06T19:56:04+00:00",
+  "adk_eval_exit_code": 0,
+  "recorded_at": "2026-09-06T19:56:05+00:00",
   "model": "gemini-3.1-flash-lite",
   "models_invoked": [
     "gemini-2.5-flash",
@@ -79,6 +79,6 @@
     "final_response_match_v2": 0.8
   },
   "agent_module": "api/agents/event_agent",
-  "agent_fingerprint": "811241ddd7654c2cc9e48aacb392117dc74a8a264b97dd9a4c639a822fa075f1",
+  "agent_fingerprint": "a638e6f3ee0b659500d0fa11cb31a4bcb7edea2b0b2a760fc3e34af3ef18c770",
   "written_by": "scripts/adk_eval.py from a real adk eval run"
 }
