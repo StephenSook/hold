@@ -13,7 +13,9 @@
     "test": "vitest run --exclude 'tests/e2e/**'",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "icons:native": "npx @capacitor/assets generate --ios --android"
+    "icons:native": "npx @capacitor/assets generate --ios --android",
+    "build:native": "VITE_API_BASE=https://hold-fwmdq7fc3q-uc.a.run.app npm run build && npx cap sync && npm run check:native",
+    "check:native": "node scripts/check_native_bundle.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.1",
