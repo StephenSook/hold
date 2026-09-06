@@ -31,7 +31,15 @@ export function App() {
       <Header />
       <OfflineBanner />
       <UpdatePrompt />
-      <main id="main" tabIndex={-1} className="min-h-[60vh] outline-none">
+      {/*
+        The routes are code split, so the first paint is the Suspense fallback and the real
+        page arrives a few hundred milliseconds later. At 60vh the footer sat inside the
+        viewport during that gap and then got pushed thousands of pixels down when the chunk
+        landed: measured at 0.23 cumulative layout shift on the judge route, which was the
+        whole of it. Filling the viewport keeps the footer at or below the fold from the first
+        frame, so the page growing underneath it moves nothing anyone can see.
+      */}
+      <main id="main" tabIndex={-1} className="min-h-[calc(100vh-var(--header-h))] outline-none">
         <Suspense fallback={<RouteFallback />}>
           <Routes>
             <Route path="/" element={<Landing />} />

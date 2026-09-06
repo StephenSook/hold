@@ -26,7 +26,17 @@ client = TestClient(app)
 # registerSW.js is not here any more. The app registers the worker through useRegisterSW, so
 # the file is no longer emitted, and leaving it in this tuple made one case skip on every run
 # for a reason that had stopped being temporary. Its successor state is asserted below.
-ROOT_FILES = ("sw.js", "manifest.webmanifest", "favicon.svg", "icon-192.png")
+ROOT_FILES = (
+    "sw.js",
+    "manifest.webmanifest",
+    "favicon.svg",
+    "icon-192.png",
+    # A crawler asking for either of these was handed the SPA with a 200: the same defect
+    # this test was written for, found again by Lighthouse rather than by the test, because
+    # the files did not exist yet so nothing here could have named them.
+    "robots.txt",
+    "llms.txt",
+)
 
 
 needs_build = pytest.mark.skipif(

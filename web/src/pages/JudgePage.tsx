@@ -101,7 +101,7 @@ export function JudgePage() {
           <Stat
             label="Benchmark matched"
             value={data?.benchmark_matched ?? '8/8'}
-            note={data ? `at commit ${data.benchmark_run_sha}` : 'recorded run'}
+            note={data ? `at commit ${data.benchmark_run_sha.slice(0, 7)}` : 'recorded run'}
           />
           <Stat
             label="Hold days"
@@ -271,12 +271,21 @@ function evalScore(adkEval: unknown): string {
   return 'not read'
 }
 
+/**
+ * The note line is always rendered and reserves two lines of height.
+ *
+ * These figures start on committed fallbacks and are replaced when /api/status answers, so the
+ * note changes length under the reader. One of them grew from "recorded run" to a forty character
+ * commit sha, wrapped to a second line, grew its grid row and pushed the whole page down: measured
+ * at 0.23 of a 0.247 cumulative layout shift, which is 93 percent of it, and the element the
+ * browser blamed was the footer, three sections away from the cause.
+ */
 function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
     <div>
       <dt className="script-label text-10 text-bone-faint">{label}</dt>
       <dd className="script mt-1.5 text-22 tabular-nums text-bone">{value}</dd>
-      {note && <dd className="script mt-1 text-10 text-bone-faint">{note}</dd>}
+      <dd className="script mt-1 min-h-[1.75rem] text-10 text-bone-faint">{note}</dd>
     </div>
   )
 }

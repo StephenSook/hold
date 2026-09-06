@@ -1,0 +1,8 @@
+# HOLD. Everything here is public and safe to crawl.
+User-agent: *
+Allow: /
+
+# The routes worth reading first.
+# /api/status   the service describing itself, every headline figure
+# /api/docs     every endpoint with its schema
+# /mcp/         HOLD's own MCP server, four tools over streamable HTTP

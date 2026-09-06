@@ -1,0 +1,45 @@
+# HOLD
+
+> The provably cheapest film shooting order, and a legality verdict for every day a child
+> performer is on set, with the sentence from the statute on screen.
+
+HOLD takes a scene list, who is in each scene, the shooting days and the rate tier. A CP-SAT model
+assigns scenes to days to minimise the days performers are paid to wait, with child-performer law
+and the union agreements as hard constraints, and either proves the optimum or reports the bound
+it stopped at. An independent checker then judges every day and names each rule it breaks with the
+citation and the verbatim quote from the source.
+
+If you are an agent, you do not have to read this site to use it. It exposes its own MCP server,
+and every headline figure is served as JSON by the status endpoint.
+
+## For agents
+
+- [MCP server](https://hold-fwmdq7fc3q-uc.a.run.app/mcp/): streamable HTTP. Four tools:
+  `solve_schedule` (cheapest legal order for a schedule), `check_legality` (one day judged, with
+  citations), `lookup_rule` (one rule record with its verbatim quote and source URL), and
+  `run_residual` (solve a published academic benchmark instance and compare the cost found to its
+  published optimum). Solve time is capped on this transport and each tool states its own cap.
+- [Status](https://hold-fwmdq7fc3q-uc.a.run.app/api/status): JSON. Every headline figure, the
+  model, the region, the solver version and the streaming state. Nothing on it is typed by hand.
+- [OpenAPI](https://hold-fwmdq7fc3q-uc.a.run.app/api/docs): every route with its schema.
+
+## For people
+
+- [The board](https://hold-fwmdq7fc3q-uc.a.run.app/#/board): the stripboard. Press Solve.
+- [Judge walkthrough](https://hold-fwmdq7fc3q-uc.a.run.app/#/judge): seven things a stranger can
+  check, each one a link.
+- [Repository](https://github.com/StephenSook/hold): Apache-2.0, all source and the rule registry.
+
+## Rules and provenance
+
+- [Rule registry](https://github.com/StephenSook/hold/tree/main/rules): 70 records covering
+  Georgia and California child-performer law, the SAG-AFTRA young-performer handbook and the low
+  budget agreements. Every quote is checked on every push against a committed snapshot of its
+  source, and a record whose quote cannot be verified is excluded rather than paraphrased.
+- [Claims audit](https://github.com/StephenSook/hold/blob/main/docs/claims-audit.md): every
+  technology named on a judge-facing surface, and the file that proves it is called at runtime.
+
+## Notes
+
+The bundled demo schedule is constructed and says so on screen. Nobody has used HOLD on a real
+production, and nothing here is legal advice.
