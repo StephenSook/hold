@@ -59,7 +59,7 @@ jobs:
           path: bench/results.json
 
   web-check:
-    name: Web (tsc + eslint + vitest + build)
+    name: Web (tsc + eslint + vitest + icons + build)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -80,6 +80,12 @@ jobs:
         run: npx eslint .
       - working-directory: web
         run: npm run test
+      # The app icon and the three PWA icons are one drawing, and they had already drifted apart:
+      # the installed app was the stripboard while the web manifest still pointed at the camera
+      # gate, so a phone with both showed two marks for one product. Nothing catches that by
+      # reading code, so the generator is the source and this asserts the committed PNGs match it.
+      - working-directory: web
+        run: npm run icons:check
       - working-directory: web
         run: npm run build
 
