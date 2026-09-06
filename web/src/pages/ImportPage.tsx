@@ -118,12 +118,20 @@ export function ImportPage() {
           >
             Scan a call sheet
           </ActionButton>
+          {/*
+            The button above is the affordance; this input is what actually receives the file, and
+            it is still a form control a screen reader reaches, so it needs a name of its own.
+            Without one axe reports a critical "form elements must have labels" on this route, which
+            is how it was found: the accessibility report had claimed zero violations since the web
+            lane shipped, and nothing re-ran it after the scan control was added.
+          */}
           <input
             ref={camera}
             data-testid="import-camera"
             type="file"
             accept="image/*"
             capture="environment"
+            aria-label="Scan a call sheet with the camera"
             className="sr-only"
             tabIndex={-1}
             onChange={(event) => {
