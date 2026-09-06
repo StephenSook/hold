@@ -4,7 +4,7 @@
 > performer is on set, with the statute sentence on screen. Built for the Agentic Cinema:
 > The Blockbuster Hackathon, IBM partner track.
 
-[![residual](https://github.com/StephenSook/hold/actions/workflows/ci.yml/badge.svg?job=residual)](https://github.com/StephenSook/hold/actions/workflows/ci.yml)
+[![CI](https://github.com/StephenSook/hold/actions/workflows/ci.yml/badge.svg)](https://github.com/StephenSook/hold/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 Live: https://hold-fwmdq7fc3q-uc.a.run.app/api/status (Cloud Run). Walkthrough for judges: [JUDGE.md](JUDGE.md).
@@ -76,18 +76,39 @@ An architecture diagram lands with task 5.6. Routes: `/api/solve`, `/api/jobs/{i
 
 ## Quick start
 
-Prerequisites: `uv` and `jq`. No key and no account are needed for anything below.
+Prerequisites: `uv`, `jq`, and Node 22 for the web app. No key and no account are needed for
+anything below. The residual suite takes about a minute; everything else is seconds.
 
 ```bash
 git clone https://github.com/StephenSook/hold && cd hold
 uv sync
 uv run pytest api/tests/test_residual.py -v            # proof 1: the benchmark residual, 8/8
 uv run python scripts/facts.py --check                 # proof 2: recompute FACTS from a real run
-uv run pytest api/tests -q -m "not network"            # the hermetic suite
-HOLD_FAKE_EXTERNALS=1 uv run uvicorn api.main:app --port 8000   # local API; fixtures answer /api/extract
+cd web && npm ci && npm run build && npm run test && cd ..   # the web app, and its 31 tests
+uv run pytest api/tests -q -m "not network"            # the hermetic suite, all of it
+```
+
+The first command rewrites `bench/results.json` with the run's own SHA and timings; the optima
+themselves do not move. `git checkout bench/results.json` puts it back.
+
+Build the web app before the hermetic suite or 11 of its tests skip: they check what the server
+serves out of `web/dist`, and without a build there is nothing to serve.
+
+Then, in one terminal:
+
+```bash
+HOLD_FAKE_EXTERNALS=1 uv run uvicorn api.main:app --port 8000   # the app and the API, one origin
+```
+
+and in a second terminal:
+
+```bash
 uv run python scripts/simulate_set_day.py --api http://localhost:8000   # solve, then three set events re-solved
 curl -s https://hold-fwmdq7fc3q-uc.a.run.app/api/status | jq            # the live headline
 ```
+
+`uvicorn` runs in the foreground and does not return, so the two blocks are two terminals. Open
+<http://localhost:8000> for the board itself.
 
 Live extraction and the Confluent leg stay off until `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION=global`
 and the `CONFLUENT_*` variables from [`.env.example`](.env.example) are set: fixtures answer extraction

@@ -8,7 +8,10 @@ task and is not described here; every step is the API and the repository.
    location and transport are live right now and whether extraction is configured; `bob_usage`
    is the committed IBM Bob evidence aggregate.
 2. **The routes.** https://hold-fwmdq7fc3q-uc.a.run.app/api/docs lists every endpoint with its
-   schema. Everything under `/api` is unauthenticated on purpose.
+   schema. Everything under `/api` is unauthenticated on purpose. One thing to know before you
+   poke at paths: anything that is not a file and not under `/api` answers 200 with the web app,
+   because that is how a single-page app is served. A status code alone therefore proves nothing
+   about whether a route exists; read the body.
 3. **A solve.** In the Swagger page, `POST /api/solve` with the body of
    [`data/demo/hold-demo.json`](data/demo/hold-demo.json) (drop the keys that start with an
    underscore; they are labels). The answer is a job id. `GET /api/jobs/{id}` returns the order,
