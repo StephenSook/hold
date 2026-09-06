@@ -96,7 +96,12 @@ export function useEventStream(jobId: string | null, enabled = true) {
           const verdict = parsed.verdict as { day?: number; status?: string } | undefined
           add(kind, `day ${Number(verdict?.day ?? 0) + 1} ${verdict?.status ?? ''}`)
         } else {
-          add(kind, `${kind}${parsed.transport ? ` over ${parsed.transport}` : ''}`)
+          // The inner kind is part of the line, not only the outer one. It tells the reader which
+          // event this was, and it keeps two echoes on one job from sharing a signature and being
+          // deduplicated as if they were the same delivery.
+          const what = typeof parsed.kind === 'string' ? parsed.kind : kind
+          const change = typeof parsed.change === 'string' ? `, ${parsed.change}` : ''
+          add(kind, `${what}${change}${parsed.transport ? ` over ${parsed.transport}` : ''}`)
         }
       } catch {
         add('message', event.data.slice(0, 120))
