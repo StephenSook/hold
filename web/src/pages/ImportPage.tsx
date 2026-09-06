@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from 'react'
-import { Check, FileUp, TriangleAlert } from 'lucide-react'
+import { Camera, Check, FileUp, TriangleAlert } from 'lucide-react'
 import { ActionButton } from '@/components/Action'
-import { apiUrl } from '@/lib/api'
+import { extractDocument } from '@/lib/extract'
+import { ApiError } from '@/lib/api'
 import { eighths } from '@/lib/format'
 import type { ExtractResult } from '@/types/contracts'
 
@@ -19,33 +20,29 @@ export function ImportPage() {
   const [result, setResult] = useState<ExtractResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState(false)
+  const [note, setNote] = useState('')
   const [fileName, setFileName] = useState<string | null>(null)
-  const input = useRef<HTMLInputElement>(null)
+  const camera = useRef<HTMLInputElement>(null)
 
-  const send = useCallback(async (file: File) => {
+  const send = useCallback(async (input: { text?: string; file?: File }) => {
     setPhase('reading')
     setError(null)
     setResult(null)
     setConfirmed(false)
-    setFileName(file.name)
+    setFileName(input.file?.name ?? null)
     try {
-      const body = new FormData()
-      body.append('file', file)
-      const response = await fetch(apiUrl('/api/extract'), { method: 'POST', body })
-      if (!response.ok) {
-        const text = await response.text().catch(() => '')
-        setError(
-          response.status === 503
-            ? 'Extraction is not configured on this deployment, so nothing was read.'
-            : `The API answered ${response.status}. ${text.slice(0, 180)}`,
-        )
-        setPhase('failed')
-        return
-      }
-      setResult((await response.json()) as ExtractResult)
+      setResult(await extractDocument(input))
       setPhase('ready')
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'The API could not be reached.')
+      setError(
+        caught instanceof ApiError
+          ? caught.status === 503
+            ? 'Extraction is not configured on this deployment, so nothing was read and nothing was guessed.'
+            : `The API answered ${caught.status}. ${caught.body.slice(0, 180)}`
+          : caught instanceof Error
+            ? caught.message
+            : 'The API could not be reached.',
+      )
       setPhase('failed')
     }
   }, [])
@@ -62,37 +59,99 @@ export function ImportPage() {
         does not state. Nothing solves until you confirm.
       </p>
 
-      <div className="mt-8 border border-rail p-6">
-        <label htmlFor="import-file" className="script-label block text-11 text-bone-faint">
-          Document
-        </label>
-        <input
-          ref={input}
-          id="import-file"
-          type="file"
-          accept=".png,.jpg,.jpeg,.pdf,.txt,text/plain,image/*,application/pdf"
-          onChange={(event) => {
-            const file = event.target.files?.[0]
-            if (file) void send(file)
-          }}
-          className="script mt-3 block w-full cursor-pointer text-12 text-bone-dim file:mr-4 file:h-11 file:cursor-pointer file:border file:border-rail file:bg-transparent file:px-4 file:text-11 file:tracking-[0.08em] file:text-bone file:uppercase hover:file:border-bone"
-        />
-        <p className="script mt-3 text-11 text-bone-faint">
-          PNG, JPG, PDF or plain text. Sample documents live in the repository at
-          data/demo/samples.
+      <div className="mt-8 space-y-6 border border-rail p-6">
+        <div>
+          <label htmlFor="import-text" className="script-label block text-11 text-bone-faint">
+            A note, in plain English
+          </label>
+          <textarea
+            id="import-text"
+            data-testid="import-text"
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            rows={3}
+            placeholder="Scene 4 moves to Thursday. The minor is not available on the 8th."
+            className="script mt-3 w-full resize-y border border-edge bg-board-2 px-3 py-2.5 text-13 text-bone placeholder:text-bone-faint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bone"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="import-file" className="script-label block text-11 text-bone-faint">
+            Or a document
+          </label>
+          <input
+            id="import-file"
+            data-testid="import-file"
+            type="file"
+            accept=".png,.jpg,.jpeg,.pdf,.txt,text/plain,image/*,application/pdf"
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              if (file) void send({ text: note, file })
+            }}
+            className="script mt-3 block w-full cursor-pointer text-12 text-bone-dim file:mr-4 file:h-11 file:cursor-pointer file:border file:border-edge file:bg-transparent file:px-4 file:text-11 file:tracking-[0.08em] file:text-bone file:uppercase hover:file:border-bone"
+          />
+          <p className="script mt-3 text-11 text-bone-faint">
+            PNG, JPG, PDF or plain text. Sample documents are in the repository at
+            data/demo/samples.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <ActionButton
+            onClick={() => void send({ text: note })}
+            disabled={phase === 'reading' || note.trim().length === 0}
+            icon={<FileUp className="size-3.5" />}
+            data-testid="import-submit"
+          >
+            {phase === 'reading' ? 'Reading' : 'Read it'}
+          </ActionButton>
+
+          {/* On a phone this opens the camera. It is the file input with a capture hint, which is
+              a real scan on a real device in the installed app, with no native plugin. */}
+          <ActionButton
+            onClick={() => camera.current?.click()}
+            variant="quiet"
+            icon={<Camera className="size-3.5" />}
+          >
+            Scan a call sheet
+          </ActionButton>
+          <input
+            ref={camera}
+            data-testid="import-camera"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="sr-only"
+            tabIndex={-1}
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              if (file) void send({ text: note, file })
+            }}
+          />
+        </div>
+
+        {/* No Capacitor branch. Capacitor is not in this build, and a runtime check for a plugin
+            that cannot be present would put its name in shipped code while docs/claims-audit.md
+            says the name appears nowhere. What ships is the browser capture, which is a real scan
+            on a real phone in the installed app. */}
+        <p className="script text-11 text-bone-faint" data-testid="scan-capability">
+          Scan opens the camera on a phone, in the browser and in the installed app. On a desktop
+          browser it picks a file instead. There is no native document-scanner plugin in this
+          build.
         </p>
       </div>
 
       {phase === 'reading' && (
         <p role="status" className="script mt-6 flex items-center gap-3 text-12 text-bone-dim">
           <FileUp className="size-4" aria-hidden="true" />
-          Reading {fileName}
+          Reading {fileName ?? 'the note'}
         </p>
       )}
 
       {phase === 'failed' && (
         <p
           role="status"
+          data-testid="extract-error"
           className="script mt-6 flex items-start gap-3 border border-flag/60 px-4 py-3 text-12 text-bone"
         >
           <TriangleAlert className="mt-0.5 size-4 shrink-0 text-flag" aria-hidden="true" />
@@ -101,7 +160,7 @@ export function ImportPage() {
       )}
 
       {result && (
-        <section className="mt-8 border border-rail">
+        <section className="mt-8 border border-rail" data-testid="extract-result">
           <header className="script flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-rail bg-board-3 px-5 py-3 text-12">
             <span className="font-bold tracking-[0.1em]">
               {result.status === 'ok' ? 'READ' : 'NEEDS CLARIFICATION'}
@@ -146,11 +205,12 @@ export function ImportPage() {
                   onClick={() => setConfirmed(true)}
                   disabled={confirmed}
                   icon={<Check className="size-3.5" />}
+                  data-testid="import-confirm"
                 >
                   {confirmed ? 'Confirmed' : 'Confirm and solve'}
                 </ActionButton>
                 {confirmed && (
-                  <p className="script text-11 text-bone-dim">
+                  <p className="script text-11 text-bone-dim" data-testid="import-confirmed">
                     Confirmed. Open the board to solve it.
                   </p>
                 )}

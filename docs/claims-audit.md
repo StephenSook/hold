@@ -35,15 +35,31 @@ description and its Built With tags.
 | MiniZinc | `api/hold/instance.py` parses `.dzn` instances; `bench/instances/` | the benchmark data is MiniZinc-formatted and MIT-licensed; HOLD does not run MiniZinc, and no surface says it does |
 | The vendor names D5 keeps out of the runtime | `api/hold/claims.py` `FORBIDDEN`, `api/tests/test_claims.py` | the guard that forbids those names on judge-facing surfaces has to spell them, so the pattern and its test are the only places they appear, and this audit does not repeat them |
 
+## The web app, shipped 2026-09-05
+
+React, Vite, Tailwind, Motion, dnd-kit, TanStack Query and Workbox are imported by `web/` and
+served by the same Cloud Run instance as the API, from `web/dist` through `api/main.py`. This
+section previously said React and Vite appeared in no shipped code, which was true when it was
+written and stopped being true the moment the web app landed. A claims audit that is not
+re-run after a lane ships is a stale document making a confident statement.
+
+| Present | Where | Claimed as |
+|---|---|---|
+| React 19, Vite 7 | `web/package.json`, `web/dist` served by `api/main.py` | the hosted web app |
+| Tailwind v4 | `web/src/styles/theme.css` | not named on a judge surface; it is a build detail |
+| Motion, dnd-kit | `web/src/board/Stripboard.tsx` | the drag and the animated reorder |
+| TanStack Query, Workbox | `web/src/main.tsx`, `web/vite.config.ts` | the PWA and its offline cache |
+
 ## Claimed nowhere and absent
 
-Postgres or Cloud SQL, Firestore, Redis, React, Vite and Capacitor appear in no shipped code and
-on no surface as a present-tense claim. The web app and the native shells are PLAN.md tasks in
-Deem's lane and in Stephen's mobile lane; where a surface mentions them it says they land with
-their own tasks.
+Postgres or Cloud SQL, Firestore, Redis and Capacitor appear in no shipped code and on no
+surface as a present-tense claim. Capacitor specifically: the camera scan is the browser's own
+capture, and no runtime check for a Capacitor plugin ships, so the name is not in the bundle.
+The native shells remain PLAN.md tasks in Stephen's mobile lane.
 
 ## Devpost Built With
 
 `python`, `fastapi`, `or-tools`, `google-cloud-run`, `vertex-ai`, `gemini`, `google-adk`,
-`confluent-cloud`, `ibm-bob`, `github-actions`. Every tag maps to a row above. No tag names a
-library the code does not import, and no tag names a service the project does not run on.
+`confluent-cloud`, `ibm-bob`, `github-actions`, `react`, `typescript`, `vite`, `tailwindcss`.
+Every tag maps to a row above. No tag names a library the code does not import, and no tag names
+a service the project does not run on.
