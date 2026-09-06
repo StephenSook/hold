@@ -44,11 +44,18 @@ export function useEventStream(jobId: string | null, enabled = true) {
     const stream = new EventSource(eventsUrl(jobId, true, 60))
     source.current = stream
 
-    const add = (kind: string, text: string) =>
+    // A message already queued when the job changed will still run this handler with the old
+    // job's closure. Without this guard its updater wins, storage flips back to the old job, and
+    // the new job's replayed lines disappear from a log that looks perfectly healthy.
+    let current = true
+
+    const add = (kind: string, text: string) => {
+      if (!current) return
       setStored((prev) => {
         const base = prev.jobId === jobId ? prev : { jobId, lines: [], dropped: false }
         return { ...base, lines: [...base.lines.slice(-40), { at: Date.now(), kind, text }] }
       })
+    }
 
     const onMessage = (event: MessageEvent<string>) => {
       try {
@@ -71,10 +78,27 @@ export function useEventStream(jobId: string | null, enabled = true) {
     for (const named of ['objective', 'verdict', 'set-event']) {
       stream.addEventListener(named, onMessage as EventListener)
     }
-    stream.onerror = () =>
+    // EventSource retries by itself, so an error is not necessarily the end. Reporting the drop
+    // and then clearing it on reconnect is the honest pair: an earlier version set dropped and
+    // never cleared it, so a stream that recovered kept saying it had closed while new lines
+    // arrived underneath the label.
+    stream.onopen = () => {
+      if (!current) return
+      setStored((prev) => (prev.jobId === jobId && prev.dropped ? { ...prev, dropped: false } : prev))
+    }
+
+    stream.onerror = () => {
+      if (!current) return
       setStored((prev) => ({ ...(prev.jobId === jobId ? prev : { jobId, lines: [] }), dropped: true }))
+      // A closed stream that is also reported closed. Leaving it open to retry while the label
+      // says closed is the combination that lies in both directions at once.
+      if (stream.readyState === EventSource.CLOSED) {
+        source.current = null
+      }
+    }
 
     return () => {
+      current = false
       stream.close()
       source.current = null
     }

@@ -35,6 +35,16 @@ const IDLE: SolveState = { phase: 'idle', jobId: null, result: null, dayMap: nul
 export function useSolve() {
   const [state, setState] = useState<SolveState>(IDLE)
   const cancelled = useRef(false)
+  /**
+   * Which operation currently owns the state.
+   *
+   * An unmount flag alone is not enough. Reset during a solve left the poll running, and it then
+   * painted a live result over a board the person had just reset. Two operations can also overlap
+   * legitimately: publishing a set event while a solve is still polling gives two loops, and
+   * whichever wrote last owned the screen, so the board could show one job's result under
+   * another's id. Every write is now stamped, and a stale stamp writes nothing.
+   */
+  const generation = useRef(0)
 
   useEffect(() => {
     cancelled.current = false
@@ -43,7 +53,25 @@ export function useSolve() {
     }
   }, [])
 
-  const reset = useCallback(() => setState(IDLE), [])
+  /** Take ownership. Any operation already in flight becomes stale from this moment. */
+  const claim = useCallback(() => {
+    generation.current += 1
+    return generation.current
+  }, [])
+
+  /** A setter that only writes while this operation is still the current one. */
+  const writerFor = useCallback(
+    (token: number) => (next: SolveState) => {
+      if (cancelled.current || generation.current !== token) return
+      setState(next)
+    },
+    [],
+  )
+
+  const reset = useCallback(() => {
+    claim()
+    setState(IDLE)
+  }, [claim])
 
   /**
    * Poll a job that already exists to completion.
@@ -51,28 +79,38 @@ export function useSolve() {
    * A set event creates a new job rather than patching the current one, so the board adopts that
    * job the same way it adopts its own solve. Sharing the poll means the two paths cannot drift.
    */
-  const adopt = useCallback(async (jobId: string) => {
-    setState({ ...IDLE, phase: 'solving', jobId })
-    try {
-      await poll(jobId, cancelled, setState)
-    } catch (error) {
-      setState({ ...IDLE, phase: 'failed', jobId, error: describe(error) })
-    }
-  }, [])
+  const adopt = useCallback(
+    async (jobId: string) => {
+      const token = claim()
+      const write = writerFor(token)
+      write({ ...IDLE, phase: 'solving', jobId })
+      try {
+        await poll(jobId, write, () => generation.current === token && !cancelled.current)
+      } catch (error) {
+        write({ ...IDLE, phase: 'failed', jobId, error: describe(error) })
+      }
+    },
+    [claim, writerFor],
+  )
 
-  const solve = useCallback(async (schedule: ScheduleInput) => {
-    setState({ ...IDLE, phase: 'solving' })
-    try {
-      const submitted = await apiFetch<{ job_id: string }>('/api/solve', {
-        method: 'POST',
-        body: JSON.stringify(schedule),
-      })
-      setState({ ...IDLE, phase: 'solving', jobId: submitted.job_id })
-      await poll(submitted.job_id, cancelled, setState)
-    } catch (error) {
-      setState({ ...IDLE, phase: 'failed', error: describe(error) })
-    }
-  }, [])
+  const solve = useCallback(
+    async (schedule: ScheduleInput) => {
+      const token = claim()
+      const write = writerFor(token)
+      write({ ...IDLE, phase: 'solving' })
+      try {
+        const submitted = await apiFetch<{ job_id: string }>('/api/solve', {
+          method: 'POST',
+          body: JSON.stringify(schedule),
+        })
+        write({ ...IDLE, phase: 'solving', jobId: submitted.job_id })
+        await poll(submitted.job_id, write, () => generation.current === token && !cancelled.current)
+      } catch (error) {
+        write({ ...IDLE, phase: 'failed', error: describe(error) })
+      }
+    },
+    [claim, writerFor],
+  )
 
   return { ...state, solve, adopt, reset }
 }
@@ -83,18 +121,24 @@ function describe(error: unknown): string {
   return 'the API could not be reached'
 }
 
-/** One poll loop, shared by a fresh solve and by a job a set event handed back. */
+/**
+ * One poll loop, shared by a fresh solve and by a job a set event handed back.
+ *
+ * `owns` is re-read after every await, not only at the top: a request in flight when the operation
+ * is superseded would otherwise land, and landing is exactly the problem.
+ */
 async function poll(
   jobId: string,
-  cancelled: { current: boolean },
-  setState: (next: SolveState) => void,
+  write: (next: SolveState) => void,
+  owns: () => boolean,
 ): Promise<void> {
   const started = Date.now()
   for (;;) {
-    if (cancelled.current) return
+    if (!owns()) return
     const job = await apiFetch<JobResponse>(`/api/jobs/${jobId}`)
+    if (!owns()) return
     if (job.status === 'done' && job.result) {
-      setState({
+      write({
         phase: 'done',
         jobId: job.job_id,
         result: job.result,
@@ -105,11 +149,11 @@ async function poll(
       return
     }
     if (job.status === 'failed') {
-      setState({ ...IDLE, phase: 'failed', jobId: job.job_id, error: job.error ?? 'the solve failed' })
+      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: job.error ?? 'the solve failed' })
       return
     }
     if (Date.now() - started > 120_000) {
-      setState({ ...IDLE, phase: 'failed', jobId: job.job_id, error: 'the solve did not finish in 120 seconds' })
+      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: 'the solve did not finish in 120 seconds' })
       return
     }
     await new Promise((resolve) => setTimeout(resolve, 700))

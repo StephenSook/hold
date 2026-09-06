@@ -182,3 +182,24 @@ test.describe('an event on set', () => {
     await expect(page.getByTestId('event-log')).toContainText(/in-process|confluent/)
   })
 })
+
+test.describe('operations that overlap', () => {
+  test('resetting during a solve does not let the solve paint the board afterwards', async ({ page }) => {
+    await page.goto('/#/board')
+    await dismissGate(page)
+
+    await page.getByTestId('solve').click()
+    // Reset while it is still solving. An unmount flag alone did not cover this: the poll kept
+    // running and painted a live result over a board the person had just reset.
+    await expect(page.getByTestId('solve')).toContainText(/Solving/i, { timeout: 10_000 })
+    await page.getByTestId('reset').click()
+
+    // The board is back to the hand-built order and stays there.
+    await expect(page.getByTestId('figure-hold-days')).toContainText(String(FACTS.hold_days_before))
+    await expect(page.getByTestId('pass2-status')).toContainText('not run')
+    await page.waitForTimeout(8_000)
+    await expect(page.getByTestId('pass2-status')).toContainText('not run')
+    await expect(page.getByTestId('figure-hold-days')).toContainText(String(FACTS.hold_days_before))
+    await expect(page.getByTestId('solve-error')).toHaveCount(0)
+  })
+})
