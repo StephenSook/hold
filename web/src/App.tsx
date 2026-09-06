@@ -4,6 +4,8 @@ import { Gate } from './components/Gate'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
+import { OfflineBanner } from './offline/OfflineBanner'
+import { UpdatePrompt } from './offline/UpdatePrompt'
 
 const Landing = lazy(() => import('./pages/Landing').then((m) => ({ default: m.Landing })))
 const BoardPage = lazy(() => import('./pages/BoardPage').then((m) => ({ default: m.BoardPage })))
@@ -27,6 +29,8 @@ export function App() {
       </a>
       <Gate />
       <Header />
+      <OfflineBanner />
+      <UpdatePrompt />
       <main id="main" tabIndex={-1} className="min-h-[60vh] outline-none">
         <Suspense fallback={<RouteFallback />}>
           <Routes>
