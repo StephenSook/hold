@@ -139,17 +139,20 @@ def main() -> int:
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
         log = run.stdout + run.stderr
         exit_code = run.returncode
-    # A gate whose failure is undiagnosable is a gate that gets disabled. The first scheduled run of
-    # this on CI reported "passed 0, failed 4" in twenty two seconds and printed nothing else,
-    # because the log was captured and only parsed: every model call had failed and the run said so
-    # nowhere. On any failure the log goes to stderr, where the run's own page shows it.
-    if exit_code:
-        print(_tail(log), file=sys.stderr)
+    # A gate whose failure is undiagnosable is a gate that gets disabled. The first run of this on
+    # CI reported "passed 0, failed 4" in twenty two seconds and printed nothing else, because the
+    # log is captured and only parsed: every model call had failed and the run said so nowhere.
+    #
+    # The condition is the FAILED COUNT, not the exit code. Gating on the exit code was the first
+    # attempt and printed nothing on the very next run, because `adk eval` exits 0 whether its
+    # cases pass or fail; the fix for an invisible failure was itself invisible.
     try:
         summary = parse_summary(log)
     except ValueError:
         print(_tail(log), file=sys.stderr)
         raise
+    if summary["failed"] or exit_code:
+        print(_tail(log), file=sys.stderr)
     history = pick_history(history_dir, summary["passed"], summary["failed"], not_before=started)
     data = json.loads(history.read_text(encoding="utf-8"))
     summary["cases"] = parse_history(data)
