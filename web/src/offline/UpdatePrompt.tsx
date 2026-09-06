@@ -26,7 +26,7 @@ export function UpdatePrompt() {
     <div
       role="status"
       data-testid="update-prompt"
-      className="script sticky top-14 z-40 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rail bg-board-3 px-5 py-2.5 text-11 text-bone sm:px-8"
+      className="script sticky top-[var(--header-h)] z-40 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rail bg-board-3 px-5 py-2.5 text-11 text-bone sm:px-8"
     >
       <RefreshCw className="size-3.5 shrink-0" aria-hidden="true" />
       <span>A newer version of HOLD is available.</span>

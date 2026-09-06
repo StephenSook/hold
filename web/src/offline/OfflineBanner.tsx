@@ -20,7 +20,7 @@ export function OfflineBanner() {
     <div
       role="status"
       data-testid="offline-banner"
-      className="script sticky top-14 z-40 flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-flag bg-flag-deep px-5 py-2.5 text-11 text-bone sm:px-8"
+      className="script sticky top-[var(--header-h)] z-40 flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-flag bg-flag-deep px-5 py-2.5 text-11 text-bone sm:px-8"
     >
       <CloudOff className="size-3.5 shrink-0" aria-hidden="true" />
       <span className="font-bold tracking-[0.1em]">OFFLINE</span>

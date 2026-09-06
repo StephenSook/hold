@@ -109,6 +109,28 @@
   --radius-slug: 2px;
 }
 
+/*
+  The device's own furniture, as a length the layout can use.
+
+  index.html asks for viewport-fit=cover, which is what lets the board run edge to edge, and the
+  price of that is the page also runs UNDER the status bar and the home indicator. On an iPhone
+  with a Dynamic Island the header sat beneath it: the clock printed over the section names and
+  the island covered the middle of the row. In a desktop browser and on an emulator without a
+  cutout there is nothing to see, which is why this survived until the app was run on a phone.
+
+  env() resolves to 0px wherever there is no inset, so the same rule is correct everywhere and
+  the header needs no platform branch.
+*/
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  /* The height of the header including whatever the device puts above it, so anything that
+     sticks below the header has one number to sit against rather than its own copy of 3.5rem. */
+  --header-h: calc(3.5rem + var(--safe-top));
+}
+
 /* Archivo's width axis is the reason it is here. Display type runs wide, the way signage
    and title cards do, which no default interface face reaches for. */
 @utility display-wide {

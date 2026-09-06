@@ -9,7 +9,7 @@ const REPO = 'https://github.com/StephenSook/hold'
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-rail">
-      <div className="mx-auto grid max-w-[1440px] gap-10 px-5 py-14 sm:grid-cols-[1fr_auto] sm:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-10 px-5 pt-14 pb-[calc(3.5rem+var(--safe-bottom))] sm:grid-cols-[1fr_auto] sm:px-8">
         <div className="max-w-md">
           <div className="flex items-center gap-2.5">
             <HoldMark className="h-5 w-5 text-bone" />
