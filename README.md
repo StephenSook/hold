@@ -91,8 +91,8 @@ uv run pytest api/tests -q -m "not network"            # the hermetic suite, all
 The first command rewrites `bench/results.json` with the run's own SHA and timings; the optima
 themselves do not move. `git checkout bench/results.json` puts it back.
 
-Build the web app before the hermetic suite or 11 of its tests skip: they check what the server
-serves out of `web/dist`, and without a build there is nothing to serve.
+Build the web app before the hermetic suite, or eleven of its tests skip: they check what the
+server serves out of the web build directory, and without a build there is nothing to serve.
 
 Then, in one terminal:
 
