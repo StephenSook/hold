@@ -43,6 +43,12 @@
       </array>
     </dict>
 	</dict>
+	<!-- The app makes ordinary HTTPS calls to its own API and uses no cryptography of its own,
+	     which is the exemption every such app qualifies for. Declaring it here rather than
+	     answering the question per upload stops each build parking in Missing Compliance, where
+	     it is invisible to testers and nothing says why. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
