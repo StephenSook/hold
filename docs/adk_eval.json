@@ -64,10 +64,10 @@
       }
     }
   },
-  "history_file": "hold_agent_hold_extraction_v1_1788720834.3478222.evalset_result.json",
-  "run_at": "2026-09-06T18:53:54+00:00",
+  "history_file": "hold_agent_hold_extraction_v1_1788727015.6031911.evalset_result.json",
+  "run_at": "2026-09-06T20:36:55+00:00",
   "adk_eval_exit_code": 0,
-  "recorded_at": "2026-09-06T18:53:56+00:00",
+  "recorded_at": "2026-09-06T20:36:56+00:00",
   "model": "gemini-3.1-flash-lite",
   "models_invoked": [
     "gemini-2.5-flash",
@@ -79,6 +79,6 @@
     "final_response_match_v2": 0.8
   },
   "agent_module": "api/agents/hold_agent",
-  "agent_fingerprint": "123096fb69d3529973a760d8404b4c1f14969ac868948b0e6d31d171bb542866",
+  "agent_fingerprint": "aa221ce927776484f89b7a92e9a24677f59daa2ea999b7f919832a9600b5aa01",
   "written_by": "scripts/adk_eval.py from a real adk eval run"
 }

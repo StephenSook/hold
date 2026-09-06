@@ -307,8 +307,19 @@ class EventProposalOut(EventProposal):
 
     @classmethod
     def of(cls, proposal: EventProposal) -> EventProposalOut:
-        payload = proposal.event_payload() if proposal.status == "ok" else {}
-        return cls(**proposal.model_dump(), payload=payload)
+        """The proposal on the wire, with its payload computed AFTER validation, never before.
+
+        `model_construct` and `model_copy(update=...)` both skip an after-validator, which is
+        pydantic's documented behaviour and not something this class can prevent. What it can
+        prevent is the incoherent result: computing the payload from the incoming object and then
+        letting the constructor demote it produced `needs_clarification` carrying a live payload,
+        which is a shape no reader should ever have to reason about. Building first and reading
+        the built object second means the status and the payload always agree.
+        """
+        built = cls(**proposal.model_dump(), payload={})
+        if built.status == "ok":
+            built.payload = built.event_payload()
+        return built
 
 
 class SetEvent(BaseModel):

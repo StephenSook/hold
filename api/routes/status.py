@@ -26,6 +26,11 @@ from api.hold.streaming import BRIDGE
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_TTL_S = 600.0
 
+# Every route that invokes the model. This is the source for the sentence above, so adding a
+# fourth model route and forgetting this list fails the test that holds the two together rather
+# than quietly publishing a claim that is one route short.
+MODEL_ROUTES: tuple[str, ...] = ("/api/extract", "/api/ask", "/api/interpret-event")
+
 router = APIRouter()
 _lock = threading.Lock()
 _cached: dict[str, Any] | None = None
@@ -65,11 +70,16 @@ def build_status() -> dict[str, Any]:
             "mode": mode,
             "extraction": {
                 "configured": configured,
-                "reason": None if configured else ("HOLD_FAKE_EXTERNALS=1: fixtures answer /api/extract" if fake else "GOOGLE_CLOUD_PROJECT unset: /api/extract answers 503"),
+                "reason": None if configured else ("HOLD_FAKE_EXTERNALS=1: fixtures answer the model routes" if fake else "GOOGLE_CLOUD_PROJECT unset: the model routes answer 503"),
             },
             "invoked_by_this_endpoint": [],
+            # The list of model routes is generated, not typed. It said /api/extract for as long as
+            # extraction was the only one, and stayed saying it after two more shipped, which made
+            # this a false sentence on the endpoint the judge page sends people to read.
+            "model_routes": list(MODEL_ROUTES),
             "note": "This endpoint reads committed files and invokes no model and no broker; Gemini is invoked by "
-            "/api/extract and Confluent by /api/set-events.",
+            + ", ".join(MODEL_ROUTES)
+            + " and Confluent by /api/set-events.",
         },
     }
 

@@ -80,8 +80,10 @@ writes from a real run and CI recomputes; a mismatch fails the build.
    that source, except one that its source does not state: see the hold-day multiplier below. Two
    `adk eval` sets, one for the tool-bearing agent and one for the event interpreter, each pass
    4 of 4 cases at the last recorded run. CI fails on a failing case, on a case nobody scored,
-   and on a record whose fingerprint no longer matches the agent that ships, so a rewritten
-   prompt cannot inherit an old score. A scheduled workflow runs both sets against Vertex.
+   and on a record whose fingerprint no longer matches the agent that ships. That fingerprint is
+   over the instruction, the model, the criteria, the eval set, and the SOURCE of every tool, of
+   the guard callback and of the response schema, so neither a rewritten prompt nor a rewritten
+   tool can inherit an old score. A scheduled workflow runs both sets against Vertex.
 
 ## Architecture, as the runtime reports it
 

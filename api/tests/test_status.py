@@ -80,3 +80,47 @@ def test_status_note_describes_shipped_routes_not_pending_tasks(client: TestClie
     note = client.get("/api/status").json()["runtime"]["note"]
     assert "once tasks" not in note
     assert "/api/extract" in note and "/api/set-events" in note
+
+
+def test_the_status_note_names_every_route_that_invokes_the_model() -> None:
+    """The sentence on /api/status is a claim, and it was false for two routes.
+
+    It said Gemini is invoked by /api/extract, and stayed saying that after /api/ask and
+    /api/interpret-event shipped, on the endpoint the judge page tells a judge to open. The
+    sentence is generated from MODEL_ROUTES now, and this holds MODEL_ROUTES to the routes that
+    actually reach the model: every module under api/routes that imports the agent runner must be
+    named in it, and nothing else may be.
+    """
+    import ast
+
+    from api.routes.status import MODEL_ROUTES
+
+    routes_dir = Path(__file__).resolve().parents[1] / "routes"
+    calls_the_model: set[str] = set()
+    for module in sorted(routes_dir.glob("*.py")):
+        tree = ast.parse(module.read_text(encoding="utf-8"))
+        # Importing the runner is not invoking the model: /api/status imports is_configured to
+        # report whether the model COULD be called, which is the opposite of calling it. The
+        # predicate is importing one of the three entry points that actually run an agent.
+        entry_points = {"extract", "ask", "interpret_event"}
+        invokes = any(
+            isinstance(node, ast.ImportFrom)
+            and (node.module or "").startswith("api.agents.hold_agent.runner")
+            and any(alias.name in entry_points for alias in node.names)
+            for node in ast.walk(tree)
+        )
+        if not invokes:
+            continue
+        for node in ast.walk(tree):
+            # The decorator's first argument is the path, which is the thing the sentence names.
+            for decorator in getattr(node, "decorator_list", []):
+                if isinstance(decorator, ast.Call) and decorator.args and isinstance(decorator.args[0], ast.Constant):
+                    path = decorator.args[0].value
+                    if isinstance(path, str) and path.startswith("/api/"):
+                        calls_the_model.add(path)
+
+    assert calls_the_model, "no route was found importing the agent runner; this check walks the wrong tree"
+    assert set(MODEL_ROUTES) == calls_the_model, (
+        f"MODEL_ROUTES is {sorted(MODEL_ROUTES)} but the routes importing the agent runner are "
+        f"{sorted(calls_the_model)}; the sentence on /api/status would be wrong"
+    )

@@ -33,7 +33,17 @@ export function BoardPage() {
   // read on every render: the board owns it from here, and reset has to be able to put it down.
   // As a memo it could not, and the banner outlived the schedule it described until a remount.
   const [imported, setImported] = useState<ScheduleInput | null>(() => getImported())
-  const [schedule, setSchedule] = useState<ScheduleInput>(imported ?? DEMO.schedule)
+  const [localSchedule, setLocalSchedule] = useState<ScheduleInput>(imported ?? DEMO.schedule)
+  /**
+   * The plan this board is working on.
+   *
+   * Derived, not stored, and the server's copy always wins. A set event edits the plan on the
+   * server and re-solves the result, so after one, any copy this page kept is a plan that no
+   * longer exists: sending it back undid the event and put a dropped scene on screen again with
+   * no message. Deriving means there is one answer to "which plan is this" on every path,
+   * including a failed job, rather than an effect per path trying to keep two copies agreeing.
+   */
+  const schedule = solver.schedule ?? localSchedule
   const [transport, setTransport] = useState<string | null>(null)
 
   /**
@@ -68,7 +78,6 @@ export function BoardPage() {
 
   const applySolved = useCallback(
     (next: ScheduleInput, dayMap: Record<string, string[]>, pass1: Verdict[]) => {
-      setSchedule(next)
       setRows(withTotals(buildRows(next, dayMap, pass1), next))
       setOrderVersion((v) => v + 1)
     },
@@ -122,7 +131,7 @@ export function BoardPage() {
     // silently reloading someone's document after they asked for a reset would be lying twice.
     clearImported()
     setImported(null)
-    setSchedule(DEMO.schedule)
+    setLocalSchedule(DEMO.schedule)
     setRows(withTotals(buildRows(DEMO.schedule, DEMO.before.dayMap, DEMO.before.verdicts), DEMO.schedule))
     setOrderVersion(0)
     laidOut.current = null
@@ -158,9 +167,16 @@ export function BoardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
+          {/*
+            Also disabled while a set event is in flight. `solver.phase` only becomes 'solving'
+            once the event's job has been created and adopted, so between the click and the
+            response the board looked idle and Solve would have posted the pre-event schedule.
+            Depending on which request the server saw first that is either a board painted from
+            one plan while the server's latest is another, or a 409 on the event.
+          */}
           <ActionButton
             onClick={onSolve}
-            disabled={solver.phase === 'solving'}
+            disabled={solver.phase === 'solving' || setEvent.pending !== null}
             icon={<Play className="size-3.5" />}
             data-testid="solve"
           >

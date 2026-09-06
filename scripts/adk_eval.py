@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib
+import inspect
 import json
 import os
 import re
@@ -94,23 +95,59 @@ def pick_history(history_dir: Path, passed: int, failed: int, not_before: float 
 
 
 def fingerprint(agent_dir: Path) -> str:
-    """What was scored, in one hash: the agent's instruction and tools, the model, the criteria and
-    the eval set. Change any of them and the recorded result stops describing the current agent."""
-    module = importlib.import_module(f"api.agents.{agent_dir.name}")
+    """What was scored, in one hash.
+
+    The first version hashed the instruction, the tool NAMES, the model, the criteria and the eval
+    set, and the README claimed it covered "the agent that ships". It did not. Renaming nothing and
+    rewriting the body of a tool, the guard callback, or the response schema left the hash
+    unchanged, so a recorded score survived changes that plainly alter what the agent does. The
+    claim was wider than the check, which is the failure this whole gate exists to prevent, so the
+    check moved rather than the claim: the SOURCE of each tool, of the before_tool_callback and of
+    the response schema is hashed, not just its name.
+
+    It also resolves the agent through `<pkg>.agent`, which is the module `adk eval` itself loads,
+    and asserts the package re-export is the same object. Hashing `__init__` while the eval scored
+    `agent.py` meant the two could point at different agents and the gate would not notice.
+    """
+    module = importlib.import_module(f"api.agents.{agent_dir.name}.agent")
     agent = module.root_agent
+    package = importlib.import_module(f"api.agents.{agent_dir.name}")
+    if package.root_agent is not agent:
+        raise ValueError(
+            f"api.agents.{agent_dir.name} and its agent module export different agents; "
+            "adk eval scores the agent module and this gate would be describing the other one"
+        )
     material = json.dumps(
         {
             "agent": agent.name,
             "model": str(agent.model),
             "instruction": str(agent.instruction),
-            "tools": sorted(getattr(t, "__name__", getattr(t, "name", repr(t))) for t in agent.tools),
-            "output_schema": getattr(agent.output_schema, "__name__", None),
+            "tools": sorted(_source_of(t) for t in agent.tools),
+            "before_tool_callback": _source_of(agent.before_tool_callback),
+            "output_schema": _source_of(agent.output_schema),
             "criteria": json.loads((agent_dir / "test_config.json").read_text(encoding="utf-8"))["criteria"],
             "evalset": (agent_dir / "evalset.json").read_text(encoding="utf-8"),
         },
         sort_keys=True,
     )
     return hashlib.sha256(material.encode("utf-8")).hexdigest()
+
+
+def _source_of(obj: object) -> str:
+    """A name and its source text, or just a name when the source cannot be read.
+
+    A callback registered as a list, a partial, or a builtin has no readable source; those fall
+    back to the repr, which is worse than nothing only if it is silent about it, so it is not.
+    """
+    if obj is None:
+        return "none"
+    if isinstance(obj, list):
+        return " | ".join(_source_of(item) for item in obj)
+    name = getattr(obj, "__name__", getattr(obj, "name", repr(obj)))
+    try:
+        return f"{name}::{inspect.getsource(obj)}"  # type: ignore[arg-type]
+    except (OSError, TypeError):
+        return f"{name}::<source unavailable>"
 
 
 def _tail(log: str, lines: int = 60) -> str:

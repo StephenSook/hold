@@ -160,12 +160,16 @@ async function poll(
       })
       return
     }
+    // The schedule is carried on the failure paths too. A set event's job can fail after the
+    // server has already made its edited schedule the plan every later event edits, and dropping
+    // the field here left the board holding the pre-event copy: the next Solve then posted it and
+    // undid the event, which is the defect the adopt fix removed by the other door.
     if (job.status === 'failed') {
-      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: job.error ?? 'the solve failed' })
+      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: job.error ?? 'the solve failed', schedule: job.schedule ?? null })
       return
     }
     if (Date.now() - started > 120_000) {
-      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: 'the solve did not finish in 120 seconds' })
+      write({ ...IDLE, phase: 'failed', jobId: job.job_id, error: 'the solve did not finish in 120 seconds', schedule: job.schedule ?? null })
       return
     }
     await new Promise((resolve) => setTimeout(resolve, 700))

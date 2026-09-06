@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CloudRain, HelpCircle, Sparkles, UserX, Scissors } from 'lucide-react'
 import { ActionButton } from '@/components/Action'
 import { useInterpretEvent } from '@/state/useInterpretEvent'
@@ -57,6 +57,23 @@ export function SetEvents({
 }) {
   const [sentence, setSentence] = useState('')
   const agent = useInterpretEvent()
+
+  /*
+   * A reading belongs to the plan it was read against, and only to that one.
+   *
+   * The proposal used to survive a re-solve, so a reading of "cut scene 6" taken before someone
+   * pressed the Scene dropped button was still on screen afterwards with a live publish button
+   * under it, and pressing it asked the engine to drop a scene that was already gone. The engine
+   * refuses and now says so, but a confirm step that can only fail is not a confirm step.
+   *
+   * Keyed on the plan id, so a new plan drops the reading rather than carrying it forward.
+   */
+  const readAgainst = useRef<string | null>(jobId)
+  useEffect(() => {
+    if (readAgainst.current === jobId) return
+    readAgainst.current = jobId
+    agent.clear()
+  }, [jobId, agent])
 
   return (
     <section className="mt-10 border border-rail">
@@ -171,7 +188,18 @@ export function SetEvents({
             <p className="script mt-3 text-11 text-bone-dim" data-testid="interpret-typed">
               {agent.proposal.kind}   {describe(agent.proposal)}
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            {/*
+              A judge arriving from the judge page's agent step has not necessarily pressed Solve,
+              and an event needs a plan to edit. Reading the sentence still works and is worth
+              seeing, so what changes is the confirm step: with no plan the panel says what to do
+              instead of drawing a primary button at 45 percent opacity that cannot be pressed.
+            */}
+            {disabled && pending === null && (
+              <p className="script mt-4 text-11 text-bone-dim" data-testid="interpret-needs-plan">
+                Press Solve first. An event edits a plan, so there has to be one to edit.
+              </p>
+            )}
+            <div className={`mt-4 flex flex-wrap items-center gap-3${disabled && pending === null ? ' hidden' : ''}`}>
               <ActionButton
                 disabled={disabled || pending !== null}
                 onClick={() => {
