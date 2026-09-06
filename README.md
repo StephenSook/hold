@@ -151,7 +151,7 @@ git clone https://github.com/StephenSook/hold && cd hold
 uv sync
 uv run pytest api/tests/test_residual.py -v            # proof 1: the benchmark residual, 8/8
 uv run python scripts/facts.py --check                 # proof 2: recompute FACTS from a real run
-cd web && npm ci && npm run build && npm run test && cd ..   # the web app, and its 31 tests
+cd web && npm ci && npm run build && npm run test && cd ..   # the web app, and its unit tests
 uv run pytest api/tests -q -m "not network"            # the hermetic suite, all of it
 ```
 
