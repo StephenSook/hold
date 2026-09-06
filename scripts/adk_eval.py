@@ -113,6 +113,13 @@ def fingerprint(agent_dir: Path) -> str:
     return hashlib.sha256(material.encode("utf-8")).hexdigest()
 
 
+def _tail(log: str, lines: int = 60) -> str:
+    """The end of the run log, labelled, for a failure message. The whole log can be megabytes of
+    per-invocation detail; the reason a run failed is at the end of it."""
+    tail = "\n".join(log.splitlines()[-lines:])
+    return f"--- last {lines} lines of the adk eval log ---\n{tail}\n--- end of log ---"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--log", type=Path, help="parse this log instead of running adk eval")
@@ -132,7 +139,17 @@ def main() -> int:
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
         log = run.stdout + run.stderr
         exit_code = run.returncode
-    summary = parse_summary(log)
+    # A gate whose failure is undiagnosable is a gate that gets disabled. The first scheduled run of
+    # this on CI reported "passed 0, failed 4" in twenty two seconds and printed nothing else,
+    # because the log was captured and only parsed: every model call had failed and the run said so
+    # nowhere. On any failure the log goes to stderr, where the run's own page shows it.
+    if exit_code:
+        print(_tail(log), file=sys.stderr)
+    try:
+        summary = parse_summary(log)
+    except ValueError:
+        print(_tail(log), file=sys.stderr)
+        raise
     history = pick_history(history_dir, summary["passed"], summary["failed"], not_before=started)
     data = json.loads(history.read_text(encoding="utf-8"))
     summary["cases"] = parse_history(data)
