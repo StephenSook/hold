@@ -2,13 +2,25 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { HoldMark } from './HoldMark'
 import { SwapText } from './SwapText'
 import { ThemeToggle } from './ThemeToggle'
+import { illegalDaysBefore } from '@/state/demo'
 import { cn } from '@/lib/cn'
 
+/**
+ * Day points at the day that cannot legally be shot, not at day one.
+ *
+ * Day one of the demo is legal, holds a single scene and demonstrates nothing: a reader who
+ * clicks Day landed on the least interesting screen in the product. The illegal day is the one
+ * carrying seven violations and the statute text, which is the thing worth showing. Derived from
+ * the fixture rather than typed, so it follows the demo instead of going stale beside it.
+ *
+ * `match` exists because the link is no longer a prefix of every day route: with /day/3 in the
+ * bar, browsing to /day/1 would leave Day unlit while the reader is plainly on a day.
+ */
 const NAV = [
-  { to: '/board', label: 'Board' },
-  { to: '/day/0', label: 'Day' },
-  { to: '/import', label: 'Import' },
-  { to: '/judge', label: 'Judge' },
+  { to: '/board', label: 'Board', match: '/board' },
+  { to: `/day/${illegalDaysBefore[0]?.day ?? 0}`, label: 'Day', match: '/day' },
+  { to: '/import', label: 'Import', match: '/import' },
+  { to: '/judge', label: 'Judge', match: '/judge' },
 ]
 
 /**
@@ -34,7 +46,7 @@ export function Header() {
 
         <nav className="flex min-w-0 items-center gap-3.5 overflow-x-auto sm:gap-5" aria-label="Sections">
           {NAV.map((item) => {
-            const active = pathname === item.to || pathname.startsWith(`${item.to}/`)
+            const active = pathname === item.match || pathname.startsWith(`${item.match}/`)
             return (
               <NavLink
                 key={item.to}

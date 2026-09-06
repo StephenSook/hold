@@ -215,10 +215,21 @@ export function BoardPage() {
               from={String(DEMO.before.holdDays)}
               to={solvedPass2 ? String(solvedPass2.hold_days) : String(DEMO.before.holdDays)}
             />
+            {/*
+              Before a solve this figure states the problem in money rather than reporting its own
+              absence. "Payroll removed: not solved" was the second thing a reader saw on the
+              primary screen, and it read as something broken rather than as something not yet
+              asked for. The hold cost of the plan currently on the board is a true and more
+              useful number: it is what these four hold days cost at the published day rate, and
+              it is the same figure that becomes "removed" once the solver has run.
+            */}
             <Figure
               testId="figure-payroll"
-              label="Payroll removed"
-              value={solvedPass2 ? dollars(DEMO.before.holdingCents - solvedPass2.holding_cents) : 'not solved'}
+              label={solvedPass2 ? 'Payroll removed' : 'Hold day cost'}
+              value={dollars(
+                solvedPass2 ? DEMO.before.holdingCents - solvedPass2.holding_cents : DEMO.before.holdingCents,
+              )}
+              source={solvedPass2 ? undefined : 'this plan, at the published day rate'}
             />
           </>
         )}

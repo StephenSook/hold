@@ -1,6 +1,6 @@
 import { ExternalLink } from 'lucide-react'
 import { useStatus } from '@/hooks/useStatus'
-import { DEMO, payrollRemovedCents } from '@/state/demo'
+import { DEMO, illegalDaysBefore, payrollRemovedCents } from '@/state/demo'
 import { dollars } from '@/lib/format'
 
 const REPO = 'https://github.com/StephenSook/hold'
@@ -44,7 +44,7 @@ export function JudgePage() {
     {
       title: 'Open the illegal day',
       body: 'Every rule it breaks, with the citation, the limit, the value we computed, how far over it is, and the verbatim sentence from the statute. Expand any rule to read the law rather than our summary of it.',
-      href: `#/day/${DEMO.before.verdicts.find((v) => v.status === 'ILLEGAL')?.day ?? 3}`,
+      href: `#/day/${illegalDaysBefore[0]?.day ?? 0}`,
       label: 'The verdict',
     },
     {
