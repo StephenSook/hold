@@ -15,9 +15,20 @@ fi
 
 FOUND=$(echo "$FILES" | python3 -c "
 import sys, os
+
+# The gate reads bytes, so a compressed image can carry the em-dash sequence by chance and turn
+# the build red for a reason that has nothing to do with prose. Roughly one file in thirty at
+# half a megabyte. Binary files carry no prose, so they are skipped by extension, and anything
+# without a known binary extension is still checked as before.
+BINARY = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.pdf', '.woff', '.woff2',
+          '.ttf', '.otf', '.mp4', '.mov', '.webm', '.mp3', '.wav', '.zip', '.gz', '.jks',
+          '.keystore', '.wasm'}
+
 found = []
 for path in sys.stdin.read().splitlines():
     if not os.path.isfile(path):
+        continue
+    if os.path.splitext(path)[1].lower() in BINARY:
         continue
     try:
         with open(path, 'rb') as f:
