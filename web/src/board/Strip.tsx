@@ -45,6 +45,7 @@ export const Strip = forwardRef<HTMLDivElement, StripProps>(function Strip(
     <div
       ref={ref}
       {...rest}
+      data-testid={`strip-${scene.id}`}
       data-scene={scene.id}
       data-colour={colour}
       className={cn(

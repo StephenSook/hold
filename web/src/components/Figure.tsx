@@ -12,6 +12,7 @@ export function Figure({
   to,
   source,
   className,
+  testId,
 }: {
   label: string
   value?: string
@@ -19,9 +20,10 @@ export function Figure({
   to?: string
   source?: string
   className?: string
+  testId?: string
 }) {
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <div className={cn('flex flex-col gap-1.5', className)} data-testid={testId}>
       <dt className="script-label text-10 text-bone-faint">{label}</dt>
       <dd className="script flex items-baseline gap-2 text-bone">
         {from !== undefined && from !== to ? (

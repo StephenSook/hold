@@ -79,6 +79,7 @@ function Violation({ violation, inCore }: { violation: ViolationRecord; inCore: 
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        data-testid={`violation-${violation.rule_id}`}
         className="group flex w-full cursor-pointer items-start gap-3 px-5 py-4 text-left transition-colors hover:bg-board-2"
       >
         <span className="mt-0.5 shrink-0 text-bone-faint transition-colors group-hover:text-bone">

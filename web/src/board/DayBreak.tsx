@@ -47,6 +47,7 @@ export const DayBreak = forwardRef<HTMLDivElement, DayBreakProps>(function DayBr
     <div
       ref={ref}
       {...rest}
+      data-testid={`day-break-${day}`}
       data-day={day}
       data-status={status ?? 'EMPTY'}
       className={cn(
@@ -97,6 +98,7 @@ export const DayBreak = forwardRef<HTMLDivElement, DayBreakProps>(function DayBr
           <button
             type="button"
             onClick={() => onOpenVerdict?.(day)}
+            data-testid={`open-verdict-${day}`}
             className="flex cursor-pointer items-center gap-1.5 bg-bone px-2 py-0.5 font-bold text-flag-deep transition-opacity hover:opacity-85"
           >
             <CircleSlash className="size-3.5" aria-hidden="true" />

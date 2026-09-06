@@ -15,6 +15,8 @@ interface Shared {
   children: string
   variant?: 'primary' | 'quiet'
   className?: string
+  /** Forwarded explicitly. A component does not receive data-* attributes unless it asks. */
+  'data-testid'?: string
 }
 
 const base =
@@ -44,17 +46,23 @@ function Inner({ icon, children }: { icon?: ReactNode; children: string }) {
   )
 }
 
-export function ActionLink({ to, icon, children, variant = 'primary', className }: Shared & { to: string }) {
+export function ActionLink({ to, icon, children, variant = 'primary', className, ...rest }: Shared & { to: string }) {
   return (
-    <Link to={to} className={cn(base, skin[variant], className)}>
+    <Link to={to} className={cn(base, skin[variant], className)} data-testid={rest['data-testid']}>
       <Inner icon={icon}>{children}</Inner>
     </Link>
   )
 }
 
-export function ActionAnchor({ href, icon, children, variant = 'quiet', className }: Shared & { href: string }) {
+export function ActionAnchor({ href, icon, children, variant = 'quiet', className, ...rest }: Shared & { href: string }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={cn(base, skin[variant], className)}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(base, skin[variant], className)}
+      data-testid={rest['data-testid']}
+    >
       <Inner icon={icon}>{children}</Inner>
     </a>
   )
@@ -68,12 +76,14 @@ export function ActionButton({
   className,
   disabled,
   type = 'button',
+  ...rest
 }: Shared & { onClick?: () => void; disabled?: boolean; type?: 'button' | 'submit' }) {
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
+      data-testid={rest['data-testid']}
       className={cn(base, skin[variant], disabled && 'cursor-not-allowed opacity-45', className)}
     >
       <Inner icon={icon}>{children}</Inner>

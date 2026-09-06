@@ -10,7 +10,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { LayoutGroup, motion } from 'motion/react'
@@ -91,6 +91,7 @@ function SortableRow({
       <Strip
         ref={setNodeRef}
         style={style}
+        data-day={row.day}
         scene={row.scene}
         cast={schedule.cast}
         flagged={flaggedDays.has(row.day)}
@@ -162,7 +163,11 @@ export function Stripboard({
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
-      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+      // Vertical only. restrictToParentElement was here too and it silently broke the keyboard
+      // path: it clamps the transform to the active node's parent rect, so an arrow key could
+      // never move a strip out of its own row and the lift announced itself as being over itself.
+      // A pointer drag looked fine throughout, which is why it survived until the golden path.
+      modifiers={[restrictToVerticalAxis]}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onDragCancel={() => setActiveId(null)}
@@ -181,7 +186,11 @@ export function Stripboard({
     >
       <LayoutGroup>
         <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-          <ul aria-label={label} className="board-surface relative isolate flex flex-col bg-board-2">
+          <ul
+            aria-label={label}
+            data-testid="stripboard"
+            className="board-surface relative isolate flex flex-col bg-board-2"
+          >
             {rows.map((row) => (
               <SortableRow
                 key={row.id}

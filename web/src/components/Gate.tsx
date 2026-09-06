@@ -93,7 +93,7 @@ export function Gate({ onOpened }: { onOpened?: () => void }) {
   return (
     <AnimatePresence onExitComplete={onOpened}>
       {closed && (
-        <motion.div key="gate" className="fixed inset-0 z-[200]" aria-hidden="true" initial={false}>
+        <motion.div key="gate" data-testid="gate" className="fixed inset-0 z-[200]" aria-hidden="true" initial={false}>
           {/* Four panels. Each carries a hairline on its inner edge, so what the eye reads on
               opening is four rules retreating, which is what a gate does. */}
           <motion.div

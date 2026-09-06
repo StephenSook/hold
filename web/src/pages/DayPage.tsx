@@ -70,7 +70,7 @@ export function DayPage() {
       </header>
 
       {verdict ? (
-        <div className="mt-7 border border-rail">
+        <div className="mt-7 border border-rail" data-testid="day-verdict">
           <VerdictCard verdict={verdict} date={shootDate(shootDay.date)} />
         </div>
       ) : (

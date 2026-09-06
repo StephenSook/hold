@@ -73,7 +73,7 @@ export function JudgePage() {
             {data && `computed ${data.computed_at.replace('T', ' ').replace('+00:00', ' UTC')}`}
           </span>
         </header>
-        <dl className="grid gap-x-8 gap-y-6 px-5 py-6 sm:grid-cols-3">
+        <dl className="grid gap-x-8 gap-y-6 px-5 py-6 sm:grid-cols-3" data-testid="status-headline">
           <Stat
             label="Benchmark matched"
             value={data?.benchmark_matched ?? '8/8'}
