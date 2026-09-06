@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { ApiError, apiFetch } from '@/lib/api'
-import type { SetEventKind } from '@/types/contracts'
+import type { SetEventKind, SetEventSource } from '@/types/contracts'
 
 export interface SetEventResponse {
   job_id: string
@@ -23,13 +23,18 @@ export function useSetEvent() {
   const [error, setError] = useState<string | null>(null)
 
   const publish = useCallback(
-    async (kind: SetEventKind, payload: Record<string, unknown>, baseJobId: string | null) => {
+    async (
+      kind: SetEventKind,
+      payload: Record<string, unknown>,
+      baseJobId: string | null,
+      source: SetEventSource = 'ui',
+    ) => {
       setPending(kind)
       setError(null)
       try {
         return await apiFetch<SetEventResponse>('/api/set-events', {
           method: 'POST',
-          body: JSON.stringify({ kind, payload, source: 'ui', base_job_id: baseJobId }),
+          body: JSON.stringify({ kind, payload, source, base_job_id: baseJobId }),
           timeoutMs: 30_000,
         })
       } catch (caught) {

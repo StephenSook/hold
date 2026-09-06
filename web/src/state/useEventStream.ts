@@ -101,7 +101,11 @@ export function useEventStream(jobId: string | null, enabled = true) {
           // deduplicated as if they were the same delivery.
           const what = typeof parsed.kind === 'string' ? parsed.kind : kind
           const change = typeof parsed.change === 'string' ? `, ${parsed.change}` : ''
-          add(kind, `${what}${change}${parsed.transport ? ` over ${parsed.transport}` : ''}`)
+          // Where the edit came from, in the log rather than only in the payload. A button press
+          // and a sentence a person confirmed are both human decisions, and they are still
+          // different provenance; a log that flattens them makes the interpreter unaccountable.
+          const from = typeof parsed.source === 'string' ? `, from ${parsed.source}` : ''
+          add(kind, `${what}${change}${from}${parsed.transport ? ` over ${parsed.transport}` : ''}`)
         }
       } catch {
         add('message', event.data.slice(0, 120))

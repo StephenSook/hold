@@ -163,15 +163,47 @@ export interface VerdictEvent {
   verdict: Verdict
 }
 
+/**
+ * Where a re-solve came from. 'agent' still means a person pressed publish: it records that the
+ * typed event was read out of a sentence by the interpreter rather than chosen from a button, and
+ * it travels into the streamed line as set-event:<kind>:agent.
+ */
+export type SetEventSource = 'ui' | 'simulation' | 'agent'
+
 export interface SetEvent {
   event: 'set-event'
   kind: SetEventKind
   payload: Record<string, unknown>
-  source: 'ui' | 'simulation'
+  source: SetEventSource
   base_job_id?: string | null
 }
 
 export type HoldEvent = ObjectiveEvent | VerdictEvent | SetEvent
+
+/**
+ * One on-set change read from a sentence, for a person to confirm before anything re-solves.
+ *
+ * This is a proposal and never an action. The model interprets the words; the deterministic
+ * `apply_set_event` path decides what the change costs, and only after someone has read the
+ * `reading` line and pressed publish.
+ */
+export interface EventProposal {
+  status: 'ok' | 'needs_clarification'
+  kind: SetEventKind | null
+  /** Filled per kind: actor_late needs both, scene_dropped needs the scene, weather_cover the day. */
+  cast_id: string | null
+  scene_id: string | null
+  /** 0-based, the index the engine wants. A sentence says Thursday; the interpreter converts. */
+  day_index: number | null
+  /**
+   * The publish payload, assembled by the API from the fields above, and empty unless the proposal
+   * is complete. The browser publishes it verbatim rather than building its own, so the mapping
+   * from named fields to event payload has one definition and cannot drift across the wire.
+   */
+  payload: Record<string, unknown>
+  questions: string[]
+  reading: string
+}
 
 /* ---- /api/status, read by the judge page ---- */
 

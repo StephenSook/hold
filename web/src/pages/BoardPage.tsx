@@ -14,7 +14,7 @@ import { useSolve } from '@/state/useSolve'
 import { useSetEvent } from '@/state/useSetEvent'
 import { useEventStream } from '@/state/useEventStream'
 import { dollars, shootDate } from '@/lib/format'
-import type { ScheduleInput, SetEventKind, Verdict } from '@/types/contracts'
+import type { ScheduleInput, SetEventKind, SetEventSource, Verdict } from '@/types/contracts'
 
 /**
  * The working board.
@@ -126,8 +126,8 @@ export function BoardPage() {
   }, [solver, stream])
 
   const onPublish = useCallback(
-    async (kind: SetEventKind, payload: Record<string, unknown>) => {
-      const answer = await setEvent.publish(kind, payload, solver.jobId)
+    async (kind: SetEventKind, payload: Record<string, unknown>, source: SetEventSource) => {
+      const answer = await setEvent.publish(kind, payload, solver.jobId, source)
       if (!answer) return
       setTransport(answer.transport)
       // The event produced a new plan. Poll it the same way a solve is polled.
@@ -269,6 +269,7 @@ export function BoardPage() {
         streamState={stream.state}
         jobId={solver.jobId}
         transport={transport}
+        schedule={schedule}
       />
 
       <VerdictDialog
