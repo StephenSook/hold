@@ -56,8 +56,12 @@ returns the cheapest order to shoot in and a verdict for every day.
    latest plan and streams the new objective and verdicts back over server-sent events and a
    second topic.
 
-An agent on Gemini turns a call sheet, a one-line schedule or a plain-English note into that
-typed input, and refuses to guess anything the document does not state.
+Three agents on Gemini sit around that engine, and none of them decides what a change costs.
+One reads a call sheet, a one-line schedule or a plain-English note into the typed input. One
+answers questions about the board by calling the checker and the rule registry, and shows which
+tools it called. One turns a sentence about what happened on set, "B is out on Thursday", into a
+typed event for a person to confirm. Each refuses to guess anything it was not given: the
+arithmetic belongs to the solver, because a number a model produced is a number nobody can check.
 
 ## The three proofs
 
@@ -73,8 +77,11 @@ writes from a real run and CI recomputes; a mismatch fails the build.
    optimum. The plain-Python recount agrees with the solver to the cent.
 3. **The verdict.** Every rule record carries a quote that CI verifies as a verbatim substring
    of a committed snapshot of its source, and every number a record carries is evidenced by
-   that source, except one that its source does not state: see the hold-day multiplier below. The agent's eval set (run against the tool-bearing agent; the extraction route's schema
-   path is covered by the recorded live goldens) passes 4 of 4 cases at the last recorded run.
+   that source, except one that its source does not state: see the hold-day multiplier below. Two
+   `adk eval` sets, one for the tool-bearing agent and one for the event interpreter, each pass
+   4 of 4 cases at the last recorded run. CI fails on a failing case, on a case nobody scored,
+   and on a record whose fingerprint no longer matches the agent that ships, so a rewritten
+   prompt cannot inherit an old score. A scheduled workflow runs both sets against Vertex.
 
 ## Architecture, as the runtime reports it
 

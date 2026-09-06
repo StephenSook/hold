@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-06T18:55:09+00:00",
-  "run_sha": "ea7a616",
+  "generated_at": "2026-09-06T19:21:58+00:00",
+  "run_sha": "5af8790",
   "written_by": "scripts/facts.py (PLAN.md D7: no headline number is typed by hand)",
   "demo_file": "data/demo/hold-demo.json",
   "before_file": "data/demo/before-order.json",
@@ -16,7 +16,7 @@
   "undetermined_days_before": 0,
   "illegal_days_after": 0,
   "benchmark_matched": "8/8",
-  "solve_ms": 157.6,
+  "solve_ms": 199.5,
   "pass2_status": "OPTIMAL",
   "checker_agrees": true,
   "adk_eval": {

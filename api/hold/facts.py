@@ -26,7 +26,7 @@ from api.hold.trust import trust_facts
 
 HEADLINE_FIELDS: tuple[str, ...] = (
     "hold_days_before", "hold_days_after", "payroll_removed_usd", "illegal_days_before",
-    "illegal_days_after", "benchmark_matched", "solve_ms", "adk_eval",
+    "illegal_days_after", "benchmark_matched", "solve_ms", "adk_eval", "adk_eval_events",
 )
 # Fields a fresh run must reproduce exactly (solve_ms and run_sha vary run to run). The residual
 # run's own SHA is not recorded here: bench/results.json is rewritten by every test run and

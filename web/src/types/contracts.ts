@@ -216,6 +216,7 @@ export interface StatusHeadline {
   benchmark_matched: string
   solve_ms: number
   adk_eval: unknown
+  adk_eval_events: unknown
 }
 
 export interface StatusRuntime {
