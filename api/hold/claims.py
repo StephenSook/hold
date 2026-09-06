@@ -39,9 +39,33 @@ _CONDITIONAL = re.compile(r"submission time|not connected|until|once|task 4\.1|P
 def judge_facing_surfaces(root: Path) -> list[Path]:
     """README and JUDGE.md plus docs, minus the generated evidence logs under docs/bob-evidence and the
     generated license inventory (docs/THIRD_PARTY_NOTICES.md names every dependency's copyright holder;
-    that is a legal notice, not a claim about the running system)."""
-    docs = sorted(p for p in (root / "docs").rglob("*.md") if "bob-evidence" not in p.parts and p.name != "THIRD_PARTY_NOTICES.md")
+    that is a legal notice, not a claim about the running system).
+
+    The .svg is here because an architecture diagram is a claims surface in picture form: every
+    component named on it is a present-tense statement about the running system, and a diagram
+    that no guard reads is the easiest place in the repository to leave a name the code does not
+    back. Its text is extracted before it is checked, so the markup itself is never mistaken for
+    prose."""
+    docs = sorted(
+        p
+        for p in (root / "docs").rglob("*")
+        if p.suffix in {".md", ".svg"} and "bob-evidence" not in p.parts and p.name != "THIRD_PARTY_NOTICES.md"
+    )
     return [root / "README.md", root / "JUDGE.md", *docs]
+
+
+_SVG_TAG = re.compile(r"<[^>]+>")
+_SVG_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def surface_text(path: Path) -> str:
+    """The words on a surface. For an SVG that is its text nodes, not its markup: `<path d="M0 0">`
+    is not a claim, and a class named `gemini-box` is not one either."""
+    raw = path.read_text(encoding="utf-8")
+    if path.suffix != ".svg":
+        return raw
+    without_comments = _SVG_COMMENT.sub(" ", raw)
+    return _SVG_TAG.sub(" ", without_comments)
 
 
 def claim_problems(text: str, runtime: Runtime) -> list[str]:

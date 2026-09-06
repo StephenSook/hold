@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 812" width="1200" height="812" role="img" aria-labelledby="t d">
+<title id="t">HOLD architecture</title>
+<desc id="d">A browser layer, one Cloud Run instance serving both the web app and the API, the solver, checker, rules registry and job store in process, and two outside services: Vertex AI for extraction and Confluent Cloud for set events.</desc>
+<style>
+  :root { color-scheme: dark light; }
+  .bg    { fill: #101010; }
+  .band  { fill: #1a1a1a; }
+  .card  { fill: #242424; }
+  .rail  { stroke: #313131; stroke-width: 1; fill: none; }
+  .edge  { stroke: #6a6a6a; stroke-width: 1.5; fill: none; }
+  .flow  { stroke: #a09f9c; stroke-width: 1.5; fill: none; }
+  text   { font-family: "Courier Prime", ui-monospace, "Courier New", monospace; fill: #f4f1ec; }
+  .h     { font-family: Archivo, "Helvetica Neue", sans-serif; font-weight: 620; font-size: 26px; letter-spacing: -0.5px; }
+  .band-label { font-size: 11px; fill: #a09f9c; letter-spacing: 1.6px; }
+  .name  { font-size: 15px; font-weight: 700; }
+  .meta  { font-size: 12px; fill: #b0aeaa; }
+  .tiny  { font-size: 11px; fill: #a09f9c; }
+  .flag  { fill: #f1453f; }
+  @media (prefers-color-scheme: light) {
+    .bg { fill: #f6f4f0; } .band { fill: #ece9e3; } .card { fill: #e0dcd4; }
+    .rail { stroke: #c6c1b8; } .edge { stroke: #6a6560; } .flow { stroke: #4a4640; }
+    text { fill: #161815; } .band-label, .tiny { fill: #4a4640; } .meta { fill: #33302c; }
+  }
+</style>
+
+<rect class="bg" width="1200" height="812"/>
+<text class="h" x="40" y="52">HOLD</text>
+<text class="meta" x="40" y="76">The cheapest legal shooting order, and the statute behind every verdict.</text>
+<text class="tiny" x="1160" y="52" text-anchor="end">Every component here is one /api/status reports.</text>
+<text class="tiny" x="1160" y="70" text-anchor="end">Nothing on this diagram is planned or partial.</text>
+<line class="rail" x1="40" y1="96" x2="1160" y2="96"/>
+
+<rect class="band" x="40" y="120" width="1120" height="118" rx="2"/>
+<rect class="rail" x="40" y="120" width="1120" height="118" rx="2"/>
+<text class="band-label" x="60" y="146">THE BROWSER</text>
+<rect class="card" x="60" y="158" width="176" height="58" rx="2"/><rect class="rail" x="60" y="158" width="176" height="58" rx="2"/>
+<text class="name" x="76" y="184">Stripboard</text><text class="tiny" x="76" y="203">drag and day breaks</text>
+<rect class="card" x="252" y="158" width="176" height="58" rx="2"/><rect class="rail" x="252" y="158" width="176" height="58" rx="2"/>
+<text class="name" x="268" y="184">Day view</text><text class="tiny" x="268" y="203">verdict first, 390 px</text>
+<rect class="card" x="444" y="158" width="176" height="58" rx="2"/><rect class="rail" x="444" y="158" width="176" height="58" rx="2"/>
+<text class="name" x="460" y="184">Import</text><text class="tiny" x="460" y="203">document or a note</text>
+<rect class="card" x="636" y="158" width="176" height="58" rx="2"/><rect class="rail" x="636" y="158" width="176" height="58" rx="2"/>
+<text class="name" x="652" y="184">Judge</text><text class="tiny" x="652" y="203">itinerary, live figures</text>
+<text class="tiny" x="852" y="180">React 19, Vite 7, Tailwind v4</text>
+<text class="tiny" x="852" y="199">PWA: shell precached, cache in IndexedDB</text>
+
+<path class="flow" d="M600 238 L600 274" marker-end="url(#a)"/>
+<text class="tiny" x="612" y="262">one origin, relative /api, HashRouter</text>
+
+<rect class="band" x="40" y="280" width="1120" height="132" rx="2"/>
+<rect class="rail" x="40" y="280" width="1120" height="132" rx="2"/>
+<text class="band-label" x="60" y="306">CLOUD RUN, ONE INSTANCE, INSTANCE BILLING</text>
+<rect class="card" x="60" y="318" width="270" height="72" rx="2"/><rect class="edge" x="60" y="318" width="270" height="72" rx="2"/>
+<text class="name" x="76" y="344">FastAPI</text>
+<text class="tiny" x="76" y="363">serves web/dist and every /api route</text>
+<text class="tiny" x="76" y="380">from the same origin</text>
+<text class="tiny" x="352" y="340">/api/solve      /api/jobs/{id}      /api/events (SSE)</text>
+<text class="tiny" x="352" y="360">/api/set-events /api/extract        /api/rules</text>
+<text class="tiny" x="352" y="380">/api/status     /api/docs</text>
+<text class="tiny" x="880" y="340">Deployed from CI by Workload Identity</text>
+<text class="tiny" x="880" y="360">Federation. No key in the repository.</text>
+<text class="tiny" x="880" y="380">Secrets in Secret Manager.</text>
+
+<rect class="band" x="40" y="454" width="1120" height="196" rx="2"/>
+<rect class="rail" x="40" y="454" width="1120" height="196" rx="2"/>
+<text class="band-label" x="60" y="480">IN THE SAME PROCESS</text>
+
+<rect class="card" x="60" y="492" width="250" height="86" rx="2"/><rect class="edge" x="60" y="492" width="250" height="86" rx="2"/>
+<text class="name" x="76" y="518">Pass 1, legality</text>
+<text class="tiny" x="76" y="537">CP-SAT with each rule as a</text>
+<text class="tiny" x="76" y="554">named assumption. The core</text>
+<text class="tiny" x="76" y="571">says why no timing exists.</text>
+
+<rect class="card" x="326" y="492" width="250" height="86" rx="2"/><rect class="edge" x="326" y="492" width="250" height="86" rx="2"/>
+<text class="name" x="342" y="518">Pass 2, cost</text>
+<text class="tiny" x="342" y="537">CP-SAT. Legality is a hard</text>
+<text class="tiny" x="342" y="554">constraint, so an illegal plan</text>
+<text class="tiny" x="342" y="571">cannot be returned.</text>
+
+<rect class="card" x="592" y="492" width="250" height="86" rx="2"/><rect class="edge" x="592" y="492" width="250" height="86" rx="2"/>
+<text class="name" x="608" y="518">The checker</text>
+<text class="tiny" x="608" y="537">Plain Python, independent of</text>
+<text class="tiny" x="608" y="554">the solver. It enumerates every</text>
+<text class="tiny" x="608" y="571">violation; the core explains.</text>
+
+<rect class="card" x="858" y="492" width="282" height="86" rx="2"/><rect class="edge" x="858" y="492" width="282" height="86" rx="2"/>
+<text class="name" x="874" y="518">Rules registry</text>
+<text class="tiny" x="874" y="537">Georgia, California, SAG-AFTRA and</text>
+<text class="tiny" x="874" y="554">four trust states. Every quote verified</text>
+<text class="tiny" x="874" y="571">verbatim against a committed snapshot.</text>
+
+<rect class="card" x="60" y="592" width="516" height="42" rx="2"/><rect class="rail" x="60" y="592" width="516" height="42" rx="2"/>
+<text class="tiny" x="76" y="618">Job store, one worker thread, so a solve never blocks the event loop</text>
+<rect class="card" x="592" y="592" width="548" height="42" rx="2"/><rect class="rail" x="592" y="592" width="548" height="42" rx="2"/>
+<text class="tiny" x="608" y="618">Event bus, in process, mirrored to the broker and replayed over SSE</text>
+
+<path class="flow" d="M330 412 L330 454" marker-end="url(#a)"/>
+<path class="flow" d="M870 412 L870 454" marker-end="url(#a)"/>
+
+<rect class="band" x="40" y="692" width="1120" height="94" rx="2"/>
+<rect class="rail" x="40" y="692" width="1120" height="94" rx="2"/>
+<text class="band-label" x="60" y="718">OUTSIDE THIS PROCESS</text>
+<rect class="card" x="60" y="728" width="516" height="42" rx="2"/><rect class="edge" x="60" y="728" width="516" height="42" rx="2"/>
+<text class="tiny" x="76" y="746">Vertex AI, location global: gemini-3.1-flash-lite through the Agent</text>
+<text class="tiny" x="76" y="762">Development Kit. One job: a document into typed constraints, or questions.</text>
+<rect class="card" x="592" y="728" width="548" height="42" rx="2"/><rect class="edge" x="592" y="728" width="548" height="42" rx="2"/>
+<text class="tiny" x="608" y="746">Confluent Cloud: hold.set-events carries an event in, hold.verdicts carries</text>
+<text class="tiny" x="608" y="762">the re-solved verdicts back. The in-process bus is the fallback transport.</text>
+
+<defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="#a09f9c"/>
+  </marker>
+</defs>
+</svg>

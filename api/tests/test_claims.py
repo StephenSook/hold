@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 
-from api.hold.claims import VOCABULARY, claim_problems, judge_facing_surfaces
+from api.hold.claims import VOCABULARY, claim_problems, judge_facing_surfaces, surface_text
 from api.routes.status import build_status
 
 ROOT = Path(__file__).parents[2]
@@ -43,13 +43,13 @@ def test_judge_facing_surfaces_claim_only_what_the_runtime_reports() -> None:
     runtime = _runtime()
     surfaces = judge_facing_surfaces(ROOT)
     assert {p.name for p in surfaces} >= {"README.md", "THREAT_MODEL.md"}
-    problems = [f"{p.name}: {m}" for p in surfaces for m in claim_problems(p.read_text(encoding="utf-8"), runtime)]
+    problems = [f"{p.name}: {m}" for p in surfaces for m in claim_problems(surface_text(p), runtime)]
     assert problems == [], "\n".join(problems)
 
 
 def test_the_guard_is_not_vacuous() -> None:
     """At least one vocabulary term is present on the surfaces, so a clean run means something."""
-    text = "\n".join(p.read_text(encoding="utf-8") for p in judge_facing_surfaces(ROOT))
+    text = "\n".join(surface_text(p) for p in judge_facing_surfaces(ROOT))
     assert any(pattern.search(text) for pattern, _ in VOCABULARY), "no vendor or model named anywhere"
 
 
@@ -97,3 +97,33 @@ def test_present_tense_streaming_claims_are_not_conditional() -> None:
     assert claim_problems("Confluent adds live verdict streaming.", runtime)
     assert claim_problems("Confluent streams live when it receives an event.", runtime)
     assert claim_problems("Streaming: connected at submission time; live state at /api/status.", runtime) == []
+
+
+def test_the_architecture_diagram_is_read_as_a_claims_surface() -> None:
+    """
+    A diagram names components, which is a present-tense statement about the running system. It
+    is the easiest place in the repository to leave a name the code does not back, because it is
+    the one surface nobody greps.
+    """
+    diagram = ROOT / "docs" / "architecture.svg"
+    assert diagram.is_file(), "docs/architecture.svg is missing (PLAN.md task 5.6)"
+    assert diagram in judge_facing_surfaces(ROOT), "the diagram is not in the guard's file set"
+
+    text = surface_text(diagram)
+    assert "<svg" not in text and "<path" not in text, "markup is reaching the claim check as if it were prose"
+    assert "CP-SAT" in text or "OR-Tools" in text, "the diagram does not name the solver, so it is not the diagram"
+
+
+def test_a_forbidden_name_in_the_diagram_would_be_caught() -> None:
+    """The guard reads an SVG's text nodes and ignores its markup. Both halves proven here."""
+    runtime = _runtime()
+    body = '<svg xmlns="http://www.w3.org/2000/svg"><text x="0" y="0">{}</text></svg>'
+
+    from api.hold.claims import _SVG_TAG
+
+    prose = _SVG_TAG.sub(" ", body.format("Verdicts come from watsonx."))
+    assert claim_problems(prose, runtime), "a forbidden name inside a text node was not caught"
+
+    # A class or an id is not a claim, and must not be read as one.
+    markup_only = _SVG_TAG.sub(" ", '<svg><g class="watsonx-box" id="granite"><rect/></g></svg>')
+    assert claim_problems(markup_only, runtime) == [], "markup was read as prose"
