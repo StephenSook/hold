@@ -48,6 +48,12 @@ export function useEventStream(jobId: string | null, enabled = true) {
     // job's closure. Without this guard its updater wins, storage flips back to the old job, and
     // the new job's replayed lines disappear from a log that looks perfectly healthy.
     let current = true
+    // EventSource reconnects on its own, and this URL asks for a replay every time, so a
+    // reconnect re-delivers the whole history. Appending it produced a log that duplicated itself
+    // after any blip, and after the server closed the stream at its own event limit. The replay
+    // is authoritative, so a reconnect clears what it is about to re-send rather than adding to
+    // it. The first open has nothing to clear.
+    let opened = false
 
     const add = (kind: string, text: string) => {
       if (!current) return
@@ -84,7 +90,13 @@ export function useEventStream(jobId: string | null, enabled = true) {
     // arrived underneath the label.
     stream.onopen = () => {
       if (!current) return
-      setStored((prev) => (prev.jobId === jobId && prev.dropped ? { ...prev, dropped: false } : prev))
+      const reconnected = opened
+      opened = true
+      setStored((prev) => {
+        if (prev.jobId !== jobId) return prev
+        if (reconnected) return { jobId, lines: [], dropped: false }
+        return prev.dropped ? { ...prev, dropped: false } : prev
+      })
     }
 
     stream.onerror = () => {
