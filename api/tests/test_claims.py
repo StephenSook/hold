@@ -117,13 +117,12 @@ def test_the_architecture_diagram_is_read_as_a_claims_surface() -> None:
 def test_a_forbidden_name_in_the_diagram_would_be_caught() -> None:
     """The guard reads an SVG's text nodes and ignores its markup. Both halves proven here."""
     runtime = _runtime()
-    body = '<svg xmlns="http://www.w3.org/2000/svg"><text x="0" y="0">{}</text></svg>'
 
-    from api.hold.claims import _SVG_TAG
+    from api.hold.claims import _svg_prose
 
-    prose = _SVG_TAG.sub(" ", body.format("Verdicts come from watsonx."))
+    prose = _svg_prose('<svg xmlns="http://www.w3.org/2000/svg"><text x="0" y="0">Verdicts come from watsonx.</text></svg>')
     assert claim_problems(prose, runtime), "a forbidden name inside a text node was not caught"
 
     # A class or an id is not a claim, and must not be read as one.
-    markup_only = _SVG_TAG.sub(" ", '<svg><g class="watsonx-box" id="granite"><rect/></g></svg>')
+    markup_only = _svg_prose('<svg><g class="watsonx-box" id="granite"><rect/></g></svg>')
     assert claim_problems(markup_only, runtime) == [], "markup was read as prose"

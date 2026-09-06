@@ -9,6 +9,7 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+from xml.etree import ElementTree
 
 Runtime = dict[str, Any]
 
@@ -54,18 +55,48 @@ def judge_facing_surfaces(root: Path) -> list[Path]:
     return [root / "README.md", root / "JUDGE.md", *docs]
 
 
-_SVG_TAG = re.compile(r"<[^>]+>")
-_SVG_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
+# Element content that is code rather than prose. A font-family in a stylesheet is not a claim
+# about the running system, and neither is a string in a script.
+_NOT_PROSE = {"style", "script", "metadata", "defs"}
+
+
+def _svg_prose(raw: str) -> str:
+    """
+    The words a viewer reads in an SVG.
+
+    This parses rather than pattern-matching, because stripping tags with a regex is wrong in both
+    directions and both were demonstrated: `<text foo=">" class="watsonx">` leaks the attribute
+    into the result, so a class name becomes a false claim, and a `<style>` block's contents are
+    kept, so a font-family fails the guard. A parser knows what a text node is.
+    """
+    try:
+        root = ElementTree.fromstring(raw)
+    except ElementTree.ParseError:
+        # Unparseable markup is not a reason to let a surface through unchecked. Fall back to the
+        # whole document, which over-reports rather than under-reports.
+        return raw
+
+    words: list[str] = []
+
+    def walk(element: ElementTree.Element) -> None:
+        tag = element.tag.rsplit("}", 1)[-1].lower()
+        if tag in _NOT_PROSE:
+            return
+        if element.text:
+            words.append(element.text)
+        for child in element:
+            walk(child)
+            if child.tail:
+                words.append(child.tail)
+
+    walk(root)
+    return " ".join(words)
 
 
 def surface_text(path: Path) -> str:
-    """The words on a surface. For an SVG that is its text nodes, not its markup: `<path d="M0 0">`
-    is not a claim, and a class named `gemini-box` is not one either."""
+    """The words on a surface. For an SVG that is its text nodes, and never its markup."""
     raw = path.read_text(encoding="utf-8")
-    if path.suffix != ".svg":
-        return raw
-    without_comments = _SVG_COMMENT.sub(" ", raw)
-    return _SVG_TAG.sub(" ", without_comments)
+    return _svg_prose(raw) if path.suffix == ".svg" else raw
 
 
 def claim_problems(text: str, runtime: Runtime) -> list[str]:
