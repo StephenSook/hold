@@ -14,6 +14,8 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from api.agents.hold_agent.runner import _event_context, parse_event_proposal
 from api.hold.schemas import EventProposal, EventProposalOut, ScheduleInput, SetEvent
@@ -152,3 +154,46 @@ def test_needs_clarification_carries_questions_and_no_kind() -> None:
     assert proposal.kind is None
     assert proposal.day_index is None
     assert proposal.questions
+
+
+# ---------------------------------------------------------------------------
+# The deterministic attack on the proposal, run instead of a second model pass.
+# ---------------------------------------------------------------------------
+
+@given(
+    status=st.sampled_from(["ok", "needs_clarification"]),
+    kind=st.sampled_from([None, "actor_late", "scene_dropped", "weather_cover"]),
+    cast_id=st.sampled_from([None, "cA", "cB", "cC", "cM", "cZZ"]),
+    scene_id=st.sampled_from([None, "s1", "s6", "s99"]),
+    day_index=st.sampled_from([None, -1, 0, 3, 6, 7, 10 ** 9]),
+    questions=st.lists(st.text(min_size=1, max_size=20), max_size=3),
+    reading=st.text(max_size=40),
+)
+@settings(max_examples=400, deadline=None)
+def test_a_proposal_is_either_publishable_or_says_what_it_needs(
+    status: str, kind: str | None, cast_id: str | None, scene_id: str | None,
+    day_index: int | None, questions: list[str], reading: str,
+) -> None:
+    """Two invariants over every shape the wire can carry, whatever a model puts on it.
+
+    A proposal that reaches the browser as `ok` must produce a payload the engine's own argument
+    reader accepts, and a proposal that is not `ok` must say something rather than rendering a
+    heading over an empty list. Ids that do not exist are still the engine's business, not this
+    schema's: the point here is that the SHAPE is never unusable and never silent.
+    """
+    proposal = EventProposal(
+        status=status, kind=kind, cast_id=cast_id, scene_id=scene_id,
+        day_index=day_index, questions=questions, reading=reading,
+    )
+    out = EventProposalOut.of(proposal)
+    if proposal.status == "ok":
+        assert proposal.kind is not None
+        payload = proposal.event_payload()
+        assert payload and out.payload == payload
+        # Every field the engine reads for this kind is present and of the type it reads.
+        for field in EventProposal.REQUIRED[proposal.kind]:
+            assert payload[field] is not None
+            assert isinstance(payload[field], int if field == "day_index" else str)
+    else:
+        assert out.payload == {}
+        assert proposal.questions or proposal.reading, "a refusal that says nothing is an empty box"

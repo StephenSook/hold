@@ -270,6 +270,12 @@ class EventProposal(BaseModel):
         shape rather than trusting the code.
         """
         if self.status != "ok":
+            # A refusal with nothing in it is a titled empty box on screen. Only the demotion path
+            # below appends a question, so a needs_clarification the MODEL chose could arrive with
+            # neither a question nor a reading and the panel would render a heading over nothing.
+            # This makes the invariant total: a proposal that is not ok always says something.
+            if not self.questions and not self.reading:
+                self.questions = ["What happened, in one sentence naming the performer, the scene or the day?"]
             return self
         if self.kind is None:
             self.status = "needs_clarification"
