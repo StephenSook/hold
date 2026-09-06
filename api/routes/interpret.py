@@ -15,14 +15,13 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from api.agents.hold_agent.runner import EVENT_TIMEOUT_S, ExtractionError, is_configured
 from api.agents.hold_agent.runner import interpret_event as run_interpret
-from api.hold.schemas import EventProposal, EventProposalOut
+from api.hold.schemas import EventProposal, EventProposalOut, ScheduleInput
 
 router = APIRouter()
 log = logging.getLogger(__name__)
@@ -35,7 +34,11 @@ MAX_SENTENCE_CHARS = 400
 class InterpretRequest(BaseModel):
     sentence: str = Field(min_length=1, max_length=MAX_SENTENCE_CHARS)
     #: The board this sentence is about. Its ids are the only ones the proposal may name.
-    schedule: dict[str, Any]
+    #
+    #: Typed, like every other route that takes a schedule. As a bare dict a malformed body reached
+    #: `_event_context`, raised AttributeError on a `.get` against a string, and came back as a 502
+    #: naming an exception class; typed, it is a 422 naming the field that is wrong.
+    schedule: ScheduleInput
 
 
 _FIXTURE = EventProposal(
@@ -61,7 +64,8 @@ async def interpret_event(request: InterpretRequest) -> EventProposalOut:
             detail="the agent is not configured: GOOGLE_CLOUD_PROJECT is unset (PLAN.md task 0.1); this route runs the task 3.1 agent and needs Vertex AI credentials",
         )
     try:
-        return EventProposalOut.of(await run_interpret(request.sentence, request.schedule, timeout_s=EVENT_TIMEOUT_S))
+        schedule = request.schedule.model_dump(mode="json")
+        return EventProposalOut.of(await run_interpret(request.sentence, schedule, timeout_s=EVENT_TIMEOUT_S))
     except TimeoutError as exc:
         raise HTTPException(status_code=504, detail=f"the agent exceeded {EVENT_TIMEOUT_S:.0f} s") from exc
     except ExtractionError as exc:

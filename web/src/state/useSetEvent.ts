@@ -42,7 +42,13 @@ export function useSetEvent() {
           caught instanceof ApiError
             ? caught.status === 409
               ? 'The plan moved under this event. Solve again and republish.'
-              : `The API answered ${caught.status}.`
+              : caught.status === 422
+                // The engine's own sentence, which names the id it refused: "cast member 'cZ' is
+                // not in the schedule". Printing only the status hid the one useful thing in the
+                // response, and a proposal read from a sentence can name an id a button never
+                // could, so this is the case that needs the detail most.
+                ? detail(caught.body)
+                : `The API answered ${caught.status}.`
             : caught instanceof Error
               ? caught.message
               : 'The API could not be reached.',
@@ -56,4 +62,19 @@ export function useSetEvent() {
   )
 
   return { publish, pending, error }
+}
+
+
+/** The `detail` out of a FastAPI error body, or the body itself when it is not that shape. */
+function detail(body: string): string {
+  try {
+    const parsed: unknown = JSON.parse(body)
+    if (parsed && typeof parsed === 'object' && 'detail' in parsed) {
+      const value = (parsed as { detail: unknown }).detail
+      if (typeof value === 'string' && value.trim()) return `The event was refused: ${value}`
+    }
+  } catch {
+    // Not JSON. Fall through to the status line rather than printing a page of HTML.
+  }
+  return 'The API answered 422 and the event was refused.'
 }

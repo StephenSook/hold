@@ -30,7 +30,11 @@ export function useInterpretEvent() {
         await apiFetch<EventProposal>('/api/interpret-event', {
           method: 'POST',
           body: JSON.stringify({ sentence, schedule }),
-          timeoutMs: 30_000,
+          // Longer than the route's own 35 s cap, like extraction and asking already are. At
+          // 30 s the browser aborted first, so the route's 504 and its "the agent exceeded 35 s"
+          // message were unreachable and a slow answer read as "the API could not be reached".
+          // The case that costs is the first call on a cold instance, which is a judge's call.
+          timeoutMs: 60_000,
         }),
       )
     } catch (caught) {
