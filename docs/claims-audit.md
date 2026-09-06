@@ -14,7 +14,7 @@ description and its Built With tags.
 |---|---|---|---|
 | Gemini (gemini-3.1-flash-lite) | README, Devpost, `.env.example` | `api/agents/hold_agent/agent.py`, `api/hold/config.py` | model id passed to `LlmAgent(model=GEMINI_MODEL)`; `/api/status.runtime.gemini_model` |
 | Vertex AI | README, Devpost | `api/agents/hold_agent/runner.py`, `.env.example` `GOOGLE_CLOUD_LOCATION` | `GOOGLE_GENAI_USE_ENTERPRISE` routes google-genai to Vertex; `/api/status.runtime.gemini_location` |
-| Google Agent Development Kit (google-adk) | README, Devpost, AGENTS | `api/agents/hold_agent/*.py` | `from google.adk.agents import LlmAgent`, `Runner`, `RunConfig`, `before_tool_callback` |
+| Google Agent Development Kit (google-adk) | README, Devpost, AGENTS, the board | `api/agents/hold_agent/*.py`, `api/routes/ask.py`, `web/src/board/AskAgent.tsx` | `from google.adk.agents import LlmAgent`, `Runner`, `RunConfig`, `before_tool_callback`; BOTH agents now run behind routes, the tool-bearing one through `POST /api/ask` |
 | google-genai | implied by the above | `api/agents/hold_agent/runner.py` | `from google.genai import types` |
 | OR-Tools CP-SAT | README, JUDGE, Devpost | `api/hold/model.py`, `api/hold/legality.py`, `api/hold/pass2.py` | `from ortools.sat.python import cp_model` |
 | FastAPI | README, Devpost | `api/main.py`, `api/routes/*.py` | `from fastapi import APIRouter, FastAPI` |
@@ -24,7 +24,7 @@ description and its Built With tags.
 | Workload Identity Federation | README, Devpost | `.github/workflows/deploy.yml` | `google-github-actions/auth` with `workload_identity_provider` |
 | Secret Manager | README, Devpost | `.github/workflows/deploy.yml`, `scripts/gcp_setup.sh` | `--set-secrets` on the deploy; secrets created by the setup script |
 | GitHub Actions | README, Devpost | `.github/workflows/ci.yml`, `deploy.yml`, `uptime.yml` | the badge job is the residual |
-| Model Context Protocol (mcp) | README, AGENTS | `api/hold/mcp_server.py`, `.bob/mcp.json` | `from mcp.server import MCPServer`; `api/tests/test_mcp_server.py` drives it over stdio |
+| Model Context Protocol (mcp) | README, JUDGE, the judge page, AGENTS | `api/hold/mcp_server.py`, `api/main.py`, `.bob/mcp.json` | `from mcp.server import MCPServer`; mounted at `/mcp` on the deployed origin and driven over stdio by `api/tests/test_mcp_server.py` and over HTTP by `api/tests/test_mcp_http.py` |
 | IBM Bob | README, AGENTS, Devpost | `.bob/custom_modes.yaml`, `docs/bob-evidence/**` | `Tool: IBM-Bob` trailer on 25 commits; `/api/status.bob_usage` |
 | Python 3.12 or newer, uv | README quick start (`uv sync` resolves it; the README names no version) | `pyproject.toml` requires-python, `Dockerfile`, `.github/workflows/ci.yml` | the quick start runs; the image and CI both pin 3.12 |
 
@@ -64,6 +64,33 @@ and matters, is that **no Capacitor API is called from the web bundle**. The cam
 browser's own capture, which works in the shells and in a plain mobile browser alike, and
 `grep -i capacitor web/dist/assets/*.js` returns nothing. The shells load the same bundle a
 browser loads.
+
+## The MCP server stopped being a build-time detail
+
+This table used to describe HOLD's MCP server as something IBM Bob called over stdio while the
+code was written, which was true and was also the whole problem: a claimed integration that only
+ever runs inside our own process is one nobody outside can check. The same four tools now answer
+on the deployed origin at `/mcp`, the README and the judge walkthrough print the command that
+connects to them, and a reader can run `run_residual` against a published benchmark instance and
+compare the cost to its published optimum without cloning anything.
+
+The two transports are deliberately not identical, and the difference is documented rather than
+silent: every tool on the public transport is time-capped and says its cap in its own description,
+because the origin is one instance that also serves the web app.
+
+## The tool-bearing agent was unreachable, and the guardrail with it
+
+An audit of what the deployed app can actually reach found that every route ran `extract_agent`,
+the tool-less twin. `root_agent` carries `check_legality`, `optimize_schedule` and `lookup_rule`
+and the `before_tool_callback` allowlist that guards them, and no code path invoked it: three
+tools and a security control that were defined, unit-tested, and had never once executed on the
+deployed service. The README and the submission described an agent with tools, which was true of
+the repository and not of the running system.
+
+`POST /api/ask` runs it, and the board has a panel that calls it. The answer carries the tool
+trajectory rather than only the sentence, because which rule the agent looked up is the difference
+between an answer and an assertion, and a refused call is rendered as prominently as a successful
+one: a guardrail nobody can see working is indistinguishable from one that is not there.
 
 ## Claimed nowhere and absent
 

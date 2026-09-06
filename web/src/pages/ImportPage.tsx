@@ -1,7 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Camera, Check, FileUp, TriangleAlert } from 'lucide-react'
 import { ActionButton } from '@/components/Action'
 import { extractDocument } from '@/lib/extract'
+import { putImported } from '@/state/handoff'
 import { ApiError } from '@/lib/api'
 import { eighths } from '@/lib/format'
 import type { ExtractResult } from '@/types/contracts'
@@ -16,6 +18,7 @@ import type { ExtractResult } from '@/types/contracts'
 type Phase = 'idle' | 'reading' | 'ready' | 'failed'
 
 export function ImportPage() {
+  const navigate = useNavigate()
   const [phase, setPhase] = useState<Phase>('idle')
   const [result, setResult] = useState<ExtractResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -202,7 +205,13 @@ export function ImportPage() {
               )}
               <div className="mt-6 flex flex-wrap items-center gap-4">
                 <ActionButton
-                  onClick={() => setConfirmed(true)}
+                  onClick={() => {
+                    // The confirmation is the handoff. This button used to set a flag and print a
+                    // sentence, and the schedule the agent had just read was discarded.
+                    putImported(schedule)
+                    setConfirmed(true)
+                    navigate('/board')
+                  }}
                   disabled={confirmed}
                   icon={<Check className="size-3.5" />}
                   data-testid="import-confirm"
@@ -211,7 +220,7 @@ export function ImportPage() {
                 </ActionButton>
                 {confirmed && (
                   <p className="script text-11 text-bone-dim" data-testid="import-confirmed">
-                    Confirmed. Open the board to solve it.
+                    Confirmed. Opening the board.
                   </p>
                 )}
               </div>

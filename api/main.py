@@ -25,6 +25,7 @@ from fastapi.staticfiles import StaticFiles
 from api.hold.jobs import JOBS
 from api.hold.mcp_server import MOUNT as _mcp_mount
 from api.hold.streaming import BRIDGE
+from api.routes.ask import router as ask_router
 from api.routes.events import handle_external_set_event
 from api.routes.events import router as events_router
 from api.routes.extract import router as extract_router
@@ -86,7 +87,7 @@ app.add_middleware(
 # API routes. Registered before the SPA catch-all so /api/* never falls through.
 # ---------------------------------------------------------------------------
 
-for _router in (status_router, solve_router, events_router, extract_router, rules_router):
+for _router in (status_router, solve_router, events_router, extract_router, ask_router, rules_router):
     app.include_router(_router)
 
 # HOLD's own MCP server, on the deployed origin, so the solver can be driven by any MCP client

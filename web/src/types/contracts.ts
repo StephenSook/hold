@@ -211,3 +211,24 @@ export interface StatusResponse {
   benchmark_run_sha: string
   runtime: StatusRuntime
 }
+
+/** One tool the agent chose to call, and whether the allowlist let it through. */
+export interface ToolCall {
+  name: string
+  args: Record<string, unknown>
+  refused: boolean
+  detail: string
+}
+
+/**
+ * The agent's answer and the trajectory it took.
+ *
+ * The tool calls are part of the payload, not a log line. An agent that says a day is illegal is
+ * worth what the reader can check, and which rule it looked up is the difference between an
+ * answer and an assertion.
+ */
+export interface AskResult {
+  answer: string
+  tool_calls: ToolCall[]
+  fixture: boolean
+}

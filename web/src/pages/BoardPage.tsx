@@ -3,11 +3,13 @@ import { Play, RotateCcw, TriangleAlert } from 'lucide-react'
 import { Stripboard } from '@/board/Stripboard'
 import { StripLegend } from '@/board/StripLegend'
 import { SetEvents } from '@/board/SetEvents'
+import { AskAgent } from '@/board/AskAgent'
 import { buildRows, withTotals, type BoardRow } from '@/board/model'
 import { VerdictDialog } from '@/verdict/VerdictDialog'
 import { ActionButton } from '@/components/Action'
 import { Figure } from '@/components/Figure'
 import { DEMO, payrollRemovedCents } from '@/state/demo'
+import { clearImported, getImported } from '@/state/handoff'
 import { useSolve } from '@/state/useSolve'
 import { useSetEvent } from '@/state/useSetEvent'
 import { useEventStream } from '@/state/useEventStream'
@@ -27,12 +29,28 @@ export function BoardPage() {
   const [openDay, setOpenDay] = useState<number | null>(null)
   const [orderVersion, setOrderVersion] = useState(0)
   const [usedFallback, setUsedFallback] = useState(false)
-  const [schedule, setSchedule] = useState<ScheduleInput>(DEMO.schedule)
+  // A schedule the import page read from a document, if there is one. Held in state rather than
+  // read on every render: the board owns it from here, and reset has to be able to put it down.
+  // As a memo it could not, and the banner outlived the schedule it described until a remount.
+  const [imported, setImported] = useState<ScheduleInput | null>(() => getImported())
+  const [schedule, setSchedule] = useState<ScheduleInput>(imported ?? DEMO.schedule)
   const [transport, setTransport] = useState<string | null>(null)
 
+  /**
+   * The starting arrangement.
+   *
+   * The demo has a hand-built plan to improve on, which is the whole before-and-after. An imported
+   * document does not: a scene record carries no day, so nothing here knows which day a scene was
+   * meant for, and inventing an arrangement would be inventing the very thing the solver decides.
+   * So an imported board starts with its days empty and solves immediately, which is what the
+   * confirm button has always said it does.
+   */
   const beforeRows = useMemo(
-    () => withTotals(buildRows(DEMO.schedule, DEMO.before.dayMap, DEMO.before.verdicts), DEMO.schedule),
-    [],
+    () =>
+      imported
+        ? withTotals(buildRows(imported, {}, []), imported)
+        : withTotals(buildRows(DEMO.schedule, DEMO.before.dayMap, DEMO.before.verdicts), DEMO.schedule),
+    [imported],
   )
   const [rows, setRows] = useState<BoardRow[]>(beforeRows)
 
@@ -67,6 +85,19 @@ export function BoardPage() {
     applySolved(schedule, solver.dayMap, solver.result.pass1)
   }, [solver.phase, solver.result, solver.dayMap, solver.jobId, applySolved, schedule])
 
+  // An imported schedule arrives unarranged, so it solves itself once, on arrival. The import
+  // page's button says "Confirm and solve" and this is the solve half of that sentence; before
+  // this the board simply reloaded the demo and the reader's document went nowhere.
+  const autoSolved = useRef(false)
+  useEffect(() => {
+    if (!imported || autoSolved.current) return
+    autoSolved.current = true
+    void solver.solve(imported)
+    // solver identity changes on every render, so it is deliberately not a dependency: this runs
+    // once per mount, guarded by the ref, and re-running it would restart a solve mid-flight.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imported])
+
   // The solver is given the schedule, not our arrangement of it: the day assignment is what pass
   // 2 decides, so sending our arrangement would be asking it to confirm our own answer.
   const onSolve = useCallback(async () => {
@@ -80,15 +111,19 @@ export function BoardPage() {
   }, [applySolved])
 
   const onReset = useCallback(() => {
+    // Reset goes back to the demo, and drops the imported schedule with it: a board that kept
+    // silently reloading someone's document after they asked for a reset would be lying twice.
+    clearImported()
+    setImported(null)
     setSchedule(DEMO.schedule)
-    setRows(beforeRows)
+    setRows(withTotals(buildRows(DEMO.schedule, DEMO.before.dayMap, DEMO.before.verdicts), DEMO.schedule))
     setOrderVersion(0)
     laidOut.current = null
     setTransport(null)
     stream.clear()
     solver.reset()
     setUsedFallback(false)
-  }, [beforeRows, solver, stream])
+  }, [solver, stream])
 
   const onPublish = useCallback(
     async (kind: SetEventKind, payload: Record<string, unknown>) => {
@@ -148,6 +183,13 @@ export function BoardPage() {
         </div>
       )}
 
+      {imported && (
+        <p className="script mt-6 border border-rail px-4 py-3 text-12 text-bone-dim" data-testid="imported-notice">
+          This board is the schedule read from your document, not the demo. A scene record carries
+          no day, so the days start empty and the solver places them. Reset returns to the demo.
+        </p>
+      )}
+
       {usedFallback && (
         <p className="script mt-6 border border-rail px-4 py-3 text-12 text-bone-dim" data-testid="fallback-notice">
           This is the run recorded on {DEMO.generatedAt.slice(0, 10)} at commit {DEMO.runSha}, not a
@@ -156,17 +198,30 @@ export function BoardPage() {
       )}
 
       <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-6">
-        <Figure
-          testId="figure-hold-days"
-          label="Hold days"
-          from={String(DEMO.before.holdDays)}
-          to={solvedPass2 ? String(solvedPass2.hold_days) : String(DEMO.before.holdDays)}
-        />
-        <Figure
-          testId="figure-payroll"
-          label="Payroll removed"
-          value={solvedPass2 ? dollars(DEMO.before.holdingCents - solvedPass2.holding_cents) : 'not solved'}
-        />
+        {imported ? (
+          <>
+            <Figure testId="figure-scenes" label="Scenes read" value={String(schedule.scenes.length)} />
+            <Figure
+              testId="figure-hold-days"
+              label="Hold days"
+              value={solvedPass2 ? String(solvedPass2.hold_days) : 'solving'}
+            />
+          </>
+        ) : (
+          <>
+            <Figure
+              testId="figure-hold-days"
+              label="Hold days"
+              from={String(DEMO.before.holdDays)}
+              to={solvedPass2 ? String(solvedPass2.hold_days) : String(DEMO.before.holdDays)}
+            />
+            <Figure
+              testId="figure-payroll"
+              label="Payroll removed"
+              value={solvedPass2 ? dollars(DEMO.before.holdingCents - solvedPass2.holding_cents) : 'not solved'}
+            />
+          </>
+        )}
         <Figure
           testId="pass2-status"
           label="Pass 2"
@@ -191,6 +246,8 @@ export function BoardPage() {
       <div className="mt-5">
         <StripLegend />
       </div>
+
+      <AskAgent schedule={schedule} />
 
       <SetEvents
         onPublish={onPublish}

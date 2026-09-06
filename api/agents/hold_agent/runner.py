@@ -6,15 +6,18 @@ only when Vertex AI is configured (GOOGLE_CLOUD_PROJECT); HOLD_FAKE_EXTERNALS=1 
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 import uuid
+from typing import Any
 
 from google.adk.agents import LlmAgent
 from google.adk.agents.run_config import RunConfig
 from google.adk.runners import Runner
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
+from pydantic import BaseModel
 
 from api.agents.hold_agent.agent import extract_agent, root_agent
 from api.hold.schemas import ExtractResult
@@ -61,6 +64,80 @@ async def extract(text: str, image: bytes | None = None, mime_type: str = "image
 
     await asyncio.wait_for(run(), timeout=timeout_s)
     return parse_extract_result("".join(final_text))
+
+
+ASK_TIMEOUT_S = 45.0
+# An answer may need a thought turn, a tool turn, a second tool turn and a final turn. Extraction
+# is capped at three because it calls nothing; asking is capped higher because calling is the point.
+MAX_ASK_LLM_CALLS = 6
+
+
+class ToolCall(BaseModel):
+    """One tool the agent chose to call, and whether the guard let it through."""
+
+    name: str
+    args: dict[str, Any]
+    refused: bool = False
+    detail: str = ""
+
+
+class AskResult(BaseModel):
+    """The agent's answer and the trajectory it took to get there.
+
+    The trajectory is returned, not just logged. An agent that says a day is illegal is worth
+    exactly as much as the reader's ability to see which rule it looked up to decide that, and
+    the tools it called are the difference between an answer and an assertion.
+    """
+
+    answer: str
+    tool_calls: list[ToolCall] = []
+    fixture: bool = False
+
+
+async def ask(question: str, schedule: dict[str, Any] | None = None, timeout_s: float = ASK_TIMEOUT_S) -> AskResult:
+    """Put a question to the tool-bearing agent and report what it called on the way to answering.
+
+    This runs `root_agent`, which until now existed and was never invoked: every route ran the
+    tool-less extraction twin, so `check_legality`, `optimize_schedule` and `lookup_rule` were
+    defined, tested, and unreachable in production, and the `before_tool_callback` allowlist that
+    guards them had never once executed on the deployed service.
+    """
+    runner = build_runner(root_agent)
+    session = await runner.session_service.create_session(app_name=APP_NAME, user_id="api", session_id=uuid.uuid4().hex)
+
+    prompt = question if schedule is None else (
+        f"{question}\n\nThe schedule to use, as JSON:\n{json.dumps(schedule)}"
+    )
+    message = types.Content(role="user", parts=[types.Part.from_text(text=prompt)])
+    final_text: list[str] = []
+    calls: list[ToolCall] = []
+
+    async def run() -> None:
+        async for event in runner.run_async(
+            user_id="api", session_id=session.id, new_message=message,
+            run_config=RunConfig(max_llm_calls=MAX_ASK_LLM_CALLS),
+        ):
+            for call in event.get_function_calls():
+                calls.append(ToolCall(name=call.name or "?", args=dict(call.args or {})))
+            for response in event.get_function_responses():
+                # The guard refuses by returning an error object rather than raising, so a refusal
+                # arrives here as a normal response and would otherwise look like a successful call.
+                body = response.response if isinstance(response.response, dict) else {}
+                result = body.get("result", body)
+                if isinstance(result, dict) and "error" in result:
+                    for recorded in reversed(calls):
+                        if recorded.name == response.name and not recorded.refused:
+                            recorded.refused = True
+                            recorded.detail = str(result.get("error", ""))[:200]
+                            break
+            if event.is_final_response() and event.content and event.content.parts:
+                final_text.append("".join(p.text or "" for p in event.content.parts))
+
+    await asyncio.wait_for(run(), timeout=timeout_s)
+    answer = "".join(final_text).strip()
+    if not answer:
+        raise ExtractionError("the agent returned no final text")
+    return AskResult(answer=answer, tool_calls=calls)
 
 
 def parse_extract_result(text_out: str) -> ExtractResult:

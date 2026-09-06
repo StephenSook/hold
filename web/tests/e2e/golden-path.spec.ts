@@ -141,7 +141,7 @@ test.describe('the board', () => {
 })
 
 test.describe('import', () => {
-  test('reads a document and solves nothing until a person confirms', async ({ page }) => {
+  test('reads a document, solves nothing until a person confirms, then hands it to the board', async ({ page }) => {
     await page.goto('/#/import')
     await dismissGate(page)
 
@@ -153,10 +153,22 @@ test.describe('import', () => {
     // Under fake externals the route says so in its own notes rather than implying a model ran.
     await expect(result).toContainText(/fixture|HOLD_FAKE_EXTERNALS/i)
 
-    // Nothing has been confirmed, so nothing has been handed to the solver.
-    await expect(page.getByTestId('import-confirmed')).toHaveCount(0)
+    // Nothing is confirmed yet, so the board has not been handed anything.
+    await page.goto('/#/board')
+    await dismissGate(page)
+    await expect(page.getByTestId('imported-notice')).toHaveCount(0)
+
+    // Confirming is the handoff. This assertion used to be that a sentence appeared on the import
+    // page, which was all confirming did: the extracted schedule was dropped when the page
+    // unmounted and the board re-seeded from the demo fixture regardless.
+    await page.goto('/#/import')
+    await dismissGate(page)
+    await page.getByTestId('import-text').fill('Shoot scene 1 at the police station on the first day.')
+    await page.getByTestId('import-submit').click()
+    await expect(page.getByTestId('extract-result')).toBeVisible({ timeout: 30_000 })
     await page.getByTestId('import-confirm').click()
-    await expect(page.getByTestId('import-confirmed')).toBeVisible()
+
+    await expect(page.getByTestId('imported-notice')).toBeVisible({ timeout: 30_000 })
   })
 })
 
