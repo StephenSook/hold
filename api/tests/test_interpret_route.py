@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import pytest
 from fastapi.testclient import TestClient
@@ -160,9 +160,16 @@ def test_needs_clarification_carries_questions_and_no_kind() -> None:
 # The deterministic attack on the proposal, run instead of a second model pass.
 # ---------------------------------------------------------------------------
 
+# Spelled as the schema's own literals so the strategy cannot drift from the field it feeds, and
+# so mypy checks the two against each other rather than taking a bare str.
+STATUSES: list[Literal["ok", "needs_clarification"]] = ["ok", "needs_clarification"]
+KINDS: list[Literal["actor_late", "scene_dropped", "weather_cover"] | None] = [
+    None, "actor_late", "scene_dropped", "weather_cover",
+]
+
 @given(
-    status=st.sampled_from(["ok", "needs_clarification"]),
-    kind=st.sampled_from([None, "actor_late", "scene_dropped", "weather_cover"]),
+    status=st.sampled_from(STATUSES),
+    kind=st.sampled_from(KINDS),
     cast_id=st.sampled_from([None, "cA", "cB", "cC", "cM", "cZZ"]),
     scene_id=st.sampled_from([None, "s1", "s6", "s99"]),
     day_index=st.sampled_from([None, -1, 0, 3, 6, 7, 10 ** 9]),
@@ -171,7 +178,9 @@ def test_needs_clarification_carries_questions_and_no_kind() -> None:
 )
 @settings(max_examples=400, deadline=None)
 def test_a_proposal_is_either_publishable_or_says_what_it_needs(
-    status: str, kind: str | None, cast_id: str | None, scene_id: str | None,
+    status: Literal["ok", "needs_clarification"],
+    kind: Literal["actor_late", "scene_dropped", "weather_cover"] | None,
+    cast_id: str | None, scene_id: str | None,
     day_index: int | None, questions: list[str], reading: str,
 ) -> None:
     """Two invariants over every shape the wire can carry, whatever a model puts on it.
