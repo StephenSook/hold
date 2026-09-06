@@ -29,38 +29,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # This FAILS rather than skipping. A workflow whose every step is conditional on a secret
+      # reports success having evaluated nothing, which is the skipped-guard false green this
+      # project's own rules ban: it would go green forever the day a secret was rotated away, and
+      # nothing would say the agent had stopped being measured. The repository owns these secrets,
+      # so their absence is a real failure of this workflow rather than a reason to stand down.
       - name: Check credentials
-        id: creds
         env:
           WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
           GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         run: |
           if [ -z "$WIF_PROVIDER" ] || [ -z "$GCP_PROJECT" ]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::No Vertex credentials; the live eval did not run. The record gate in CI still ran."
-          else
-            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "::error::WIF_PROVIDER or GCP_PROJECT is not set, so the live eval cannot run. This job fails rather than passing without evaluating anything."
+            exit 1
           fi
 
-      - if: steps.creds.outputs.configured == 'true'
-        uses: google-github-actions/auth@v2
+      - uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
-      - if: steps.creds.outputs.configured == 'true'
-        uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v4
         with:
           python-version: "3.12"
 
-      - if: steps.creds.outputs.configured == 'true'
-        run: uv sync
+      - run: uv sync
 
       # Both agents, each bare on its own exit path. The recorder returns 1 when any case failed,
       # and no pipe stands between that exit code and the step, because a pipeline's status is its
       # last command's and `adk eval ... | tail` reports the exit code of tail.
       - name: Evaluate the tool-bearing agent
-        if: steps.creds.outputs.configured == 'true'
         env:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.GCP_PROJECT }}
           GOOGLE_CLOUD_LOCATION: global
@@ -69,7 +67,6 @@ jobs:
         run: uv run python scripts/adk_eval.py
 
       - name: Evaluate the event interpreter
-        if: steps.creds.outputs.configured == 'true'
         env:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.GCP_PROJECT }}
           GOOGLE_CLOUD_LOCATION: global
@@ -80,9 +77,6 @@ jobs:
       # What the run scored, in the run's own summary, so a reader does not have to open a log to
       # learn whether the numbers moved. The records themselves are not committed from here: a
       # workflow that rewrites its own evidence on a schedule can quietly replace a bad result.
-      # What the run scored, in the run's own summary, so a reader does not have to open a log to
-      # learn whether the numbers moved. The records themselves are not committed from here: a
-      # workflow that rewrites its own evidence on a schedule can quietly replace a bad result.
       - name: Report
-        if: always() && steps.creds.outputs.configured == 'true'
+        if: always()
         run: uv run python -m scripts.eval_summary >> "$GITHUB_STEP_SUMMARY"

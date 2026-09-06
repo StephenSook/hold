@@ -54,6 +54,12 @@ export function JudgePage() {
       label: 'Drag and solve',
     },
     {
+      title: 'Ask the agent, and tell it what happened on set',
+      body: 'Two agent panels sit under the board. Ask a question and the answer arrives with the tools it called listed beneath it, including any call the guardrail refused, so you are reading a trajectory rather than an assertion. Then say what happened in your own words, "B is out on Thursday", and it comes back as a typed event with a plain reading to confirm before anything re-solves. The model interprets the sentence; the solver decides what the change costs, which is why the payroll figure is checkable.',
+      href: '#/board',
+      label: 'The agent panels',
+    },
+    {
       title: 'Read the service describing itself',
       body: 'Nothing on this page is typed by hand. The endpoint names the model, the region, the solver version, the streaming state, and says plainly that it invokes no model and no broker itself.',
       href: './api/status',
@@ -79,13 +85,19 @@ export function JudgePage() {
     },
   ]
 
+  // The one step that needs a clone, found rather than counted. The sentence below used to say
+  // "step five" as a literal, so inserting a step above it made the page misdirect a judge to the
+  // wrong item while every test stayed green: a number about the list, kept outside the list.
+  const cloneStep = steps.findIndex((step) => step.label === 'The repository') + 1
+
   return (
     <div className="mx-auto max-w-[62rem] px-5 py-10 sm:px-8 sm:py-14">
       <p className="script-label text-11 text-bone-faint">For judges</p>
       <h1 className="display-wide mt-3 text-36 text-bone sm:text-48">{COUNT_WORD[steps.length] ?? steps.length} things you can check</h1>
       <p className="mt-4 max-w-[62ch] text-16 text-bone-dim">
-        Nothing below needs a key or an account until step five, which needs a clone. Every figure
-        on this page comes from the live service.
+        Nothing below needs a key or an account until step{' '}
+        {COUNT_WORD[cloneStep]?.toLowerCase() ?? cloneStep}, which needs a clone. Every figure on
+        this page comes from the live service.
       </p>
 
       <section className="mt-10 border border-rail">
@@ -128,7 +140,7 @@ export function JudgePage() {
           <Stat
             label="Agent eval"
             value={evalScore(data?.headline.adk_eval, data?.headline.adk_eval_events)}
-            note={data?.runtime.gemini_model ?? 'Gemini through the Agent Development Kit'}
+            note={`two eval sets, ${data?.runtime.gemini_model ?? 'Gemini through the Agent Development Kit'}`}
           />
         </dl>
       </section>

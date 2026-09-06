@@ -193,17 +193,37 @@ def test_the_interpreter_evalset_is_generated_not_pasted() -> None:
 
 def test_the_interpreter_golds_are_valid_proposals_the_engine_would_accept() -> None:
     """An expected answer the API's own schema refuses cannot prove the interpreter, and one the
-    engine would reject proves only that the model can produce unusable JSON convincingly."""
-    from api.hold.schemas import EventProposal
+    engine would reject proves only that the model can produce unusable JSON convincingly.
 
+    "Would accept" is asserted by running it. An earlier version of this only checked that the
+    payload was non-empty, which is a weaker claim than its own docstring made: a payload of
+    {"scene_id": "s99"} is non-empty and the engine refuses it.
+    """
+    from api.hold.schemas import EventProposal, ScheduleInput, SetEvent
+    from api.hold.set_events import apply_set_event
+
+    schedule = ScheduleInput.model_validate(_demo())
     evalset = json.loads((ROOT / "api" / "agents" / "event_agent" / "evalset.json").read_text(encoding="utf-8"))
     ok = 0
     for case in evalset["eval_cases"]:
         text = "".join(p.get("text", "") for p in case["conversation"][0]["final_response"]["parts"])
         proposal = EventProposal.model_validate_json(text)
         if proposal.status == "ok":
-            assert proposal.event_payload(), case["eval_id"]
+            assert proposal.kind is not None
+            _, change = apply_set_event(
+                schedule,
+                SetEvent(kind=proposal.kind, payload=proposal.event_payload(), source="agent"),
+            )
+            assert change, case["eval_id"]
             ok += 1
         else:
             assert proposal.questions, f"{case['eval_id']} refuses without saying what it needs"
     assert ok >= 3, "the eval set must contain applicable events, not only refusals"
+
+
+def _demo() -> dict[str, object]:
+    return {
+        k: v
+        for k, v in json.loads((ROOT / "data" / "demo" / "hold-demo.json").read_text(encoding="utf-8")).items()
+        if not k.startswith("_")
+    }
