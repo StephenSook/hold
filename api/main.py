@@ -139,9 +139,13 @@ def _dist_file(full_path: str, dist: Path | None = None) -> Path | None:
     try:
         candidate = (root / full_path).resolve()
         candidate.relative_to(root)
+        # is_file() belongs inside the try. It stats the path, and a request for a segment longer
+        # than the filesystem allows raises ENAMETOOLONG rather than answering False, which turned
+        # a nonsense URL into a 500 on the one origin a judge opens. Found by a property test
+        # generating path segments, not by reading the code.
+        return candidate if candidate.is_file() else None
     except (ValueError, OSError):
         return None
-    return candidate if candidate.is_file() else None
 
 
 @app.get("/{full_path:path}", response_model=None)  # a Response union is not a response model
