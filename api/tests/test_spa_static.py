@@ -23,7 +23,10 @@ DIST = ROOT / "web" / "dist"
 client = TestClient(app)
 
 # The files Vite writes at the root of dist. index.html is excluded: it is the fallback itself.
-ROOT_FILES = ("registerSW.js", "sw.js", "manifest.webmanifest", "favicon.svg", "icon-192.png")
+# registerSW.js is not here any more. The app registers the worker through useRegisterSW, so
+# the file is no longer emitted, and leaving it in this tuple made one case skip on every run
+# for a reason that had stopped being temporary. Its successor state is asserted below.
+ROOT_FILES = ("sw.js", "manifest.webmanifest", "favicon.svg", "icon-192.png")
 
 
 needs_build = pytest.mark.skipif(
@@ -36,8 +39,7 @@ needs_build = pytest.mark.skipif(
 @pytest.mark.parametrize("name", ROOT_FILES)
 def test_a_root_file_is_served_as_itself_and_not_as_index_html(name: str) -> None:
     """Each is served from disk. Before the fix every one of these answered with HTML."""
-    if not (DIST / name).is_file():
-        pytest.skip(f"{name} is not in this build")
+    assert (DIST / name).is_file(), f"{name} is not in this build, so this case would assert nothing"
     response = client.get(f"/{name}")
     assert response.status_code == 200
     assert not response.text.lstrip().lower().startswith("<!doctype html>"), (
@@ -130,3 +132,30 @@ def test_the_api_is_never_shadowed_by_a_file() -> None:
     response = client.get("/api/status")
     assert response.status_code == 200
     assert response.json()["headline_source"] == "docs/FACTS.json"
+
+
+@pytest.mark.parametrize("path", ["/", "/judge", "/icon-192.png"])
+def test_head_is_answered_on_the_paths_a_link_checker_asks_about(path: str) -> None:
+    """
+    A FastAPI route declared with @app.get accepts only GET. Starlette adds HEAD beside GET on its
+    own routes and FastAPI does not, so the site root, the judge page and every static asset
+    answered 405 to a HEAD request while every browser saw a working site.
+
+    That is what a link unfurler, an uptime monitor and most link checkers send first, so the one
+    URL printed on the README read as broken to everything that checks a link without opening it.
+    """
+    assert client.head(path).status_code != 405
+
+
+@needs_build
+def test_register_sw_is_not_emitted() -> None:
+    """
+    The retired half of the rule above. The worker is registered through useRegisterSW, so Vite
+    writes no registerSW.js, and a request for it correctly falls through to the SPA.
+
+    This is asserted rather than skipped. A guard whose condition has dissolved has to state the
+    state that replaced it, or it goes quiet and nobody learns that the file came back.
+    """
+    assert not (DIST / "registerSW.js").exists(), (
+        "registerSW.js is being emitted again; put it back in ROOT_FILES so it is served as itself"
+    )

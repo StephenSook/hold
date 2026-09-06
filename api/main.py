@@ -148,7 +148,14 @@ def _dist_file(full_path: str, dist: Path | None = None) -> Path | None:
         return None
 
 
-@app.get("/{full_path:path}", response_model=None)  # a Response union is not a response model
+# HEAD is listed explicitly. Starlette adds it beside GET on its own routes, but a FastAPI
+# route does not, so every path this serves, which is the site root, the judge page and every
+# static asset, answered 405 to a HEAD request. Browsers never noticed. Link unfurlers, uptime
+# monitors and link checkers ask with HEAD first, so the one URL on the README read as broken
+# to everything that checks a link without opening it.
+@app.api_route(  # a Response union is not a response model
+    "/{full_path:path}", methods=["GET", "HEAD"], response_model=None
+)
 async def spa_fallback(full_path: str) -> FileResponse | JSONResponse:
     """Serve a real file from web/dist when the path names one, else index.html (HashRouter SPA)."""
     found = _dist_file(full_path)
