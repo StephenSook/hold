@@ -22,7 +22,7 @@ call the Cloud Run API, so every figure on the judge screen is computed when you
 |---|---|
 | <img src="docs/install/android-apk.png" alt="QR code linking to the HOLD Android APK download" width="150"> | <img src="docs/install/ios-testflight.png" alt="QR code linking to the HOLD TestFlight beta" width="150"> |
 | [**Download the APK**](https://github.com/StephenSook/hold/releases/latest/download/hold.apk) | [**Join on TestFlight**](https://testflight.apple.com/join/guYBH8xE) |
-| Android 7.0 or newer. Allow installs from this source when prompted. | Needs the TestFlight app. Build 2, in beta review at the time of writing: the link opens once Apple approves it. |
+| Android 7.0 or newer. Allow installs from this source when prompted. | Needs the TestFlight app. Build 2 is uploaded and waiting on Apple's beta review, so until that clears the link reads "this beta isn't accepting any new testers right now". The APK on the left needs no such wait. |
 
 The APK is signed and its checksum is on the
 [release](https://github.com/StephenSook/hold/releases/tag/v1.0.0), so a download can be checked
