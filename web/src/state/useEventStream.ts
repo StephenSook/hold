@@ -13,10 +13,22 @@ interface StreamState {
    *  cleared afterwards. */
   jobId: string | null
   lines: StreamLine[]
+  /** Signatures already shown, so a replay cannot show the same event twice. */
+  seen: string[]
   dropped: boolean
 }
 
-const EMPTY: StreamState = { jobId: null, lines: [], dropped: false }
+const EMPTY: StreamState = { jobId: null, lines: [], seen: [], dropped: false }
+
+/**
+ * What makes two deliveries the same event.
+ *
+ * The stream carries no id, so the signature is the kind plus the rendered line, and every line
+ * this hook builds already embeds what distinguishes it: an objective carries its millisecond, a
+ * verdict its day and status. Two deliveries that agree on all of that are the same event
+ * arriving twice, which is exactly what a replay is.
+ */
+const signature = (kind: string, text: string): string => `${kind}\u0000${text}`
 
 /**
  * The server-sent stream for one job.
@@ -48,18 +60,29 @@ export function useEventStream(jobId: string | null, enabled = true) {
     // job's closure. Without this guard its updater wins, storage flips back to the old job, and
     // the new job's replayed lines disappear from a log that looks perfectly healthy.
     let current = true
-    // EventSource reconnects on its own, and this URL asks for a replay every time, so a
-    // reconnect re-delivers the whole history. Appending it produced a log that duplicated itself
-    // after any blip, and after the server closed the stream at its own event limit. The replay
-    // is authoritative, so a reconnect clears what it is about to re-send rather than adding to
-    // it. The first open has nothing to clear.
-    let opened = false
 
+    /**
+     * EventSource reconnects on its own and this URL asks for a replay every time, so a reconnect
+     * re-delivers the history and appending it duplicated the log after any blip.
+     *
+     * The first fix cleared the lines on reconnect, on the premise that the replay was about to
+     * re-send them. That premise is false in the one case this hook exists for: the bus is in
+     * process, so after an instance swap the new process replays nothing, and clearing would
+     * discard the only remaining copy of the log while reporting the stream as connected.
+     *
+     * Skipping what has already been shown loses nothing in either case.
+     */
     const add = (kind: string, text: string) => {
       if (!current) return
+      const key = signature(kind, text)
       setStored((prev) => {
-        const base = prev.jobId === jobId ? prev : { jobId, lines: [], dropped: false }
-        return { ...base, lines: [...base.lines.slice(-40), { at: Date.now(), kind, text }] }
+        const base = prev.jobId === jobId ? prev : { jobId, lines: [], seen: [], dropped: false }
+        if (base.seen.includes(key)) return base
+        return {
+          ...base,
+          lines: [...base.lines.slice(-40), { at: Date.now(), kind, text }],
+          seen: [...base.seen.slice(-200), key],
+        }
       })
     }
 
@@ -90,18 +113,12 @@ export function useEventStream(jobId: string | null, enabled = true) {
     // arrived underneath the label.
     stream.onopen = () => {
       if (!current) return
-      const reconnected = opened
-      opened = true
-      setStored((prev) => {
-        if (prev.jobId !== jobId) return prev
-        if (reconnected) return { jobId, lines: [], dropped: false }
-        return prev.dropped ? { ...prev, dropped: false } : prev
-      })
+      setStored((prev) => (prev.jobId === jobId && prev.dropped ? { ...prev, dropped: false } : prev))
     }
 
     stream.onerror = () => {
       if (!current) return
-      setStored((prev) => ({ ...(prev.jobId === jobId ? prev : { jobId, lines: [] }), dropped: true }))
+      setStored((prev) => ({ ...(prev.jobId === jobId ? prev : { jobId, lines: [], seen: [] }), dropped: true }))
       // A closed stream that is also reported closed. Leaving it open to retry while the label
       // says closed is the combination that lies in both directions at once.
       if (stream.readyState === EventSource.CLOSED) {
