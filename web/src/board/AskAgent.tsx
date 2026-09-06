@@ -5,6 +5,30 @@ import { ApiError, apiFetch } from '@/lib/api'
 import type { AskResult, ScheduleInput } from '@/types/contracts'
 
 /**
+ * What the agent passed, in one readable line.
+ *
+ * The first version printed JSON.stringify(args), and the agent passes the whole schedule to
+ * check_legality, so a single tool call rendered as roughly forty lines of minified JSON and
+ * buried the answer above it. The interesting part of a call is never the payload: it is which
+ * tool, and the one or two arguments that chose the day or the rule.
+ */
+function summarize(args: Record<string, unknown>): string {
+  const parts = Object.entries(args).map(([key, value]) => {
+    if (value === null || value === undefined) return `${key}: null`
+    if (Array.isArray(value)) return `${key}: ${value.length} items`
+    if (typeof value === 'object') {
+      const shape = value as { scenes?: unknown[]; days?: unknown[]; cast?: unknown[] }
+      if (Array.isArray(shape.scenes) && Array.isArray(shape.days)) {
+        return `${key}: ${shape.scenes.length} scenes over ${shape.days.length} days`
+      }
+      return `${key}: ${Object.keys(value as object).length} fields`
+    }
+    return `${key}: ${String(value)}`
+  })
+  return parts.join('   ')
+}
+
+/**
  * Ask the tool-bearing agent about this board.
  *
  * This is the only surface that reaches `root_agent`. Every other route runs the tool-less
@@ -144,7 +168,7 @@ export function AskAgent({ schedule }: { schedule: ScheduleInput }) {
                         <Wrench className="size-3.5 text-bone-faint" aria-hidden="true" />
                       )}
                       <span className={call.refused ? 'text-flag' : 'text-bone'}>{call.name}</span>
-                      <span className="text-bone-faint">{JSON.stringify(call.args)}</span>
+                      <span className="text-bone-faint">{summarize(call.args)}</span>
                       {call.refused && <span className="text-flag">refused: {call.detail}</span>}
                     </li>
                   ))}
