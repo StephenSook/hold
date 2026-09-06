@@ -18,4 +18,9 @@ private
 *.local.json
 .bob
 docs/bob-evidence/*.png
-bench/instances
+# bench/instances used to be excluded here to keep the image lean. It cannot be any more: the
+# deployed MCP server exposes run_residual, and the README and the judge walkthrough invite a
+# reader to solve a published benchmark instance against its published optimum on the live
+# service. Without these the tool raises and the strongest checkable claim in the submission is
+# a broken command. They are 48K of text, and optima.json shipped without them, so the failure
+# looked like a solver error rather than a missing file.
