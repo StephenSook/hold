@@ -1,9 +1,9 @@
 {
-  "eval_set_id": "hold_extraction_v1",
+  "eval_set_id": "hold_events_v1",
   "passed": 4,
   "failed": 0,
   "cases": {
-    "rule_lookup_trajectory": {
+    "event_scene_dropped": {
       "status": "PASSED",
       "metrics": {
         "tool_trajectory_avg_score": {
@@ -18,7 +18,7 @@
         }
       }
     },
-    "ambiguity_refusal": {
+    "event_out_of_scope": {
       "status": "PASSED",
       "metrics": {
         "tool_trajectory_avg_score": {
@@ -33,7 +33,7 @@
         }
       }
     },
-    "extract_callsheet": {
+    "event_actor_late": {
       "status": "PASSED",
       "metrics": {
         "tool_trajectory_avg_score": {
@@ -48,7 +48,7 @@
         }
       }
     },
-    "nl_constraints": {
+    "event_weather_cover": {
       "status": "PASSED",
       "metrics": {
         "tool_trajectory_avg_score": {
@@ -64,10 +64,10 @@
       }
     }
   },
-  "history_file": "hold_agent_hold_extraction_v1_1788720834.3478222.evalset_result.json",
-  "run_at": "2026-09-06T18:53:54+00:00",
-  "adk_eval_exit_code": 0,
-  "recorded_at": "2026-09-06T18:53:56+00:00",
+  "history_file": "event_agent_hold_events_v1_1788720690.58543.evalset_result.json",
+  "run_at": "2026-09-06T18:51:30+00:00",
+  "adk_eval_exit_code": null,
+  "recorded_at": "2026-09-06T18:52:18+00:00",
   "model": "gemini-3.1-flash-lite",
   "models_invoked": [
     "gemini-2.5-flash",
@@ -78,7 +78,7 @@
     "tool_trajectory_avg_score": 1.0,
     "final_response_match_v2": 0.8
   },
-  "agent_module": "api/agents/hold_agent",
-  "agent_fingerprint": "123096fb69d3529973a760d8404b4c1f14969ac868948b0e6d31d171bb542866",
+  "agent_module": "api/agents/event_agent",
+  "agent_fingerprint": "811241ddd7654c2cc9e48aacb392117dc74a8a264b97dd9a4c639a822fa075f1",
   "written_by": "scripts/adk_eval.py from a real adk eval run"
 }

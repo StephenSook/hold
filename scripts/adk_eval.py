@@ -1,15 +1,24 @@
 #!/usr/bin/env python
 """
 Task 3.4: run `adk eval` against Vertex AI (or read an existing run log) and record the summary in
-docs/adk_eval.json, which scripts/facts.py copies into FACTS as adk_eval. Nothing is typed by hand.
+docs/adk_eval*.json, which scripts/facts.py copies into FACTS as adk_eval. Nothing is typed by hand.
 
     GOOGLE_CLOUD_PROJECT=hold-2026 GOOGLE_CLOUD_LOCATION=global GOOGLE_GENAI_USE_ENTERPRISE=true \\
       uv run python scripts/adk_eval.py                 # run the eval, then record
     uv run python scripts/adk_eval.py --log path.log    # record from a log you already have
+    uv run python scripts/adk_eval.py --agent api/agents/event_agent --out docs/adk_eval_events.json
+
+Each record carries a fingerprint of the agent it scored: the instruction, the tool names, the
+model id, the criteria and the eval set bytes. A recorded result says nothing about an agent whose
+prompt has since been rewritten, and without the fingerprint nothing could tell the two apart, so
+the record read 4 passed forever no matter what the agent had become. api/tests/test_adk_eval.py
+recomputes it and turns a stale record into a red build.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib
 import json
 import os
 import re
@@ -21,7 +30,6 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENT = ROOT / "api" / "agents" / "hold_agent"
-HISTORY = AGENT / ".adk" / "eval_history"
 OUT = ROOT / "docs" / "adk_eval.json"
 EVAL_STATUS = {1: "PASSED", 2: "FAILED", 3: "NOT_EVALUATED"}  # google.adk.evaluation.eval_metrics.EvalStatus
 _MODEL = re.compile(r"Sending out request, model: (\S+),")
@@ -85,22 +93,47 @@ def pick_history(history_dir: Path, passed: int, failed: int, not_before: float 
     return candidates[0]
 
 
+def fingerprint(agent_dir: Path) -> str:
+    """What was scored, in one hash: the agent's instruction and tools, the model, the criteria and
+    the eval set. Change any of them and the recorded result stops describing the current agent."""
+    module = importlib.import_module(f"api.agents.{agent_dir.name}")
+    agent = module.root_agent
+    material = json.dumps(
+        {
+            "agent": agent.name,
+            "model": str(agent.model),
+            "instruction": str(agent.instruction),
+            "tools": sorted(getattr(t, "__name__", getattr(t, "name", repr(t))) for t in agent.tools),
+            "output_schema": getattr(agent.output_schema, "__name__", None),
+            "criteria": json.loads((agent_dir / "test_config.json").read_text(encoding="utf-8"))["criteria"],
+            "evalset": (agent_dir / "evalset.json").read_text(encoding="utf-8"),
+        },
+        sort_keys=True,
+    )
+    return hashlib.sha256(material.encode("utf-8")).hexdigest()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--log", type=Path, help="parse this log instead of running adk eval")
+    parser.add_argument("--agent", type=Path, default=AGENT, help="the agent module directory to evaluate")
+    parser.add_argument("--out", type=Path, default=OUT, help="where to write the record")
     args = parser.parse_args()
+    agent_dir = args.agent if args.agent.is_absolute() else ROOT / args.agent
+    out = args.out if args.out.is_absolute() else ROOT / args.out
+    history_dir = agent_dir / ".adk" / "eval_history"
     started: float | None = None
     exit_code: int | None = None
     if args.log:
         log = args.log.read_text(encoding="utf-8")
     else:
         started = datetime.now(UTC).timestamp()
-        cmd = ["uv", "run", "adk", "eval", str(AGENT), str(AGENT / "evalset.json"), "--config_file_path", str(AGENT / "test_config.json")]
+        cmd = ["uv", "run", "adk", "eval", str(agent_dir), str(agent_dir / "evalset.json"), "--config_file_path", str(agent_dir / "test_config.json")]
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=False)
         log = run.stdout + run.stderr
         exit_code = run.returncode
     summary = parse_summary(log)
-    history = pick_history(HISTORY, summary["passed"], summary["failed"], not_before=started)
+    history = pick_history(history_dir, summary["passed"], summary["failed"], not_before=started)
     data = json.loads(history.read_text(encoding="utf-8"))
     summary["cases"] = parse_history(data)
     summary["history_file"] = history.name
@@ -112,11 +145,13 @@ def main() -> int:
         "model": os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite"),
         "models_invoked": models_invoked(log),
         "location": os.environ.get("GOOGLE_CLOUD_LOCATION", "global"),
-        "criteria": json.loads((AGENT / "test_config.json").read_text(encoding="utf-8"))["criteria"],
+        "criteria": json.loads((agent_dir / "test_config.json").read_text(encoding="utf-8"))["criteria"],
+        "agent_module": str(agent_dir.relative_to(ROOT)),
+        "agent_fingerprint": fingerprint(agent_dir),
         "written_by": "scripts/adk_eval.py from a real adk eval run",
     }
-    OUT.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
-    print(f"wrote {OUT.relative_to(ROOT)}: passed {record['passed']}, failed {record['failed']}")
+    out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {out.relative_to(ROOT)}: passed {record['passed']}, failed {record['failed']}")
     return 0 if record["failed"] == 0 else 1
 
 

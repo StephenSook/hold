@@ -132,3 +132,78 @@ def test_the_call_sheet_case_prompt_is_the_committed_sample() -> None:
     assert prompt == (root / "data" / "demo" / "samples" / "callsheet-day3.txt").read_text(encoding="utf-8").strip()
     gold = json.loads("".join(p.get("text", "") for p in inv["final_response"]["parts"]))
     assert gold["status"] == "ok" and gold["questions"] == []
+
+
+# ---------------------------------------------------------------------------
+# The gate. Everything above tests the recorder; this tests the record.
+# ---------------------------------------------------------------------------
+
+ROOT = Path(__file__).resolve().parents[2]
+RECORDS = [
+    (ROOT / "api" / "agents" / "hold_agent", ROOT / "docs" / "adk_eval.json"),
+    (ROOT / "api" / "agents" / "event_agent", ROOT / "docs" / "adk_eval_events.json"),
+]
+
+
+@pytest.mark.parametrize(("agent_dir", "record_path"), RECORDS, ids=lambda p: p.name)
+def test_the_recorded_eval_is_green_and_covers_every_case(agent_dir: Path, record_path: Path) -> None:
+    """A recorded eval with a failing case is a failing build, and so is a case nobody scored.
+
+    Until this existed the only thing CI checked about the eval was that FACTS quoted the record
+    faithfully, which is a consistency check between two files and says nothing about whether the
+    agent works. A record can be internally perfect and report three failures.
+    """
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    evalset = json.loads((agent_dir / "evalset.json").read_text(encoding="utf-8"))
+    expected = {case["eval_id"] for case in evalset["eval_cases"]}
+
+    assert record["failed"] == 0, f"{record_path.name}: {record['failed']} case(s) failed"
+    assert record["passed"] == len(expected)
+    assert set(record["cases"]) == expected, "the record must score every case in the eval set and no others"
+    for eval_id, case in record["cases"].items():
+        assert case["status"] == "PASSED", f"{eval_id} is {case['status']}"
+        assert case["metrics"], f"{eval_id} passed with no metric recorded, which is not a measurement"
+        for name, metric in case["metrics"].items():
+            assert metric["score"] >= metric["threshold"], f"{eval_id}/{name} scored below its own threshold"
+
+
+@pytest.mark.parametrize(("agent_dir", "record_path"), RECORDS, ids=lambda p: p.name)
+def test_the_recorded_eval_describes_the_agent_that_exists_now(agent_dir: Path, record_path: Path) -> None:
+    """Rewrite the prompt, add a tool, change the model or edit a case, and the record stops being
+    evidence about anything that ships. Without this the file reads 4 passed forever: a result has
+    no expiry of its own, and the agent it scored can be replaced underneath it in one edit.
+
+    The remedy the failure asks for is to re-run the eval, never to update the hash.
+    """
+    from scripts.adk_eval import fingerprint
+
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    assert record["agent_fingerprint"] == fingerprint(agent_dir), (
+        f"{record_path.name} was recorded against a different agent, prompt, model, criteria or eval set. "
+        f"Re-run it: uv run python scripts/adk_eval.py --agent {agent_dir.relative_to(ROOT)} --out {record_path.relative_to(ROOT)}"
+    )
+
+
+def test_the_interpreter_evalset_is_generated_not_pasted() -> None:
+    """The prompt in each case is the context block the service builds, so it cannot drift from it."""
+    from scripts.event_evalset import render
+
+    assert (ROOT / "api" / "agents" / "event_agent" / "evalset.json").read_text(encoding="utf-8") == render()
+
+
+def test_the_interpreter_golds_are_valid_proposals_the_engine_would_accept() -> None:
+    """An expected answer the API's own schema refuses cannot prove the interpreter, and one the
+    engine would reject proves only that the model can produce unusable JSON convincingly."""
+    from api.hold.schemas import EventProposal
+
+    evalset = json.loads((ROOT / "api" / "agents" / "event_agent" / "evalset.json").read_text(encoding="utf-8"))
+    ok = 0
+    for case in evalset["eval_cases"]:
+        text = "".join(p.get("text", "") for p in case["conversation"][0]["final_response"]["parts"])
+        proposal = EventProposal.model_validate_json(text)
+        if proposal.status == "ok":
+            assert proposal.event_payload(), case["eval_id"]
+            ok += 1
+        else:
+            assert proposal.questions, f"{case['eval_id']} refuses without saying what it needs"
+    assert ok >= 3, "the eval set must contain applicable events, not only refusals"

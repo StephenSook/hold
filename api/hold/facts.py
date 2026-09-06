@@ -51,9 +51,14 @@ def git_sha(root: Path) -> str:
     return out.stdout.strip() or "unknown"
 
 
-def load_adk_eval(root: Path) -> dict[str, Any] | None:
-    """The recorded adk eval summary (docs/adk_eval.json, written by scripts/adk_eval.py), or None."""
-    path = root / "docs" / "adk_eval.json"
+def load_adk_eval(root: Path, name: str = "adk_eval.json") -> dict[str, Any] | None:
+    """A recorded adk eval summary (docs/adk_eval*.json, written by scripts/adk_eval.py), or None.
+
+    There are two: the tool-bearing agent's set and the event interpreter's. They are separate
+    records because `adk eval` scores one agent module per run, so a single combined number would
+    be an average of two different things and could hide a whole failing agent behind a passing one.
+    """
+    path = root / "docs" / name
     if not path.exists():
         return None
     data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
@@ -110,6 +115,7 @@ def compute_facts(root: Path, time_limit_s: float = 60.0) -> dict[str, Any]:
         "pass2_status": outcome.result.status,
         "checker_agrees": bool(outcome.checker.agrees),
         "adk_eval": load_adk_eval(root),
+        "adk_eval_events": load_adk_eval(root, "adk_eval_events.json"),
         "adk_eval_note": "recorded by scripts/adk_eval.py from a real adk eval run" if load_adk_eval(root) else "task 3.4 has not run; null until a real adk eval score is recorded",
         "rules": {
             "records": counts["records"],
@@ -151,15 +157,19 @@ def headline_mismatches(text: str, facts: dict[str, Any], allow_usd: Iterable[fl
     allowed = {float(a) for a in allow_usd}
     hold_ok = {int(facts["hold_days_before"]), int(facts["hold_days_after"])}
     illegal_ok = {int(facts["illegal_days_before"]), int(facts["illegal_days_after"])}
-    eval_run = facts.get("adk_eval") or None
+    # Every recorded eval set, not only the first. A claim of "N of M cases" is checked against all
+    # of them and passes if it states one of them exactly; before this a claim about the interpreter
+    # was silently checked against the extraction agent's numbers and passed by coincidence.
+    eval_runs = [r for r in (facts.get("adk_eval"), facts.get("adk_eval_events")) if r]
     out: list[str] = []
     for sentence in re.split(r"(?<=[.!?])\s+|\n", text):
         for m in _EVAL_CASES.finditer(sentence):
             passed, total = _numeral(m.group(1)), _numeral(m.group(2))
-            if eval_run is None:
+            if not eval_runs:
                 out.append(f"eval cases claimed with no recorded run: {sentence.strip()[:120]}")
-            elif passed != int(eval_run["passed"]) or total != int(eval_run["passed"]) + int(eval_run["failed"]):
-                out.append(f"eval cases stated as {m.group(1)} of {m.group(2)}, FACTS says {eval_run['passed']} of {int(eval_run['passed']) + int(eval_run['failed'])}: {sentence.strip()[:120]}")
+            elif not any(passed == int(r["passed"]) and total == int(r["passed"]) + int(r["failed"]) for r in eval_runs):
+                recorded = " or ".join(f"{r['passed']} of {int(r['passed']) + int(r['failed'])}" for r in eval_runs)
+                out.append(f"eval cases stated as {m.group(1)} of {m.group(2)}, FACTS says {recorded}: {sentence.strip()[:120]}")
         for pattern, ok, label in ((_HOLD, hold_ok, "hold days"), (_ILLEGAL, illegal_ok, "illegal days")):
             for m in pattern.finditer(sentence):
                 n = _numeral(m.group(1))

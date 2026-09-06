@@ -1,0 +1,88 @@
+# The agent eval, actually run.
+#
+# The gate in api/tests/test_adk_eval.py checks the RECORD: green, complete, and fingerprinted to
+# the agent that exists now. It runs on every push and needs no credentials, which is exactly why
+# it cannot be the whole story: it proves the record describes this agent, not that this agent
+# still behaves. Only a live run can do that, and a live run needs Vertex AI.
+#
+# So this workflow runs both eval sets against the real model. It is deliberately not attached to
+# push: a model call is not deterministic, and a gate that can block a deploy on a judge model's
+# mood is a gate people learn to bypass. It runs daily and on demand, and a failure sends GitHub's
+# own failure mail to the repository owner.
+name: Agent eval (live)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Offset minute, not :00. Scheduled runs on the hour are deprioritised hardest, and the newest
+    # run's AGE is what says whether this is alive; a green history says nothing.
+    - cron: "17 6 * * *"
+
+jobs:
+  eval:
+    name: adk eval against Vertex AI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write   # Workload Identity Federation, no JSON key in the repo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check credentials
+        id: creds
+        env:
+          WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        run: |
+          if [ -z "$WIF_PROVIDER" ] || [ -z "$GCP_PROJECT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No Vertex credentials; the live eval did not run. The record gate in CI still ran."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.creds.outputs.configured == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - if: steps.creds.outputs.configured == 'true'
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+
+      - if: steps.creds.outputs.configured == 'true'
+        run: uv sync
+
+      # Both agents, each bare on its own exit path. The recorder returns 1 when any case failed,
+      # and no pipe stands between that exit code and the step, because a pipeline's status is its
+      # last command's and `adk eval ... | tail` reports the exit code of tail.
+      - name: Evaluate the tool-bearing agent
+        if: steps.creds.outputs.configured == 'true'
+        env:
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GCP_PROJECT }}
+          GOOGLE_CLOUD_LOCATION: global
+          GOOGLE_GENAI_USE_ENTERPRISE: "true"
+          GEMINI_MODEL: gemini-3.1-flash-lite
+        run: uv run python scripts/adk_eval.py
+
+      - name: Evaluate the event interpreter
+        if: steps.creds.outputs.configured == 'true'
+        env:
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.GCP_PROJECT }}
+          GOOGLE_CLOUD_LOCATION: global
+          GOOGLE_GENAI_USE_ENTERPRISE: "true"
+          GEMINI_MODEL: gemini-3.1-flash-lite
+        run: uv run python scripts/adk_eval.py --agent api/agents/event_agent --out docs/adk_eval_events.json
+
+      # What the run scored, in the run's own summary, so a reader does not have to open a log to
+      # learn whether the numbers moved. The records themselves are not committed from here: a
+      # workflow that rewrites its own evidence on a schedule can quietly replace a bad result.
+      # What the run scored, in the run's own summary, so a reader does not have to open a log to
+      # learn whether the numbers moved. The records themselves are not committed from here: a
+      # workflow that rewrites its own evidence on a schedule can quietly replace a bad result.
+      - name: Report
+        if: always() && steps.creds.outputs.configured == 'true'
+        run: uv run python -m scripts.eval_summary >> "$GITHUB_STEP_SUMMARY"
