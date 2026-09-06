@@ -45,3 +45,33 @@ for (const [name, path] of ROUTES) {
     expect(cls, `cumulative layout shift on ${name}`).toBeLessThan(0.1)
   })
 }
+
+test('the headline reveal leaves room for its descenders', async ({ page }) => {
+  /*
+   * The display sizes set a line height below 1, and the reveal wraps every line in an
+   * overflow-hidden mask so the line can travel up into view. Together those cut the tails off
+   * the y in "you" and the g and y in "legally" on the first screen of the site. The mask carries
+   * padding for the descender and takes the same amount back in margin, so this asserts both: the
+   * room exists, and it costs the layout nothing.
+   */
+  await page.goto('/#/')
+  const masks = page.locator('h1 > span')
+  await expect(masks.first()).toBeVisible()
+  const count = await masks.count()
+  expect(count).toBeGreaterThan(0)
+
+  for (let i = 0; i < count; i += 1) {
+    const box = await masks.nth(i).evaluate((el) => {
+      const style = getComputedStyle(el)
+      const size = parseFloat(style.fontSize)
+      return {
+        overflow: style.overflowY,
+        padEm: parseFloat(style.paddingBottom) / size,
+        marginEm: parseFloat(style.marginBottom) / size,
+      }
+    })
+    expect(box.overflow, 'the mask is what makes the reveal work').toBe('hidden')
+    expect(box.padEm, 'the mask must clear the font descender').toBeGreaterThanOrEqual(0.2)
+    expect(box.padEm + box.marginEm, 'the room must cost the layout nothing').toBeCloseTo(0, 3)
+  }
+})

@@ -10,6 +10,12 @@ import { cn } from '@/lib/cn'
  *
  * Each line is real text inside a clip, so a screen reader hears the sentence once and in order,
  * and under reduced motion MotionConfig drops the travel and keeps the fade.
+ *
+ * The clip is what makes the reveal work and it is also what cut the bottom off every descender.
+ * The display sizes set a line height below 1 (0.9 at the largest), so the line box ends above
+ * the font's descender and `overflow-hidden` took the tails off the y in "you", the g and the y
+ * in "legally". The mask is given room for them in padding and the same amount is taken back in
+ * margin, so the descenders are inside the clip and the vertical rhythm of the page is unchanged.
  */
 export function Reveal({
   lines,
@@ -27,7 +33,7 @@ export function Reveal({
   return (
     <Tag className={className}>
       {lines.map((line, index) => (
-        <span key={line} className="block overflow-hidden">
+        <span key={line} className="block overflow-hidden pb-[0.24em] -mb-[0.24em]">
           <motion.span
             className={cn('block', lineClassName)}
             initial={{ y: '108%', opacity: 0 }}
