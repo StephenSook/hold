@@ -375,3 +375,41 @@ def test_an_unbound_set_event_still_edits_the_latest_plan(client: TestClient) ->
     answer = client.post("/api/set-events", json={"kind": "scene_dropped", "payload": {"scene_id": "s3"}, "source": "ui"})
     assert answer.status_code == 202, answer.text
     assert answer.json()["base_job_id"] == job_id
+
+
+def test_every_set_event_the_ui_offers_is_one_the_engine_accepts(client: TestClient) -> None:
+    """The three buttons on the board, with the exact payloads they send.
+
+    Two of them had never worked. `actor_late` sent `minutes` and `weather_cover` sent `day`, while
+    apply_set_event reads `day_index` for both, so a judge pressing either got a 422 on the primary
+    screen. Nothing caught it: the unit tests construct their own payloads, and the e2e clicked
+    only the third button. This test reads the payloads out of the shipped component, so a button
+    the engine would refuse cannot ship again, and neither can a fourth one added without a test.
+    """
+    import re
+
+    source = (ROOT / "web" / "src" / "board" / "SetEvents.tsx").read_text(encoding="utf-8")
+    block = re.search(r"const EVENTS[^=]*=\s*\[(.*?)\n\]", source, re.DOTALL)
+    assert block, "the EVENTS array could not be found; this test guards a shape that moved"
+    offered = re.findall(r"kind:\s*'(\w+)'.*?payload:\s*\{([^}]*)\}", block.group(1))
+    assert len(offered) == 3, f"expected the three set events, found {len(offered)}"
+
+    job_id = _solve(client)
+    for kind, payload_src in offered:
+        payload = {
+            key.strip(): (int(value) if value.strip().lstrip("-").isdigit() else value.strip().strip("'"))
+            for key, value in (pair.split(":", 1) for pair in payload_src.split(",") if ":" in pair)
+        }
+        answer = client.post(
+            "/api/set-events",
+            json={"kind": kind, "payload": payload, "source": "ui", "base_job_id": job_id},
+        )
+        assert answer.status_code == 202, f"the {kind} button sends {payload}, which the API refuses: {answer.text}"
+        job_id = answer.json()["job_id"]
+        _wait(client, job_id)
+
+
+def _solve(client: TestClient) -> str:
+    job_id: str = client.post("/api/solve", json=_demo()).json()["job_id"]
+    _wait(client, job_id)
+    return job_id

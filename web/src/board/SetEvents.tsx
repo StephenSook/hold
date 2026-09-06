@@ -12,10 +12,18 @@ import type { StreamLine } from '@/state/useEventStream'
  * rather than patching the one on screen, which is why the answer carries a new job id. The
  * stream below is the service's own account of that, not a narration of it.
  */
+/*
+ * The payload keys are the ones `apply_set_event` reads, and two of the three used to be wrong:
+ * actor_late sent `minutes` and weather_cover sent `day`, while the engine reads `day_index` for
+ * both. Those two buttons had never worked, on any deployment, and the failure was invisible
+ * because the e2e only ever clicked the third. A judge pressing either got "The API answered 422."
+ * The typed sentence below them produced the right keys from the day it shipped, which is how
+ * this was found: the agent path worked and the buttons above it did not.
+ */
 const EVENTS: { kind: SetEventKind; label: string; icon: typeof UserX; payload: Record<string, unknown> }[] = [
   { kind: 'scene_dropped', label: 'Scene dropped', icon: Scissors, payload: { scene_id: 's6' } },
-  { kind: 'actor_late', label: 'Actor late', icon: UserX, payload: { cast_id: 'cM', minutes: 120 } },
-  { kind: 'weather_cover', label: 'Weather cover', icon: CloudRain, payload: { day: 3 } },
+  { kind: 'actor_late', label: 'Actor late', icon: UserX, payload: { cast_id: 'cM', day_index: 3 } },
+  { kind: 'weather_cover', label: 'Weather cover', icon: CloudRain, payload: { day_index: 3 } },
 ]
 
 /** The proposal, in the words the board uses, so a person confirms a reading and not a JSON blob. */
@@ -137,6 +145,14 @@ export function SetEvents({
               <HelpCircle className="size-3.5" aria-hidden="true" />
               It will not guess
             </p>
+            {/* The reading is shown here too, not only above a proposal. A refusal the model wrote
+                itself can arrive with an explanation and no questions, and rendering only the list
+                left a titled empty box holding the one sentence that explained the refusal. */}
+            {agent.proposal.reading && (
+              <p className="mt-2 text-14 text-bone" data-testid="interpret-reading">
+                {agent.proposal.reading}
+              </p>
+            )}
             <ul className="mt-3 space-y-2">
               {agent.proposal.questions.map((question) => (
                 <li key={question} className="flex gap-3 text-13 text-bone">
@@ -160,7 +176,9 @@ export function SetEvents({
                 disabled={disabled || pending !== null}
                 onClick={() => {
                   const { kind, payload } = agent.proposal ?? {}
-                  if (!kind || !payload) return
+                  // Object.keys, not truthiness: {} is truthy in JavaScript, so the old guard could
+                  // never fire and an empty payload would have been published as a silent no-op.
+                  if (!kind || !payload || Object.keys(payload).length === 0) return
                   onPublish(kind, payload, 'agent')
                   agent.clear()
                   setSentence('')
