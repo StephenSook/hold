@@ -68,27 +68,60 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check web scaffold exists
-        id: web_exists
-        run: |
-          if [ -f "web/package.json" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-            echo "web/package.json not found - scaffold pending (task 0.10, Deem lane)"
-          fi
-      - if: steps.web_exists.outputs.exists == 'true'
-        working-directory: web
+      # Every step below is unconditional. They were guarded on `web/package.json` existing while
+      # the web app was still a plan, and that guard outlived its reason: once the file landed the
+      # condition was always true, and a step that CAN skip is a gate that can go quiet without
+      # anyone noticing. CI rule 2: a conditionally skipped test is a false green.
+      - working-directory: web
         run: npm ci
-      - if: steps.web_exists.outputs.exists == 'true'
-        working-directory: web
+      - working-directory: web
         run: npx tsc --noEmit
-      - if: steps.web_exists.outputs.exists == 'true'
-        working-directory: web
+      - working-directory: web
+        run: npx eslint .
+      - working-directory: web
         run: npm run test
-      - if: steps.web_exists.outputs.exists == 'true'
-        working-directory: web
+      - working-directory: web
         run: npm run build
+
+  web-e2e:
+    name: Web e2e (golden path, fake externals)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - working-directory: web
+        run: npm ci
+      # The browsers Playwright drives. Both projects in playwright.config.ts are installed, so a
+      # missing browser fails here with a clear message instead of inside a spec.
+      - working-directory: web
+        run: npx playwright install --with-deps chromium webkit
+      # The app has to be built before uvicorn starts: api/main.py mounts web/dist/assets at
+      # import time, so a server started against an unbuilt tree serves a dead mount for its
+      # whole life. The Playwright webServer waits on /api/status before any spec runs.
+      - working-directory: web
+        run: npm run build
+      - name: The golden path
+        working-directory: web
+        env:
+          HOLD_FAKE_EXTERNALS: "1"
+          HOLD_SOLVE_TIME_LIMIT_S: "20"
+        run: npx playwright test
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            web/test-results
+            web/playwright-report
+          retention-days: 7
 
   em-dash-gate:
     name: Em-dash gate
