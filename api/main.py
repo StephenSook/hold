@@ -29,6 +29,7 @@ from api.routes.ask import router as ask_router
 from api.routes.events import handle_external_set_event
 from api.routes.events import router as events_router
 from api.routes.extract import router as extract_router
+from api.routes.interpret import router as interpret_router
 from api.routes.rules import router as rules_router
 from api.routes.solve import router as solve_router
 from api.routes.status import router as status_router
@@ -87,7 +88,7 @@ app.add_middleware(
 # API routes. Registered before the SPA catch-all so /api/* never falls through.
 # ---------------------------------------------------------------------------
 
-for _router in (status_router, solve_router, events_router, extract_router, ask_router, rules_router):
+for _router in (status_router, solve_router, events_router, extract_router, ask_router, interpret_router, rules_router):
     app.include_router(_router)
 
 # HOLD's own MCP server, on the deployed origin, so the solver can be driven by any MCP client

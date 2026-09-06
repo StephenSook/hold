@@ -12,10 +12,10 @@ from __future__ import annotations
 from google.adk.agents import LlmAgent
 
 from api.agents.hold_agent.callbacks import guard_tool_call
-from api.agents.hold_agent.prompts import INSTRUCTION
+from api.agents.hold_agent.prompts import EVENT_INSTRUCTION, INSTRUCTION
 from api.agents.hold_agent.tools import check_legality, lookup_rule, optimize_schedule
 from api.hold.config import GEMINI_MODEL
-from api.hold.schemas import ExtractResult
+from api.hold.schemas import EventProposal, ExtractResult
 
 root_agent = LlmAgent(
     name="hold_agent",
@@ -37,6 +37,27 @@ extract_agent = LlmAgent(
     instruction=INSTRUCTION,
     tools=[],
     output_schema=ExtractResult,
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
+)
+
+
+# The third agent, and the split across all three is AUTHORITY rather than decoration.
+#
+# Two of them carry a schema and no tools, because their job is a judgement about words that a
+# person then confirms: extraction reads a document, and this one reads a sentence about something
+# that happened on set. The tool-bearing agent carries no schema, because on this model an agent
+# with both never emits its final answer (see the note at the top of this file).
+#
+# What this one produces is a proposal, never an action. The typed event goes to the same
+# deterministic path the buttons use, which is what decides what the change means for the plan.
+event_agent = LlmAgent(
+    name="hold_event",
+    model=GEMINI_MODEL,
+    description="Turns one sentence about an on-set change into one typed HOLD event, with no tools.",
+    instruction=EVENT_INSTRUCTION,
+    tools=[],
+    output_schema=EventProposal,
     disallow_transfer_to_parent=True,
     disallow_transfer_to_peers=True,
 )

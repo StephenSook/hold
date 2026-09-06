@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import uuid
+from datetime import date
 from typing import Any
 
 from google.adk.agents import LlmAgent
@@ -19,8 +20,8 @@ from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
 from pydantic import BaseModel
 
-from api.agents.hold_agent.agent import extract_agent, root_agent
-from api.hold.schemas import ExtractResult
+from api.agents.hold_agent.agent import event_agent, extract_agent, root_agent
+from api.hold.schemas import EventProposal, ExtractResult
 
 log = logging.getLogger(__name__)
 
@@ -152,3 +153,90 @@ def parse_extract_result(text_out: str) -> ExtractResult:
         fields = sorted({".".join(str(p) for p in e.get("loc", ())) or "<root>" for e in getattr(exc, "errors", lambda: [])()}) or ["<json>"]
         log.warning("extraction: final text is not an ExtractResult (%s)", exc)
         raise ExtractionError(f"the model's final text is not an ExtractResult (fields: {', '.join(fields)})") from exc
+
+
+EVENT_TIMEOUT_S = 35.0
+# One structured answer over a short sentence, with no tools. Two calls, not three: the
+# extraction cap allows a thought turn over a long document, and this input is one line.
+MAX_EVENT_LLM_CALLS = 2
+# The sentence is short and the timeout is not, because the first call of a process pays for the
+# client as well as the answer: at 20 s the very first live run timed out and every later one
+# returned in a few seconds. A cap tuned on a warm client is a cap that only fails in production.
+
+
+def _event_context(schedule: dict[str, Any]) -> str:
+    """The ids the sentence is allowed to name, each beside the words a person would use for it.
+
+    The model is given the ids rather than asked to invent them, which is the whole reason the
+    proposal can be checked: `apply_set_event` refuses an id that does not exist, so a hallucinated
+    cast member fails loudly at the boundary instead of quietly rescheduling the wrong performer.
+
+    What travels with each id is the handle a sentence actually uses. Cast are letters on this
+    board, so "B is out" has to reach `cB`. Scenes are said by number or by set, so "the orchard
+    scene" has to reach `s1`. Days are said by weekday, so the weekday is spelled out beside the
+    0-based index the payload wants. Nothing else goes over the wire: no page counts, no day rates,
+    no contract terms, because none of them can help decide which of three events this is.
+    """
+    cast = ", ".join(f"{c.get('id')} (letter {c.get('letter', '?')})" for c in schedule.get("cast", []))
+    scenes = ", ".join(
+        f"{s.get('id')} (scene {s.get('number', '?')}, {s.get('int_ext', '')} {s.get('set', '')})".strip()
+        for s in schedule.get("scenes", [])
+    )
+    days = ", ".join(
+        f"day_index {i} = {d.get('date')} ({_weekday(str(d.get('date', '')))})"
+        for i, d in enumerate(schedule.get("days", []))
+    )
+    return f"Cast: {cast}\nScenes: {scenes}\nDays: {days}"
+
+
+def _weekday(iso_date: str) -> str:
+    """The weekday name for an ISO date, or an empty label when the date is unreadable. A sentence
+    says Thursday and a payload wants an index, and this is the only bridge between them."""
+    try:
+        return date.fromisoformat(iso_date[:10]).strftime("%A")
+    except ValueError:
+        return "unknown day"
+
+
+async def interpret_event(
+    sentence: str, schedule: dict[str, Any], timeout_s: float = EVENT_TIMEOUT_S
+) -> EventProposal:
+    """One sentence about what happened on set, one typed proposal, no tools and no action.
+
+    Nothing is applied here. The proposal goes back to the person who wrote the sentence, who
+    confirms it before the deterministic `apply_set_event` path touches the plan. That split is
+    deliberate: interpreting English is the model's job and deciding what a change costs is the
+    solver's, and putting a model on the second half would make the number unprovable.
+    """
+    runner = build_runner(event_agent)
+    session = await runner.session_service.create_session(
+        app_name=APP_NAME, user_id="api", session_id=uuid.uuid4().hex
+    )
+    prompt = f"{_event_context(schedule)}\n\nWhat happened: {sentence}"
+    message = types.Content(role="user", parts=[types.Part.from_text(text=prompt)])
+    final_text: list[str] = []
+
+    async def run() -> None:
+        async for event in runner.run_async(
+            user_id="api", session_id=session.id, new_message=message,
+            run_config=RunConfig(max_llm_calls=MAX_EVENT_LLM_CALLS),
+        ):
+            if event.is_final_response() and event.content and event.content.parts:
+                final_text.append("".join(p.text or "" for p in event.content.parts))
+
+    await asyncio.wait_for(run(), timeout=timeout_s)
+    return parse_event_proposal("".join(final_text))
+
+
+def parse_event_proposal(text_out: str) -> EventProposal:
+    """The model's final text as an EventProposal, with the same field-naming discipline as
+    extraction: the error says which fields failed and the text itself stays in the log."""
+    text_out = text_out.strip()
+    if not text_out:
+        raise ExtractionError("the model returned no final text")
+    try:
+        return EventProposal.model_validate_json(text_out)
+    except ValueError as exc:
+        fields = sorted({".".join(str(p) for p in e.get("loc", ())) or "<root>" for e in getattr(exc, "errors", lambda: [])()}) or ["<json>"]
+        log.warning("event: final text is not an EventProposal (%s)", exc)
+        raise ExtractionError(f"the model's final text is not an EventProposal (fields: {', '.join(fields)})") from exc

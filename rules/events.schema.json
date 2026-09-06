@@ -4,7 +4,7 @@
   "description": "Messages on hold.set-events (SetEvent, plus job_id when the API mirrors its own event) and hold.verdicts (VerdictEvent). Generated from api/hold/schemas.py by scripts/events_schema.py; hand edits fail CI.",
   "definitions": {
     "SetEvent": {
-      "description": "Emitted when an on-set event (actor late, scene dropped, weather cover)\ntriggers a re-solve.\nsource='ui': user action; source='simulation': simulate_set_day.py script.",
+      "description": "Emitted when an on-set event (actor late, scene dropped, weather cover)\ntriggers a re-solve.\n\nsource='ui': a person pressed one of the three buttons. source='simulation':\nsimulate_set_day.py. source='agent': a person wrote a sentence, the interpreter proposed this\ntyped event from it, and the person confirmed the reading. The third one is still a human\ndecision, and it is recorded separately because the provenance of a re-solve is worth knowing:\nit travels into the streamed line as set-event:<kind>:agent, so the log says where the edit\ncame from without anyone having to take our word for it.",
       "properties": {
         "event": {
           "default": "set-event",
@@ -28,7 +28,8 @@
         "source": {
           "enum": [
             "ui",
-            "simulation"
+            "simulation",
+            "agent"
           ],
           "title": "Source",
           "type": "string"
