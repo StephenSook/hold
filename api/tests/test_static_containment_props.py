@@ -159,6 +159,21 @@ def test_a_vendor_name_a_viewer_would_read_is_always_a_claim(svg: str) -> None:
     assert FORBIDDEN.search(_strip(svg)), f"a real claim was missed: {svg}"
 
 
+@pytest.mark.parametrize(
+    "svg",
+    [
+        # defs looks like a block nobody reads. Its contents are drawn wherever a use element
+        # references them, so a claim parked in defs is a claim on screen. Excluding defs left a
+        # hole exactly the size of "put it in defs and reference it".
+        '<svg><defs><text id="t">watsonx</text></defs><use href="#t"/></svg>',
+        '<svg><defs><g id="g"><text>granite</text></g></defs><use href="#g"/></svg>',
+        '<svg><defs><marker id="m"><text>openai</text></marker></defs></svg>',
+    ],
+)
+def test_a_claim_parked_in_defs_is_still_a_claim(svg: str) -> None:
+    assert FORBIDDEN.search(_strip(svg)), f"a name inside defs was invisible to the guard: {svg}"
+
+
 def test_unparseable_markup_is_not_a_free_pass() -> None:
     """Broken markup over-reports rather than under-reports: silence would be the wrong default."""
     assert FORBIDDEN.search(_strip('<svg><text>watsonx'))

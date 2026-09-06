@@ -57,7 +57,11 @@ def judge_facing_surfaces(root: Path) -> list[Path]:
 
 # Element content that is code rather than prose. A font-family in a stylesheet is not a claim
 # about the running system, and neither is a string in a script.
-_NOT_PROSE = {"style", "script", "metadata", "defs"}
+#
+# `defs` is deliberately NOT here. It looks like a definitions block that nobody reads, and its
+# contents are drawn wherever a `use` element references them, so a `text` inside `defs` is on
+# screen. Excluding it left a hole exactly the size of "put the claim in defs and reference it".
+_NOT_PROSE = {"style", "script", "metadata"}
 
 
 def _svg_prose(raw: str) -> str:
