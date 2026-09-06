@@ -9,6 +9,7 @@ edit and commit the table as docs/links-check.md.
 from __future__ import annotations
 
 import datetime
+import json
 import re
 import sys
 import urllib.error
@@ -38,6 +39,38 @@ def fetch(url: str) -> tuple[str, str]:
         return "ERR", type(exc).__name__
 
 
+def call_mcp(url: str) -> tuple[str, str]:
+    """The MCP endpoint answered the way a client answers it, not the way a browser does.
+
+    A plain GET on a streamable-HTTP MCP endpoint is a 406: the transport requires an Accept of
+    text/event-stream and a JSON-RPC body. The checker read that as a broken link, which is a false
+    positive on the one URL in the README that a judge is told to POINT A CLIENT at rather than
+    click. Rather than skip it, this exercises it the way the README's own worked example does, so
+    the row now proves more than a link check ever did: the tools are actually listed.
+    """
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}).encode()
+    req = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+            "MCP-Protocol-Version": "2025-11-25",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            text = r.read(200_000).decode("utf-8", "ignore")
+        names = sorted(set(re.findall(r'"name":"(\w+)"', text)))
+        if not names:
+            return "ERR", "answered with no tools"
+        return str(r.status), f"tools/list: {', '.join(names)}"
+    except urllib.error.HTTPError as exc:
+        return str(exc.code), "HTTP error on the JSON-RPC call"
+    except Exception as exc:
+        return "ERR", type(exc).__name__
+
+
 def main() -> int:
     urls: dict[str, str] = {}
     paths: dict[str, str] = {}
@@ -56,7 +89,7 @@ def main() -> int:
         if re.match(r"https?://(localhost|127\.0\.0\.1)", u):
             print(f"| {name} | {u} | skipped | local address from the quick start |")
             continue
-        status, title = fetch(u)
+        status, title = call_mcp(u) if u.rstrip("/").endswith("/mcp") else fetch(u)
         ok = status.startswith("2") or status == "403"
         bad += not ok
         print(f"| {name} | {u} | {status} | {title} |")
