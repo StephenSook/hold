@@ -7,7 +7,11 @@
 [![CI](https://github.com/StephenSook/hold/actions/workflows/ci.yml/badge.svg)](https://github.com/StephenSook/hold/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-Live: https://hold-fwmdq7fc3q-uc.a.run.app/api/status (Cloud Run). Walkthrough for judges: [JUDGE.md](JUDGE.md).
+**Live: <https://hold-fwmdq7fc3q-uc.a.run.app>** The board, the verdicts and the solver, on one
+Cloud Run instance. Walkthrough for judges: [JUDGE.md](JUDGE.md). The service's own account of
+itself, with every headline figure: [`/api/status`](https://hold-fwmdq7fc3q-uc.a.run.app/api/status).
+
+![HOLD architecture](docs/architecture.svg)
 
 ---
 
