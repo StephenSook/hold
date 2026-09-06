@@ -9,6 +9,8 @@ interface JobResponse {
   day_scene_ids: Record<string, string[]>
   error: string | null
   solve_ms: number | null
+  /** The plan the server actually solved, which after a set event is not the one we sent. */
+  schedule: ScheduleInput
 }
 
 export type SolvePhase = 'idle' | 'solving' | 'done' | 'failed'
@@ -20,9 +22,18 @@ export interface SolveState {
   dayMap: Record<string, string[]> | null
   solveMs: number | null
   error: string | null
+  /**
+   * The plan the server solved. Null until one comes back.
+   *
+   * A set event edits the latest plan on the server and re-solves the result, so after one the
+   * caller's own copy is a plan that no longer exists. The board adopts this instead of keeping
+   * what it sent; without it, pressing Solve again resubmitted the pre-event schedule and quietly
+   * undid the event, and the strip that had just been dropped came back with no message.
+   */
+  schedule: ScheduleInput | null
 }
 
-const IDLE: SolveState = { phase: 'idle', jobId: null, result: null, dayMap: null, solveMs: null, error: null }
+const IDLE: SolveState = { phase: 'idle', jobId: null, result: null, dayMap: null, solveMs: null, error: null, schedule: null }
 
 /**
  * Run a solve on the API and poll the job to completion.
@@ -145,6 +156,7 @@ async function poll(
         dayMap: job.day_scene_ids,
         solveMs: job.solve_ms,
         error: null,
+        schedule: job.schedule,
       })
       return
     }

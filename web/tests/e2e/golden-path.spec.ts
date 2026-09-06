@@ -140,6 +140,17 @@ test.describe('the board', () => {
   })
 })
 
+/**
+ * Whether this run is pointed at a deployed origin rather than the local fake-externals server.
+ *
+ * It changes what the import assertions are allowed to expect, and only those. Locally the route
+ * answers from the committed fixture and says so; on the deployment a real model reads the
+ * sentence and may quite correctly refuse it, which is the behaviour the whole extraction design
+ * is for. Asserting the fixture label against the deployment made this spec fail on a working
+ * product, so the suite could not be run against the thing a judge actually opens.
+ */
+const LIVE = Boolean(process.env.HOLD_E2E_BASE)
+
 test.describe('import', () => {
   test('reads a document, solves nothing until a person confirms, then hands it to the board', async ({ page }) => {
     await page.goto('/#/import')
@@ -150,8 +161,15 @@ test.describe('import', () => {
 
     const result = page.getByTestId('extract-result')
     await expect(result).toBeVisible({ timeout: 30_000 })
-    // Under fake externals the route says so in its own notes rather than implying a model ran.
-    await expect(result).toContainText(/fixture|HOLD_FAKE_EXTERNALS/i)
+    if (LIVE) {
+      // A live read is a judgement, so the only thing that is always true is that it answered one
+      // of the two ways it is allowed to: a schedule, or the questions it needs answered. What is
+      // asserted is that it did not answer with nothing and did not invent a schedule silently.
+      await expect(result).toContainText(/READ|NEEDS CLARIFICATION/)
+    } else {
+      // Under fake externals the route says so in its own notes rather than implying a model ran.
+      await expect(result).toContainText(/fixture|HOLD_FAKE_EXTERNALS/i)
+    }
 
     // Nothing is confirmed yet, so the board has not been handed anything.
     await page.goto('/#/board')
@@ -166,13 +184,54 @@ test.describe('import', () => {
     await page.getByTestId('import-text').fill('Shoot scene 1 at the police station on the first day.')
     await page.getByTestId('import-submit').click()
     await expect(page.getByTestId('extract-result')).toBeVisible({ timeout: 30_000 })
-    await page.getByTestId('import-confirm').click()
+
+    const confirm = page.getByTestId('import-confirm')
+    if (LIVE && (await confirm.count()) === 0) {
+      // The live model asked for clarification instead of reading a schedule, so there is nothing
+      // to confirm and the handoff has nothing to carry. That is a correct refusal, not a failure,
+      // and the assertion is that the page said so rather than offering a button over no data.
+      await expect(result).toContainText('NEEDS CLARIFICATION')
+      // At least one question, counted as list items. The first version of this asserted a
+      // question mark and failed on a correct refusal, because the model phrases its questions as
+      // "Please provide the call time" with no punctuation. That was an assumption about the
+      // model's prose smuggled into an assertion about the product.
+      expect(await result.getByRole('listitem').count()).toBeGreaterThan(0)
+      return
+    }
+    await confirm.click()
 
     await expect(page.getByTestId('imported-notice')).toBeVisible({ timeout: 30_000 })
   })
 })
 
 test.describe('an event on set', () => {
+  test('a second solve does not undo a published event', async ({ page }) => {
+    // The board used to keep its own copy of the schedule and send that copy back on every solve.
+    // A set event edits the plan on the SERVER, so after one the two were different schedules and
+    // the next Solve resubmitted the pre-event one: the dropped strip came back, with nothing on
+    // screen saying the event had been undone. The board only looked correct in between, because
+    // a dropped scene is missing from the day map and stops being drawn while still being sent.
+    await page.goto('/#/board')
+    await dismissGate(page)
+
+    await page.getByTestId('solve').click()
+    await expect(page.getByTestId('pass2-status')).toContainText(/OPTIMAL|FEASIBLE/, { timeout: 120_000 })
+    const before = await page.getByTestId(/^strip-/).count()
+
+    await page.getByTestId('set-event-scene_dropped').click()
+    await expect(page.getByTestId('strip-s6')).toHaveCount(0, { timeout: 120_000 })
+    const afterDrop = await page.getByTestId(/^strip-/).count()
+    expect(afterDrop).toBe(before - 1)
+
+    await page.getByTestId('solve').click()
+    await expect(page.getByTestId('pass2-status')).toContainText(/OPTIMAL|FEASIBLE/, { timeout: 120_000 })
+    // The scene stays dropped. Asserted by id, not only by count, so a different scene going
+    // missing cannot make this pass.
+    await expect(page.getByTestId('strip-s6')).toHaveCount(0)
+    expect(await page.getByTestId(/^strip-/).count()).toBe(afterDrop)
+  })
+
+
   test('a dropped scene re-solves the plan and the new plan arrives over the stream', async ({ page }) => {
     await page.goto('/#/board')
     await dismissGate(page)

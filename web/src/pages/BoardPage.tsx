@@ -82,8 +82,15 @@ export function BoardPage() {
     if (solver.phase !== 'done' || !solver.result || !solver.dayMap) return
     if (laidOut.current === solver.jobId) return
     laidOut.current = solver.jobId
-    applySolved(schedule, solver.dayMap, solver.result.pass1)
-  }, [solver.phase, solver.result, solver.dayMap, solver.jobId, applySolved, schedule])
+    // The plan the SERVER solved, not the one this page last held. A set event edits the latest
+    // plan on the server, so after one they are different schedules, and taking our own back was
+    // how a second Solve resurrected a scene that had been dropped: the board went 10 strips, 9,
+    // then 10 again with nothing on screen saying the event had been undone. The board only looked
+    // right because a dropped scene is missing from the day map, so it stopped being drawn while
+    // still being sent. It is also the schedule both agent panels read, so a stale copy let the
+    // interpreter propose an id the engine would then refuse.
+    applySolved(solver.schedule ?? schedule, solver.dayMap, solver.result.pass1)
+  }, [solver.phase, solver.result, solver.dayMap, solver.jobId, solver.schedule, applySolved, schedule])
 
   // An imported schedule arrives unarranged, so it solves itself once, on arrival. The import
   // page's button says "Confirm and solve" and this is the solve half of that sentence; before

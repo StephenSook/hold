@@ -39,11 +39,20 @@ class Job:
     solve_ms: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        """The job as the API reports it, including the schedule it actually solved.
+
+        The schedule is here because a set event does not edit the caller's copy: it edits the
+        latest plan on the server and queues a re-solve of the RESULT. A client that kept its own
+        copy was therefore holding a plan that no longer existed, and pressing Solve again sent it
+        back and silently undid the event. The day map alone cannot fix that, because it says where
+        scenes went and not which scenes there still are.
+        """
         return {
             "job_id": self.id,
             "status": self.status,
             "source": self.source,
             "created_at": self.created_at,
+            "schedule": self.schedule.model_dump(mode="json"),
             "result": self.result.model_dump(mode="json") if self.result is not None else None,
             "day_scene_ids": {str(d): ids for d, ids in self.day_scene_ids.items()},
             "error": self.error,
