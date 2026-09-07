@@ -22,7 +22,10 @@ call the Cloud Run API, so every figure on the judge screen is computed when you
 |---|---|
 | <img src="docs/install/android-apk.png" alt="QR code linking to the HOLD Android APK download" width="150"> | <img src="docs/install/ios-testflight.png" alt="QR code linking to the HOLD TestFlight beta" width="150"> |
 | [**Download the APK**](https://github.com/StephenSook/hold/releases/latest/download/hold.apk) | [**Join on TestFlight**](https://testflight.apple.com/join/guYBH8xE) |
-| Android 7.0 or newer. Allow installs from this source when prompted. | Needs the TestFlight app. Build 3, the same bundle as the APK, calling the same live API. |
+| Android 7.0 or newer. Allow installs from this source when prompted. | Build 3 is approved for external TestFlight testing. Install TestFlight, then open the link above on your iPhone or iPad. |
+
+External beta approval was verified in App Store Connect on September 7, 2026, and the public
+invitation page is open. This is TestFlight beta access; HOLD is not an App Store release.
 
 The APK is signed and its checksum is on the
 [release](https://github.com/StephenSook/hold/releases/tag/v1.0.0), so a download can be checked
@@ -98,15 +101,14 @@ writes from a real run and CI recomputes; a mismatch fails the build.
 | Hosting | Cloud Run, deployed from CI through Workload Identity Federation, secrets in Secret Manager | `runtime.mode` |
 | Evidence | The IBM Bob session export and attribution counts | `bob_usage` |
 
-An architecture diagram lands with task 5.6. Routes: `/api/solve`, `/api/jobs/{id}`,
+Routes: `/api/solve`, `/api/jobs/{id}`,
 `/api/events` (SSE), `/api/set-events`, `/api/extract`, `/api/rules`, `/api/bench`,
 `/api/status`, `/api/docs`.
 
 ## Drive it from your own AI client
 
 HOLD runs its own MCP server on the deployed origin, so the optimizer and the rule registry are
-tools any MCP client can call. This is the same server IBM Bob calls over stdio while the code is
-being written, on a second transport.
+tools any MCP client can call. The same server also runs over stdio from a local clone.
 
 ```json
 {
@@ -211,8 +213,8 @@ and the in-process bus is the transport. The deployed instance has them. `script
 - Louisiana hour caps are unverified, so the registry carries no record for them and the
   jurisdiction has no Louisiana shoot state: such a shoot is `other` and gets the SAG-AFTRA
   records only. Its Coogan trust records are real and display only.
-- The solver runs on the server. The phone app is not in this repository yet; when it lands it
-  displays and caches rather than solving.
+- The solver runs on the server. The Android and iOS shells are in this repository; they
+  display and cache the board and call the live API rather than solving on the device.
 - Practitioner outreach: five were written to on 2026-09-02. One replied on 2026-09-03, a business
   representative at a SAG-AFTRA local, and confirmed the cumulative reading this engine implements:
   California's rules follow a California-resident minor to another state, and a stricter Georgia

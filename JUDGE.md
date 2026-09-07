@@ -1,7 +1,11 @@
 # HOLD in ninety seconds
 
-Nothing below needs a key, an account or a local install until step 6. The web app is a separate
-task and is not described here; every step is the API and the repository.
+Start with the [live board and guided walkthrough](https://hold-fwmdq7fc3q-uc.a.run.app/#/judge).
+For a phone, [join the approved iOS TestFlight beta](https://testflight.apple.com/join/guYBH8xE)
+or use the [Android download and install instructions](README.md). The iOS beta requires the
+TestFlight app. External testing of build 3 was approved and verified on September 7, 2026.
+
+The API and repository checks below need no key or account. Only step 6 needs a local install.
 
 1. **The headline, self-reported.** Open https://hold-fwmdq7fc3q-uc.a.run.app/api/status. The
    `headline` block is read from the committed `docs/FACTS.json`; `runtime` says which model,
