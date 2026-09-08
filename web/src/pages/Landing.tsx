@@ -85,7 +85,7 @@ function FrameMarks() {
 /**
  * The one orchestrated moment.
  *
- * The board holds the hand-built order: four performers paid to wait, one day that cannot legally
+ * The board holds the hand-built order: four paid hold days across three performers, one day that cannot legally
  * be shot. When the section is reached the solved order arrives and every strip travels at once
  * while the two figures count down. Nothing else on this page moves unless somebody asks it to.
  */
@@ -122,7 +122,7 @@ function TheBoard() {
           <div>
             <p className="script-label text-11 text-bone-faint">The board</p>
             <h2 className="display-wide mt-3 max-w-[24ch] text-28 text-bone sm:text-36">
-              Four performers were paid to wait. Now none are.
+              Four paid hold days across three performers. Now none.
             </h2>
           </div>
           <dl className="flex flex-wrap gap-x-10 gap-y-5">

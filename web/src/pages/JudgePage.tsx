@@ -37,7 +37,7 @@ export function JudgePage() {
   const steps = [
     {
       title: 'Watch the board solve itself',
-      body: 'The home page holds the hand-built order: four performers paid to wait between their scenes, and one day that cannot legally be shot. The solved order arrives on its own and every strip moves at once.',
+      body: 'The home page holds the hand-built order: four paid hold days across three performers, and one day that cannot legally be shot. The solved order arrives on its own and every strip moves at once.',
       href: '#/',
       label: 'The board',
     },
